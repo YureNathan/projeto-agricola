@@ -51,6 +51,10 @@ public class SecurityConfig {
                         )
                         .permitAll()
                         .requestMatchers(
+                                "/api/v1/admin/**"
+                        )
+                        .authenticated()
+                        .requestMatchers(
                                 "/api/v1/empresas/{empresaId}",
                                 "/api/v1/empresas/{empresaId}/**"
                         )

@@ -125,8 +125,52 @@ function Movimentacoes() {
         setExcluindoId,
     ] = useState(null)
 
+    const [
+        convertendoId,
+        setConvertendoId,
+    ] = useState(null)
+
+    const [
+        movimentacaoParaExcluir,
+        setMovimentacaoParaExcluir,
+    ] = useState(null)
+
+    const [
+        movimentacaoParaConverter,
+        setMovimentacaoParaConverter,
+    ] = useState(null)
+
+    const [
+        categoriasConversao,
+        setCategoriasConversao,
+    ] = useState([])
+
+    const [
+        categoriaConversaoId,
+        setCategoriaConversaoId,
+    ] = useState('')
+
+    const [
+        carregandoCategoriasConversao,
+        setCarregandoCategoriasConversao,
+    ] = useState(false)
+
     const empresaId =
         sessao?.usuario?.empresaId
+
+    function criarCabecalhos(possuiCorpo = false) {
+        const cabecalhos = {
+            Authorization:
+                `${sessao.tipoToken} ${sessao.token}`,
+        }
+
+        if (possuiCorpo) {
+            cabecalhos['Content-Type'] =
+                'application/json; charset=utf-8'
+        }
+
+        return cabecalhos
+    }
 
     useEffect(() => {
         if (!sessao || !empresaId) {
@@ -231,14 +275,6 @@ function Movimentacoes() {
     async function excluirMovimentacao(
         movimentacao,
     ) {
-        const confirmou = window.confirm(
-            `Deseja realmente excluir a movimentação "${movimentacao.descricao}"?`,
-        )
-
-        if (!confirmou) {
-            return
-        }
-
         if (!sessao || !empresaId) {
             limparSessao()
 
@@ -302,6 +338,214 @@ function Movimentacoes() {
             )
         } finally {
             setExcluindoId(null)
+        }
+    }
+
+    function abrirConfirmacaoExclusao(movimentacao) {
+        setErro('')
+        setMovimentacaoParaExcluir(movimentacao)
+    }
+
+    function fecharConfirmacaoExclusao() {
+        if (excluindoId) {
+            return
+        }
+
+        setMovimentacaoParaExcluir(null)
+    }
+
+    async function confirmarExclusao() {
+        if (!movimentacaoParaExcluir) {
+            return
+        }
+
+        await excluirMovimentacao(
+            movimentacaoParaExcluir,
+        )
+
+        setMovimentacaoParaExcluir(null)
+    }
+
+    async function abrirConversao(movimentacao) {
+        if (!sessao || !empresaId) {
+            limparSessao()
+
+            navigate('/login', {
+                replace: true,
+            })
+
+            return
+        }
+
+        const tipoDestino =
+            movimentacao.tipo === 'RECEITA'
+                ? 'DESPESA'
+                : 'RECEITA'
+
+        setErro('')
+        setMovimentacaoParaConverter(movimentacao)
+        setCategoriaConversaoId('')
+        setCategoriasConversao([])
+
+        try {
+            setCarregandoCategoriasConversao(true)
+
+            const resposta = await fetch(
+                `${API_URL}/empresas/${empresaId}/categorias?tipo=${tipoDestino}`,
+                {
+                    headers: criarCabecalhos(),
+                },
+            )
+
+            if (
+                resposta.status === 401 ||
+                resposta.status === 403
+            ) {
+                limparSessao()
+
+                navigate('/login', {
+                    replace: true,
+                })
+
+                return
+            }
+
+            if (!resposta.ok) {
+                throw new Error(
+                    await obterMensagemDeErro(
+                        resposta,
+                        'Não foi possível carregar as categorias.',
+                    ),
+                )
+            }
+
+            const dados = await resposta.json()
+            const categoriasAtivas =
+                Array.isArray(dados)
+                    ? dados.filter(
+                        (categoria) =>
+                            categoria.ativo,
+                    )
+                    : []
+
+            setCategoriasConversao(categoriasAtivas)
+
+            if (categoriasAtivas.length > 0) {
+                setCategoriaConversaoId(
+                    String(categoriasAtivas[0].id),
+                )
+            }
+        } catch (erroDaRequisicao) {
+            setErro(
+                erroDaRequisicao instanceof Error
+                    ? erroDaRequisicao.message
+                    : 'Não foi possível carregar as categorias.',
+            )
+        } finally {
+            setCarregandoCategoriasConversao(false)
+        }
+    }
+
+    function fecharConversao() {
+        if (convertendoId) {
+            return
+        }
+
+        setMovimentacaoParaConverter(null)
+        setCategoriasConversao([])
+        setCategoriaConversaoId('')
+    }
+
+    async function confirmarConversao(evento) {
+        evento.preventDefault()
+
+        if (
+            !movimentacaoParaConverter ||
+            !categoriaConversaoId
+        ) {
+            setErro(
+                'Escolha uma categoria para concluir a troca.',
+            )
+            return
+        }
+
+        const tipoDestino =
+            movimentacaoParaConverter.tipo === 'RECEITA'
+                ? 'DESPESA'
+                : 'RECEITA'
+
+        const corpo = {
+            descricao:
+                movimentacaoParaConverter.descricao,
+            valor: movimentacaoParaConverter.valor,
+            tipo: tipoDestino,
+            categoriaId: Number(categoriaConversaoId),
+            dataMovimentacao:
+                movimentacaoParaConverter.dataMovimentacao,
+            observacao:
+                movimentacaoParaConverter.observacao
+                ?? null,
+        }
+
+        try {
+            setConvertendoId(
+                movimentacaoParaConverter.id,
+            )
+            setErro('')
+
+            const resposta = await fetch(
+                `${API_URL}/empresas/${empresaId}/movimentacoes/${movimentacaoParaConverter.id}`,
+                {
+                    method: 'PUT',
+                    headers: criarCabecalhos(true),
+                    body: JSON.stringify(corpo),
+                },
+            )
+
+            if (
+                resposta.status === 401 ||
+                resposta.status === 403
+            ) {
+                limparSessao()
+
+                navigate('/login', {
+                    replace: true,
+                })
+
+                return
+            }
+
+            if (!resposta.ok) {
+                throw new Error(
+                    await obterMensagemDeErro(
+                        resposta,
+                        'Não foi possível trocar o tipo da movimentação.',
+                    ),
+                )
+            }
+
+            const movimentacaoAtualizada =
+                await resposta.json()
+
+            setMovimentacoes(
+                (movimentacoesAtuais) =>
+                    movimentacoesAtuais.map((item) =>
+                        item.id ===
+                        movimentacaoAtualizada.id
+                            ? movimentacaoAtualizada
+                            : item,
+                    ),
+            )
+
+            fecharConversao()
+        } catch (erroDaRequisicao) {
+            setErro(
+                erroDaRequisicao instanceof Error
+                    ? erroDaRequisicao.message
+                    : 'Não foi possível trocar o tipo da movimentação.',
+            )
+        } finally {
+            setConvertendoId(null)
         }
     }
 
@@ -487,13 +731,29 @@ function Movimentacoes() {
                                                 </Link>
 
                                                 <button
+                                                    className="movimentacoes-trocar"
+                                                    disabled={
+                                                        convertendoId ===
+                                                        movimentacao.id
+                                                    }
+                                                    onClick={() =>
+                                                        abrirConversao(
+                                                            movimentacao,
+                                                        )
+                                                    }
+                                                    type="button"
+                                                >
+                                                    Trocar tipo
+                                                </button>
+
+                                                <button
                                                     className="movimentacoes-excluir"
                                                     disabled={
                                                         excluindoId ===
                                                         movimentacao.id
                                                     }
                                                     onClick={() =>
-                                                        excluirMovimentacao(
+                                                        abrirConfirmacaoExclusao(
                                                             movimentacao,
                                                         )
                                                     }
@@ -514,6 +774,200 @@ function Movimentacoes() {
                     </div>
                 )}
             </section>
+
+            {movimentacaoParaExcluir && (
+                <div
+                    className="movimentacoes-modal-fundo"
+                    role="presentation"
+                >
+                    <section
+                        aria-modal="true"
+                        className="movimentacoes-modal"
+                        role="dialog"
+                    >
+                        <div className="movimentacoes-modal-topo">
+                            <p className="movimentacoes-etiqueta">
+                                Confirmação necessária
+                            </p>
+
+                            <button
+                                aria-label="Fechar confirmação"
+                                onClick={
+                                    fecharConfirmacaoExclusao
+                                }
+                                type="button"
+                            >
+                                ×
+                            </button>
+                        </div>
+
+                        <h2>Excluir movimentação?</h2>
+
+                        <p>
+                            A movimentação "
+                            {movimentacaoParaExcluir.descricao}
+                            " será removida definitivamente.
+                            Depois disso, não será possível
+                            recuperar esse lançamento.
+                        </p>
+
+                        <div className="movimentacoes-modal-acoes">
+                            <button
+                                className="movimentacoes-modal-cancelar"
+                                onClick={
+                                    fecharConfirmacaoExclusao
+                                }
+                                type="button"
+                            >
+                                Voltar
+                            </button>
+
+                            <button
+                                className="movimentacoes-modal-confirmar"
+                                disabled={Boolean(
+                                    excluindoId,
+                                )}
+                                onClick={confirmarExclusao}
+                                type="button"
+                            >
+                                {excluindoId
+                                    ? 'Excluindo...'
+                                    : 'Sim, excluir'}
+                            </button>
+                        </div>
+                    </section>
+                </div>
+            )}
+
+            {movimentacaoParaConverter && (
+                <div
+                    className="movimentacoes-modal-fundo"
+                    role="presentation"
+                >
+                    <section
+                        aria-modal="true"
+                        className="movimentacoes-modal"
+                        role="dialog"
+                    >
+                        <div className="movimentacoes-modal-topo">
+                            <p className="movimentacoes-etiqueta">
+                                Trocar tipo
+                            </p>
+
+                            <button
+                                aria-label="Fechar troca de tipo"
+                                onClick={fecharConversao}
+                                type="button"
+                            >
+                                ×
+                            </button>
+                        </div>
+
+                        <h2>
+                            {movimentacaoParaConverter.tipo ===
+                            'RECEITA'
+                                ? 'Mover para despesa'
+                                : 'Mover para receita'}
+                        </h2>
+
+                        <p>
+                            Escolha a nova categoria para "
+                            {movimentacaoParaConverter.descricao}
+                            ". O valor e a data serão mantidos.
+                        </p>
+
+                        <form
+                            className="movimentacoes-modal-form"
+                            onSubmit={confirmarConversao}
+                        >
+                            <label htmlFor="categoriaConversao">
+                                Categoria de destino
+                            </label>
+
+                            <select
+                                disabled={
+                                    carregandoCategoriasConversao ||
+                                    Boolean(convertendoId)
+                                }
+                                id="categoriaConversao"
+                                onChange={(evento) =>
+                                    setCategoriaConversaoId(
+                                        evento.target.value,
+                                    )
+                                }
+                                required
+                                value={categoriaConversaoId}
+                            >
+                                {carregandoCategoriasConversao ? (
+                                    <option value="">
+                                        Carregando categorias...
+                                    </option>
+                                ) : categoriasConversao.length ===
+                                0 ? (
+                                    <option value="">
+                                        Nenhuma categoria ativa
+                                        encontrada
+                                    </option>
+                                ) : (
+                                    categoriasConversao.map(
+                                        (categoria) => (
+                                            <option
+                                                key={
+                                                    categoria.id
+                                                }
+                                                value={
+                                                    categoria.id
+                                                }
+                                            >
+                                                {categoria.nome}
+                                            </option>
+                                        ),
+                                    )
+                                )}
+                            </select>
+
+                            {categoriasConversao.length === 0 &&
+                                !carregandoCategoriasConversao && (
+                                    <button
+                                        className="movimentacoes-modal-link"
+                                        onClick={() =>
+                                            navigate(
+                                                '/dashboard/categorias',
+                                            )
+                                        }
+                                        type="button"
+                                    >
+                                        Criar categoria
+                                    </button>
+                                )}
+
+                            <div className="movimentacoes-modal-acoes">
+                                <button
+                                    className="movimentacoes-modal-cancelar"
+                                    onClick={fecharConversao}
+                                    type="button"
+                                >
+                                    Voltar
+                                </button>
+
+                                <button
+                                    className="movimentacoes-modal-confirmar"
+                                    disabled={
+                                        carregandoCategoriasConversao ||
+                                        Boolean(convertendoId) ||
+                                        !categoriaConversaoId
+                                    }
+                                    type="submit"
+                                >
+                                    {convertendoId
+                                        ? 'Salvando...'
+                                        : 'Confirmar troca'}
+                                </button>
+                            </div>
+                        </form>
+                    </section>
+                </div>
+            )}
         </main>
     )
 }

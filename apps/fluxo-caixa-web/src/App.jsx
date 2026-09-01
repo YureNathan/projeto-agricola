@@ -15,6 +15,7 @@ import Login from './paginas/Login.jsx'
 import Cadastro from './paginas/Cadastro.jsx'
 import EsqueciSenha from './paginas/EsqueciSenha.jsx'
 import RedefinirSenha from './paginas/RedefinirSenha.jsx'
+import AdminPainel from './paginas/AdminPainel.jsx'
 
 function App() {
     return (
@@ -42,6 +43,11 @@ function App() {
             <Route
                 path="/redefinir-senha"
                 element={<RedefinirSenha />}
+            />
+
+            <Route
+                path="/admin"
+                element={<AdminPainel />}
             />
 
             <Route

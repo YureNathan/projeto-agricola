@@ -17,6 +17,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "usuarios")
@@ -60,6 +61,20 @@ public class Usuario {
 
     @Column(name = "ultimo_login_em")
     private LocalDateTime ultimoLoginEm;
+
+    @Column(name = "acesso_liberado", nullable = false)
+    private boolean acessoLiberado = true;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status_pagamento", nullable = false, length = 30)
+    private StatusPagamento statusPagamento =
+            StatusPagamento.EM_DIA;
+
+    @Column(name = "data_vencimento_pagamento")
+    private LocalDate dataVencimentoPagamento;
+
+    @Column(name = "ultimo_uso_em")
+    private LocalDateTime ultimoUsoEm;
 
     @Version
     @Column(nullable = false)
@@ -144,6 +159,22 @@ public class Usuario {
         return ultimoLoginEm;
     }
 
+    public boolean isAcessoLiberado() {
+        return acessoLiberado;
+    }
+
+    public StatusPagamento getStatusPagamento() {
+        return statusPagamento;
+    }
+
+    public LocalDate getDataVencimentoPagamento() {
+        return dataVencimentoPagamento;
+    }
+
+    public LocalDateTime getUltimoUsoEm() {
+        return ultimoUsoEm;
+    }
+
     public Long getVersao() {
         return versao;
     }
@@ -154,5 +185,29 @@ public class Usuario {
 
     public LocalDateTime getAtualizadoEm() {
         return atualizadoEm;
+    }
+
+    public void registrarLogin(
+            LocalDateTime dataHora) {
+
+        this.ultimoLoginEm = dataHora;
+        this.ultimoUsoEm = dataHora;
+        this.tentativasLogin = 0;
+        this.bloqueadoAte = null;
+    }
+
+    public void alterarAcessoLiberado(
+            boolean acessoLiberado) {
+
+        this.acessoLiberado = acessoLiberado;
+    }
+
+    public void atualizarPagamento(
+            StatusPagamento statusPagamento,
+            LocalDate dataVencimentoPagamento) {
+
+        this.statusPagamento = statusPagamento;
+        this.dataVencimentoPagamento =
+                dataVencimentoPagamento;
     }
 }

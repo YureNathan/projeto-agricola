@@ -1,6 +1,6 @@
 package br.com.fluxocaixa.categoria;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class CategoriaComMovimentacoesException
@@ -8,13 +8,13 @@ public class CategoriaComMovimentacoesException
 
     private static final DateTimeFormatter
             FORMATADOR_DATA =
-            DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 
-    private final LocalDate dataReavaliacao;
+    private final LocalDateTime dataReavaliacao;
 
     public CategoriaComMovimentacoesException(
             String nomeCategoria,
-            LocalDate dataReavaliacao) {
+            LocalDateTime dataReavaliacao) {
 
         super(
                 "A categoria \""
@@ -32,7 +32,7 @@ public class CategoriaComMovimentacoesException
         this.dataReavaliacao = dataReavaliacao;
     }
 
-    public LocalDate getDataReavaliacao() {
+    public LocalDateTime getDataReavaliacao() {
         return dataReavaliacao;
     }
 }

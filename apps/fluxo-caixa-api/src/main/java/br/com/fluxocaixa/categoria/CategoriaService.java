@@ -8,7 +8,7 @@ import br.com.fluxocaixa.movimentacao.TipoMovimentacao;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
@@ -17,7 +17,7 @@ public class CategoriaService {
 
     private static final DateTimeFormatter
             FORMATADOR_DATA =
-            DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 
     private final CategoriaRepository categoriaRepository;
     private final EmpresaRepository empresaRepository;
@@ -231,7 +231,7 @@ public class CategoriaService {
                         categoria
                 );
 
-        LocalDate dataReavaliacao =
+        LocalDateTime dataReavaliacao =
                 calcularDataLiberacao(
                         categoriaArquivada
                 );
@@ -311,12 +311,12 @@ public class CategoriaService {
             );
         }
 
-        LocalDate dataLiberacao =
+        LocalDateTime dataLiberacao =
                 calcularDataLiberacao(
                         categoriaOrigem
                 );
 
-        if (LocalDate.now().isBefore(dataLiberacao)) {
+        if (LocalDateTime.now().isBefore(dataLiberacao)) {
             throw new TransferenciaCategoriaInvalidaException(
                     "Por segurança, aguarde até "
                             + dataLiberacao.format(
@@ -365,17 +365,16 @@ public class CategoriaService {
         }
     }
 
-    private LocalDate calcularDataLiberacao(
+    private LocalDateTime calcularDataLiberacao(
             Categoria categoria) {
 
         if (categoria.getArquivadaEm() == null) {
-            return LocalDate.now().plusDays(7);
+            return LocalDateTime.now().plusHours(36);
         }
 
         return categoria
                 .getArquivadaEm()
-                .toLocalDate()
-                .plusDays(7);
+                .plusHours(36);
     }
 
     private Categoria buscarCategoria(

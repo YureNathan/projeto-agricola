@@ -1,10 +1,7 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router'
+import { API_LOGIN_URL as API_LOGIN } from '../config.js'
 import './Autenticacao.css'
-
-import { API_LOGIN_URL } from '../config.js'
-
-const API_LOGIN = API_LOGIN_URL
 
 function Login() {
     const navigate = useNavigate()
@@ -75,9 +72,14 @@ function Login() {
                 String(expiraEm),
             )
 
-            navigate('/dashboard', {
+            navigate(
+                dados.usuario.papel === 'ADMINISTRADOR'
+                    ? '/admin'
+                    : '/dashboard',
+                {
                 replace: true,
-            })
+                },
+            )
         } catch (erro) {
             setMensagem(
                 erro instanceof Error
@@ -219,12 +221,6 @@ function Login() {
                                     {mostrarSenha ? '●' : '○'}
                                 </button>
                             </div>
-
-                            <p className="autenticacao-esqueci-senha">
-                                <Link to="/esqueci-senha">
-                                    Esqueci minha senha
-                                </Link>
-                            </p>
                         </div>
 
                         <button
@@ -239,6 +235,12 @@ function Login() {
                                 : 'Entrar'}
                         </button>
                     </form>
+
+                    <p className="autenticacao-alternativa">
+                        <Link to="/esqueci-senha">
+                            Esqueci minha senha
+                        </Link>
+                    </p>
 
                     <p className="autenticacao-alternativa">
                         Ainda não tem conta?{' '}

@@ -63,6 +63,10 @@ function formatarDataParaApi(data) {
     return `${ano}-${mes}-${dia}`
 }
 
+function obterDataAtual() {
+    return formatarDataParaApi(new Date())
+}
+
 function obterPeriodoFuturo(dias) {
     const dataInicial = new Date()
     const dataFinal = new Date()
@@ -360,6 +364,38 @@ async function obterMensagemDeErro(
         ?? mensagemPadrao
 }
 
+function obterNomeArquivo(
+    contentDisposition,
+    nomePadrao,
+) {
+    if (!contentDisposition) {
+        return nomePadrao
+    }
+
+    const nomeUtf8 =
+        contentDisposition.match(
+            /filename\*=UTF-8''([^;]+)/i,
+        )
+
+    if (nomeUtf8?.[1]) {
+        try {
+            return decodeURIComponent(
+                nomeUtf8[1],
+            )
+        } catch {
+            return nomeUtf8[1]
+        }
+    }
+
+    const nomeComum =
+        contentDisposition.match(
+            /filename="?([^";]+)"?/i,
+        )
+
+    return nomeComum?.[1]
+        ?? nomePadrao
+}
+
 function obterClasseSituacao(conta) {
     if (conta.situacao === 'QUITADA') {
         return 'contas-status-quitada'
@@ -449,6 +485,79 @@ function ContasFinanceiras() {
 
     const [erro, setErro] =
         useState('')
+
+    const [
+        contaParaLiquidar,
+        setContaParaLiquidar,
+    ] = useState(null)
+
+    const [
+        contaParaCancelar,
+        setContaParaCancelar,
+    ] = useState(null)
+
+    const [
+        categoriasLiquidacao,
+        setCategoriasLiquidacao,
+    ] = useState([])
+
+    const [
+        carregandoCategoriasLiquidacao,
+        setCarregandoCategoriasLiquidacao,
+    ] = useState(false)
+
+    const [
+        salvandoLiquidacao,
+        setSalvandoLiquidacao,
+    ] = useState(false)
+
+    const [
+        cancelandoConta,
+        setCancelandoConta,
+    ] = useState(false)
+
+    const [valorLiquidacao, setValorLiquidacao] =
+        useState('')
+
+    const [dataLiquidacao, setDataLiquidacao] =
+        useState(obterDataAtual)
+
+    const [
+        observacaoLiquidacao,
+        setObservacaoLiquidacao,
+    ] = useState('')
+
+    const [
+        lancarNoControleFinanceiro,
+        setLancarNoControleFinanceiro,
+    ] = useState(true)
+
+    const [
+        categoriaLiquidacaoId,
+        setCategoriaLiquidacaoId,
+    ] = useState('')
+
+    const [erroModal, setErroModal] =
+        useState('')
+
+    const [
+        baixandoRelatorio,
+        setBaixandoRelatorio,
+    ] = useState('')
+
+    function criarCabecalhos(possuiCorpo = false) {
+        const cabecalhos = {
+            Authorization:
+                `${sessao.tipoToken} ${sessao.token}`,
+        }
+
+        if (possuiCorpo) {
+            cabecalhos['Content-Type'] =
+                'application/json; charset=utf-8'
+        }
+
+        return cabecalhos
+    }
 
     const carregarDados =
         useCallback(async () => {
@@ -689,6 +798,11 @@ function ContasFinanceiras() {
             [contas],
         )
 
+    const contasVisiveis =
+        situacao === 'CANCELADA'
+            ? contas
+            : contasAtivas
+
     const pontosGrafico =
         useMemo(
             () =>
@@ -710,6 +824,354 @@ function ContasFinanceiras() {
         navigate(
             `/dashboard/contas/nova?tipo=${tipoConta}`,
         )
+    }
+
+    function abrirCategorias() {
+        navigate('/dashboard/categorias')
+    }
+
+    async function baixarRelatorio(tipoRelatorio) {
+        if (!sessao) {
+            return
+        }
+
+        const empresaId =
+            sessao.usuario.empresaId
+
+        const periodo =
+            obterPeriodoFuturo(diasGrafico)
+
+        const parametros =
+            new URLSearchParams({
+                dataInicial: periodo.dataInicial,
+                dataFinal: periodo.dataFinal,
+            })
+
+        const extensao =
+            tipoRelatorio === 'excel'
+                ? 'xlsx'
+                : 'pdf'
+
+        const nomePadrao =
+            `projecao-financeira.${extensao}`
+
+        try {
+            setBaixandoRelatorio(tipoRelatorio)
+            setErro('')
+
+            const resposta =
+                await fetch(
+                    `${API_URL}/empresas/${empresaId}/relatorios/${tipoRelatorio}?${parametros}`,
+                    {
+                        headers: criarCabecalhos(),
+                    },
+                )
+
+            if (
+                resposta.status === 401
+                || resposta.status === 403
+            ) {
+                limparSessao()
+
+                navigate('/login', {
+                    replace: true,
+                })
+
+                return
+            }
+
+            if (!resposta.ok) {
+                throw new Error(
+                    await obterMensagemDeErro(
+                        resposta,
+                        'Não foi possível gerar o relatório de projeção financeira.',
+                    ),
+                )
+            }
+
+            const arquivo =
+                await resposta.blob()
+
+            const nomeArquivo =
+                obterNomeArquivo(
+                    resposta.headers.get(
+                        'Content-Disposition',
+                    ),
+                    nomePadrao,
+                )
+
+            const urlArquivo =
+                URL.createObjectURL(arquivo)
+
+            const link =
+                document.createElement('a')
+
+            link.href = urlArquivo
+            link.download = nomeArquivo
+
+            document.body.appendChild(link)
+            link.click()
+            link.remove()
+
+            URL.revokeObjectURL(urlArquivo)
+        } catch (erroDoRelatorio) {
+            setErro(
+                erroDoRelatorio instanceof Error
+                    ? erroDoRelatorio.message
+                    : 'Não foi possível gerar o relatório de projeção financeira.',
+            )
+        } finally {
+            setBaixandoRelatorio('')
+        }
+    }
+
+    async function carregarCategoriasLiquidacao(conta) {
+        if (!sessao) {
+            return
+        }
+
+        const tipoCategoria =
+            conta.tipo === 'PAGAR'
+                ? 'DESPESA'
+                : 'RECEITA'
+
+        try {
+            setCarregandoCategoriasLiquidacao(true)
+            setErroModal('')
+
+            const empresaId =
+                sessao.usuario.empresaId
+
+            const resposta = await fetch(
+                `${API_URL}/empresas/${empresaId}/categorias?tipo=${tipoCategoria}`,
+                {
+                    headers: criarCabecalhos(),
+                },
+            )
+
+            if (
+                resposta.status === 401 ||
+                resposta.status === 403
+            ) {
+                limparSessao()
+
+                navigate('/login', {
+                    replace: true,
+                })
+
+                return
+            }
+
+            if (!resposta.ok) {
+                throw new Error(
+                    await obterMensagemDeErro(
+                        resposta,
+                        'Não foi possível carregar as categorias.',
+                    ),
+                )
+            }
+
+            const dados =
+                await resposta.json()
+
+            const categorias =
+                Array.isArray(dados)
+                    ? dados
+                    : []
+
+            setCategoriasLiquidacao(categorias)
+            setCategoriaLiquidacaoId(
+                categorias.length > 0
+                    ? String(categorias[0].id)
+                    : '',
+            )
+        } catch (erroDaRequisicao) {
+            setErroModal(
+                erroDaRequisicao instanceof Error
+                    ? erroDaRequisicao.message
+                    : 'Não foi possível carregar as categorias.',
+            )
+        } finally {
+            setCarregandoCategoriasLiquidacao(false)
+        }
+    }
+
+    function abrirLiquidacao(conta) {
+        setContaParaLiquidar(conta)
+        setValorLiquidacao(String(conta.valorPendente))
+        setDataLiquidacao(obterDataAtual())
+        setObservacaoLiquidacao('')
+        setLancarNoControleFinanceiro(true)
+        setCategoriasLiquidacao([])
+        setCategoriaLiquidacaoId('')
+        setErroModal('')
+
+        void carregarCategoriasLiquidacao(conta)
+    }
+
+    function fecharModalLiquidacao() {
+        if (salvandoLiquidacao) {
+            return
+        }
+
+        setContaParaLiquidar(null)
+        setErroModal('')
+    }
+
+    async function liquidarConta(evento) {
+        evento.preventDefault()
+
+        if (!sessao || !contaParaLiquidar) {
+            return
+        }
+
+        if (
+            lancarNoControleFinanceiro &&
+            !categoriaLiquidacaoId
+        ) {
+            setErroModal(
+                'Escolha uma categoria para lançar no dashboard financeiro.',
+            )
+
+            return
+        }
+
+        try {
+            setSalvandoLiquidacao(true)
+            setErroModal('')
+
+            const empresaId =
+                sessao.usuario.empresaId
+
+            const corpo = {
+                valor:
+                    Number(valorLiquidacao),
+                dataLiquidacao,
+                observacao:
+                    observacaoLiquidacao.trim()
+                    || null,
+                lancarNoControleFinanceiro,
+                categoriaId:
+                    lancarNoControleFinanceiro
+                        ? Number(
+                            categoriaLiquidacaoId,
+                        )
+                        : null,
+            }
+
+            const resposta = await fetch(
+                `${API_URL}/empresas/${empresaId}/contas-financeiras/${contaParaLiquidar.id}/liquidacoes`,
+                {
+                    method: 'POST',
+                    headers:
+                        criarCabecalhos(true),
+                    body:
+                        JSON.stringify(corpo),
+                },
+            )
+
+            if (
+                resposta.status === 401 ||
+                resposta.status === 403
+            ) {
+                limparSessao()
+
+                navigate('/login', {
+                    replace: true,
+                })
+
+                return
+            }
+
+            if (!resposta.ok) {
+                throw new Error(
+                    await obterMensagemDeErro(
+                        resposta,
+                        'Não foi possível quitar a conta.',
+                    ),
+                )
+            }
+
+            setContaParaLiquidar(null)
+            await carregarDados()
+        } catch (erroDaRequisicao) {
+            setErroModal(
+                erroDaRequisicao instanceof Error
+                    ? erroDaRequisicao.message
+                    : 'Não foi possível quitar a conta.',
+            )
+        } finally {
+            setSalvandoLiquidacao(false)
+        }
+    }
+
+    function abrirCancelamento(conta) {
+        setContaParaCancelar(conta)
+        setErroModal('')
+    }
+
+    function fecharModalCancelamento() {
+        if (cancelandoConta) {
+            return
+        }
+
+        setContaParaCancelar(null)
+        setErroModal('')
+    }
+
+    async function cancelarConta() {
+        if (!sessao || !contaParaCancelar) {
+            return
+        }
+
+        try {
+            setCancelandoConta(true)
+            setErroModal('')
+
+            const empresaId =
+                sessao.usuario.empresaId
+
+            const resposta = await fetch(
+                `${API_URL}/empresas/${empresaId}/contas-financeiras/${contaParaCancelar.id}/cancelar`,
+                {
+                    method: 'PATCH',
+                    headers: criarCabecalhos(),
+                },
+            )
+
+            if (
+                resposta.status === 401 ||
+                resposta.status === 403
+            ) {
+                limparSessao()
+
+                navigate('/login', {
+                    replace: true,
+                })
+
+                return
+            }
+
+            if (!resposta.ok) {
+                throw new Error(
+                    await obterMensagemDeErro(
+                        resposta,
+                        'Não foi possível cancelar a conta.',
+                    ),
+                )
+            }
+
+            setContaParaCancelar(null)
+            await carregarDados()
+        } catch (erroDaRequisicao) {
+            setErroModal(
+                erroDaRequisicao instanceof Error
+                    ? erroDaRequisicao.message
+                    : 'Não foi possível cancelar a conta.',
+            )
+        } finally {
+            setCancelandoConta(false)
+        }
     }
 
     if (!sessao) {
@@ -990,6 +1452,94 @@ function ContasFinanceiras() {
                     )}
                 </section>
 
+                <section className="contas-atalhos-painel">
+                    <div className="contas-lista-topo">
+                        <div>
+                            <p className="contas-etiqueta">
+                                Acesso rápido
+                            </p>
+
+                            <h2>
+                                Contas e categorias
+                            </h2>
+                        </div>
+                    </div>
+
+                    <div className="contas-atalhos">
+                        <button
+                            onClick={() =>
+                                criarConta('RECEBER')
+                            }
+                            type="button"
+                        >
+                            <span>+</span>
+                            Nova conta a receber
+                        </button>
+
+                        <button
+                            onClick={() =>
+                                criarConta('PAGAR')
+                            }
+                            type="button"
+                        >
+                            <span>-</span>
+                            Nova conta a pagar
+                        </button>
+
+                        <button
+                            onClick={abrirCategorias}
+                            type="button"
+                        >
+                            <span>≡</span>
+                            Gerenciar categorias
+                        </button>
+
+                        <button
+                            onClick={abrirCategorias}
+                            type="button"
+                        >
+                            <span>+</span>
+                            Criar categoria
+                        </button>
+
+                        <button
+                            disabled={Boolean(
+                                baixandoRelatorio,
+                            )}
+                            onClick={() =>
+                                baixarRelatorio(
+                                    'excel',
+                                )
+                            }
+                            type="button"
+                        >
+                            <span>▦</span>
+                            {baixandoRelatorio
+                            === 'excel'
+                                ? 'Gerando Excel...'
+                                : 'Excel da projeção'}
+                        </button>
+
+                        <button
+                            disabled={Boolean(
+                                baixandoRelatorio,
+                            )}
+                            onClick={() =>
+                                baixarRelatorio(
+                                    'pdf',
+                                )
+                            }
+                            type="button"
+                        >
+                            <span>▤</span>
+                            {baixandoRelatorio
+                            === 'pdf'
+                                ? 'Gerando PDF...'
+                                : 'PDF da projeção'}
+                        </button>
+                    </div>
+                </section>
+
                 <section
                     className="contas-lista-painel"
                     id="lista-contas"
@@ -999,7 +1549,7 @@ function ContasFinanceiras() {
                             <h2>Contas cadastradas</h2>
 
                             <p>
-                                {contasAtivas.length}{' '}
+                                {contasVisiveis.length}{' '}
                                 registros encontrados
                             </p>
                         </div>
@@ -1067,7 +1617,7 @@ function ContasFinanceiras() {
                         <div className="contas-vazio">
                             Carregando contas...
                         </div>
-                    ) : contas.length === 0 ? (
+                    ) : contasVisiveis.length === 0 ? (
                         <div className="contas-vazio">
                             <strong>
                                 Nenhuma conta encontrada
@@ -1081,7 +1631,7 @@ function ContasFinanceiras() {
                         </div>
                     ) : (
                         <div className="contas-lista">
-                            {contas.map((conta) => (
+                            {contasVisiveis.map((conta) => (
                                 <article
                                     className="contas-item"
                                     key={conta.id}
@@ -1178,12 +1728,294 @@ function ContasFinanceiras() {
                                             </small>
                                         )}
                                     </div>
+
+                                    <div className="contas-item-acoes">
+                                        {conta.situacao !== 'QUITADA'
+                                            && conta.situacao !== 'CANCELADA' && (
+                                                <button
+                                                    className="contas-acao-principal"
+                                                    onClick={() =>
+                                                        abrirLiquidacao(
+                                                            conta,
+                                                        )
+                                                    }
+                                                    type="button"
+                                                >
+                                                    Quitar
+                                                </button>
+                                            )}
+
+                                        {conta.situacao !== 'QUITADA'
+                                            && conta.situacao !== 'CANCELADA' && (
+                                                <button
+                                                    className="contas-acao-perigo"
+                                                    onClick={() =>
+                                                        abrirCancelamento(
+                                                            conta,
+                                                        )
+                                                    }
+                                                    type="button"
+                                                >
+                                                    Cancelar
+                                                </button>
+                                            )}
+                                    </div>
                                 </article>
                             ))}
                         </div>
                     )}
                 </section>
             </div>
+
+            {contaParaLiquidar && (
+                <div
+                    className="contas-modal-fundo"
+                    role="presentation"
+                >
+                    <section
+                        aria-modal="true"
+                        className="contas-modal"
+                        role="dialog"
+                    >
+                        <div className="contas-modal-topo">
+                            <div>
+                                <p className="contas-etiqueta">
+                                    Quitar conta
+                                </p>
+
+                                <h2>
+                                    {contaParaLiquidar.descricao}
+                                </h2>
+                            </div>
+
+                            <button
+                                aria-label="Fechar"
+                                onClick={fecharModalLiquidacao}
+                                type="button"
+                            >
+                                ×
+                            </button>
+                        </div>
+
+                        <form
+                            className="contas-modal-formulario"
+                            onSubmit={liquidarConta}
+                        >
+                            <div className="contas-modal-linha">
+                                <label>
+                                    Valor
+                                    <input
+                                        disabled={salvandoLiquidacao}
+                                        min="0.01"
+                                        onChange={(evento) =>
+                                            setValorLiquidacao(
+                                                evento.target.value,
+                                            )
+                                        }
+                                        required
+                                        step="0.01"
+                                        type="number"
+                                        value={valorLiquidacao}
+                                    />
+                                </label>
+
+                                <label>
+                                    Data
+                                    <input
+                                        disabled={salvandoLiquidacao}
+                                        max={obterDataAtual()}
+                                        onChange={(evento) =>
+                                            setDataLiquidacao(
+                                                evento.target.value,
+                                            )
+                                        }
+                                        required
+                                        type="date"
+                                        value={dataLiquidacao}
+                                    />
+                                </label>
+                            </div>
+
+                            <label className="contas-modal-check">
+                                <input
+                                    checked={
+                                        lancarNoControleFinanceiro
+                                    }
+                                    disabled={salvandoLiquidacao}
+                                    onChange={(evento) =>
+                                        setLancarNoControleFinanceiro(
+                                            evento.target.checked,
+                                        )
+                                    }
+                                    type="checkbox"
+                                />
+
+                                <span>
+                                    Lançar também no Dashboard financeiro
+                                </span>
+                            </label>
+
+                            {lancarNoControleFinanceiro && (
+                                <label>
+                                    Categoria no Dashboard financeiro
+                                    <select
+                                        disabled={
+                                            salvandoLiquidacao
+                                            || carregandoCategoriasLiquidacao
+                                        }
+                                        onChange={(evento) =>
+                                            setCategoriaLiquidacaoId(
+                                                evento.target.value,
+                                            )
+                                        }
+                                        required
+                                        value={categoriaLiquidacaoId}
+                                    >
+                                        {carregandoCategoriasLiquidacao ? (
+                                            <option value="">
+                                                Carregando categorias...
+                                            </option>
+                                        ) : categoriasLiquidacao.length === 0 ? (
+                                            <option value="">
+                                                Nenhuma categoria disponível
+                                            </option>
+                                        ) : (
+                                            categoriasLiquidacao.map(
+                                                (categoria) => (
+                                                    <option
+                                                        key={categoria.id}
+                                                        value={categoria.id}
+                                                    >
+                                                        {categoria.nome}
+                                                    </option>
+                                                ),
+                                            )
+                                        )}
+                                    </select>
+                                </label>
+                            )}
+
+                            {lancarNoControleFinanceiro
+                                && !carregandoCategoriasLiquidacao
+                                && categoriasLiquidacao.length === 0 && (
+                                    <button
+                                        className="contas-modal-link"
+                                        onClick={abrirCategorias}
+                                        type="button"
+                                    >
+                                        Criar categoria
+                                    </button>
+                                )}
+
+                            <label>
+                                Observação
+                                <textarea
+                                    disabled={salvandoLiquidacao}
+                                    maxLength="500"
+                                    onChange={(evento) =>
+                                        setObservacaoLiquidacao(
+                                            evento.target.value,
+                                        )
+                                    }
+                                    placeholder="Detalhes opcionais"
+                                    value={observacaoLiquidacao}
+                                />
+                            </label>
+
+                            {erroModal && (
+                                <p className="contas-modal-erro">
+                                    {erroModal}
+                                </p>
+                            )}
+
+                            <div className="contas-modal-acoes">
+                                <button
+                                    onClick={fecharModalLiquidacao}
+                                    type="button"
+                                >
+                                    Voltar
+                                </button>
+
+                                <button
+                                    className="contas-modal-confirmar"
+                                    disabled={salvandoLiquidacao}
+                                    type="submit"
+                                >
+                                    {salvandoLiquidacao
+                                        ? 'Quitando...'
+                                        : 'Confirmar quitação'}
+                                </button>
+                            </div>
+                        </form>
+                    </section>
+                </div>
+            )}
+
+            {contaParaCancelar && (
+                <div
+                    className="contas-modal-fundo"
+                    role="presentation"
+                >
+                    <section
+                        aria-modal="true"
+                        className="contas-modal contas-modal-perigo"
+                        role="dialog"
+                    >
+                        <div className="contas-modal-topo">
+                            <div>
+                                <p className="contas-etiqueta">
+                                    Cancelar conta
+                                </p>
+
+                                <h2>
+                                    {contaParaCancelar.descricao}
+                                </h2>
+                            </div>
+
+                            <button
+                                aria-label="Fechar"
+                                onClick={fecharModalCancelamento}
+                                type="button"
+                            >
+                                ×
+                            </button>
+                        </div>
+
+                        <p className="contas-modal-texto">
+                            Tem certeza que deseja cancelar esta conta?
+                            Depois disso ela não entrará mais nas
+                            projeções e a operação não poderá ser
+                            desfeita pela tela.
+                        </p>
+
+                        {erroModal && (
+                            <p className="contas-modal-erro">
+                                {erroModal}
+                            </p>
+                        )}
+
+                        <div className="contas-modal-acoes">
+                            <button
+                                onClick={fecharModalCancelamento}
+                                type="button"
+                            >
+                                Voltar
+                            </button>
+
+                            <button
+                                className="contas-modal-confirmar-perigo"
+                                disabled={cancelandoConta}
+                                onClick={cancelarConta}
+                                type="button"
+                            >
+                                {cancelandoConta
+                                    ? 'Cancelando...'
+                                    : 'Sim, cancelar conta'}
+                            </button>
+                        </div>
+                    </section>
+                </div>
+            )}
         </div>
     )
 }

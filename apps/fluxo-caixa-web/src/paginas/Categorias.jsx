@@ -117,6 +117,8 @@ function Categorias() {
     const [tipo, setTipo] = useState('RECEITA')
     const [erro, setErro] = useState('')
     const [sucesso, setSucesso] = useState('')
+    const [confirmacao, setConfirmacao] =
+        useState(null)
 
     const empresaId =
         sessao?.usuario?.empresaId
@@ -412,16 +414,6 @@ function Categorias() {
             ? 'desativar'
             : 'ativar'
 
-        if (categoria.ativo) {
-            const confirmou = window.confirm(
-                `Deseja desativar a categoria "${categoria.nome}"?\n\nAs movimentações antigas serão preservadas.`,
-            )
-
-            if (!confirmou) {
-                return
-            }
-        }
-
         try {
             setAlterandoId(categoria.id)
             setErro('')
@@ -505,20 +497,6 @@ function Categorias() {
     }
 
     async function excluirCategoria(categoria) {
-        const confirmou = window.confirm(
-            `Excluir a categoria "${categoria.nome}"?\n\n` +
-            'Se ela nunca foi utilizada, será excluída ' +
-            'definitivamente e essa ação não poderá ser desfeita.\n\n' +
-            'Se possuir movimentações, nenhum dado financeiro ' +
-            'será apagado: a categoria será arquivada e o sistema ' +
-            'informará a data de reavaliação.\n\n' +
-            'Deseja continuar?',
-        )
-
-        if (!confirmou) {
-            return
-        }
-
         try {
             setExcluindoId(categoria.id)
             setErro('')
@@ -581,6 +559,58 @@ function Categorias() {
         } finally {
             setExcluindoId(null)
         }
+    }
+
+    function solicitarAlteracaoSituacao(categoria) {
+        if (!categoria.ativo) {
+            void alterarSituacao(categoria)
+            return
+        }
+
+        setErro('')
+        setSucesso('')
+        setConfirmacao({
+            tipo: 'desativar',
+            categoria,
+        })
+    }
+
+    function solicitarExclusao(categoria) {
+        setErro('')
+        setSucesso('')
+        setConfirmacao({
+            tipo: 'excluir',
+            categoria,
+        })
+    }
+
+    function fecharConfirmacao() {
+        if (
+            confirmacao?.categoria?.id === alterandoId ||
+            confirmacao?.categoria?.id === excluindoId
+        ) {
+            return
+        }
+
+        setConfirmacao(null)
+    }
+
+    async function confirmarAcao() {
+        if (!confirmacao) {
+            return
+        }
+
+        if (confirmacao.tipo === 'desativar') {
+            await alterarSituacao(
+                confirmacao.categoria,
+            )
+        } else {
+            await excluirCategoria(
+                confirmacao.categoria,
+            )
+        }
+
+        setConfirmacao(null)
     }
 
     function renderizarCategoria(categoria) {
@@ -658,7 +688,9 @@ function Categorias() {
                         }
                         disabled={ocupada}
                         onClick={() =>
-                            alterarSituacao(categoria)
+                            solicitarAlteracaoSituacao(
+                                categoria,
+                            )
                         }
                         type="button"
                     >
@@ -673,7 +705,9 @@ function Categorias() {
                         className="categoria-excluir"
                         disabled={ocupada}
                         onClick={() =>
-                            excluirCategoria(categoria)
+                            solicitarExclusao(
+                                categoria,
+                            )
                         }
                         type="button"
                     >
@@ -908,6 +942,84 @@ function Categorias() {
                     </div>
                 )}
             </section>
+
+            {confirmacao && (
+                <div
+                    className="categorias-modal-fundo"
+                    role="presentation"
+                >
+                    <section
+                        aria-modal="true"
+                        className="categorias-modal"
+                        role="dialog"
+                    >
+                        <div className="categorias-modal-topo">
+                            <p className="categorias-etiqueta">
+                                Confirmação necessária
+                            </p>
+
+                            <button
+                                aria-label="Fechar confirmação"
+                                onClick={fecharConfirmacao}
+                                type="button"
+                            >
+                                ×
+                            </button>
+                        </div>
+
+                        <h2>
+                            {confirmacao.tipo === 'desativar'
+                                ? 'Desativar categoria?'
+                                : 'Excluir categoria?'}
+                        </h2>
+
+                        <p>
+                            {confirmacao.tipo === 'desativar'
+                                ? `A categoria "${confirmacao.categoria.nome}" será desativada. As movimentações antigas serão preservadas.`
+                                : `A categoria "${confirmacao.categoria.nome}" será excluída se nunca tiver sido usada. Se já possuir movimentações, ela será arquivada e só poderá ser revisada após 36 horas.`}
+                        </p>
+
+                        {confirmacao.tipo === 'excluir' && (
+                            <strong>
+                                Depois de excluir uma categoria
+                                sem movimentações, não será
+                                possível recuperar essa ação.
+                            </strong>
+                        )}
+
+                        <div className="categorias-modal-acoes">
+                            <button
+                                className="categorias-modal-cancelar"
+                                onClick={fecharConfirmacao}
+                                type="button"
+                            >
+                                Voltar
+                            </button>
+
+                            <button
+                                className="categorias-modal-confirmar"
+                                disabled={
+                                    confirmacao.categoria.id ===
+                                    alterandoId ||
+                                    confirmacao.categoria.id ===
+                                    excluindoId
+                                }
+                                onClick={confirmarAcao}
+                                type="button"
+                            >
+                                {confirmacao.categoria.id ===
+                                    alterandoId ||
+                                confirmacao.categoria.id ===
+                                    excluindoId
+                                    ? 'Aguarde...'
+                                    : confirmacao.tipo === 'desativar'
+                                      ? 'Sim, desativar'
+                                      : 'Sim, excluir'}
+                            </button>
+                        </div>
+                    </section>
+                </div>
+            )}
         </main>
     )
 }

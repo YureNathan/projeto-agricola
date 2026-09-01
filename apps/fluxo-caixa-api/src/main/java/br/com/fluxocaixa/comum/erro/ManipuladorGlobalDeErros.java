@@ -1,5 +1,7 @@
 package br.com.fluxocaixa.comum.erro;
 
+import br.com.fluxocaixa.admin.AcessoAdministrativoNegadoException;
+import br.com.fluxocaixa.admin.AcessoUsuarioBloqueadoException;
 import br.com.fluxocaixa.autenticacao.CredenciaisInvalidasException;
 import br.com.fluxocaixa.categoria.CategoriaComMovimentacoesException;
 import br.com.fluxocaixa.categoria.CategoriaJaCadastradaException;
@@ -12,6 +14,7 @@ import br.com.fluxocaixa.movimentacao.PeriodoInvalidoException;
 import br.com.fluxocaixa.movimentacao.TipoMovimentacaoIncompativelException;
 import br.com.fluxocaixa.recuperacaosenha.TokenRecuperacaoSenhaInvalidoException;
 import br.com.fluxocaixa.usuario.EmailJaCadastradoException;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -83,6 +86,36 @@ public class ManipuladorGlobalDeErros {
         );
     }
 
+    @ExceptionHandler(AcessoUsuarioBloqueadoException.class)
+    public ResponseEntity<ErroResposta>
+    tratarAcessoUsuarioBloqueado(
+            AcessoUsuarioBloqueadoException exception,
+            HttpServletRequest request) {
+
+        return criarResposta(
+                HttpStatus.FORBIDDEN,
+                "Acesso bloqueado",
+                exception.getMessage(),
+                request.getRequestURI(),
+                Map.of()
+        );
+    }
+
+    @ExceptionHandler(AcessoAdministrativoNegadoException.class)
+    public ResponseEntity<ErroResposta>
+    tratarAcessoAdministrativoNegado(
+            AcessoAdministrativoNegadoException exception,
+            HttpServletRequest request) {
+
+        return criarResposta(
+                HttpStatus.FORBIDDEN,
+                "Acesso administrativo negado",
+                exception.getMessage(),
+                request.getRequestURI(),
+                Map.of()
+        );
+    }
+
     @ExceptionHandler(CategoriaJaCadastradaException.class)
     public ResponseEntity<ErroResposta>
     tratarCategoriaDuplicada(
@@ -113,6 +146,10 @@ public class ManipuladorGlobalDeErros {
                 request.getRequestURI(),
                 Map.of(
                         "dataReavaliacao",
+                        exception.getDataReavaliacao()
+                                .toLocalDate()
+                                .toString(),
+                        "dataHoraReavaliacao",
                         exception.getDataReavaliacao()
                                 .toString()
                 )
@@ -145,6 +182,21 @@ public class ManipuladorGlobalDeErros {
         return criarResposta(
                 HttpStatus.NOT_FOUND,
                 "Empresa não encontrada",
+                exception.getMessage(),
+                request.getRequestURI(),
+                Map.of()
+        );
+    }
+
+    @ExceptionHandler(EntityNotFoundException.class)
+    public ResponseEntity<ErroResposta>
+    tratarEntidadeNaoEncontrada(
+            EntityNotFoundException exception,
+            HttpServletRequest request) {
+
+        return criarResposta(
+                HttpStatus.NOT_FOUND,
+                "Registro nao encontrado",
                 exception.getMessage(),
                 request.getRequestURI(),
                 Map.of()

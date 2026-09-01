@@ -588,6 +588,100 @@
     line-height: 1.5;
 }
 
+.categorias-modal-fundo {
+    position: fixed;
+    inset: 0;
+    z-index: 40;
+    display: grid;
+    padding: 20px;
+    place-items: center;
+    background: rgb(15 23 42 / 0.42);
+}
+
+.categorias-modal {
+    width: min(100%, 460px);
+    padding: 22px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--card);
+    box-shadow: 0 22px 70px rgb(15 23 42 / 0.22);
+}
+
+.categorias-modal-topo {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.categorias-modal-topo button {
+    display: grid;
+    width: 34px;
+    height: 34px;
+    place-items: center;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--muted);
+    color: var(--foreground);
+    font-size: 1.2rem;
+    cursor: pointer;
+}
+
+.categorias-modal h2 {
+    margin: 12px 0 8px;
+    color: var(--foreground);
+    font-size: 1.25rem;
+}
+
+.categorias-modal p,
+.categorias-modal strong {
+    display: block;
+    margin: 0;
+    color: var(--muted-foreground);
+    font-size: 0.86rem;
+    line-height: 1.55;
+}
+
+.categorias-modal strong {
+    margin-top: 12px;
+    color: var(--destructive);
+}
+
+.categorias-modal-acoes {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 22px;
+}
+
+.categorias-modal-cancelar,
+.categorias-modal-confirmar {
+    min-height: 38px;
+    padding: 0 15px;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 0.78rem;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.categorias-modal-cancelar {
+    border: 1px solid var(--border);
+    background: var(--card);
+    color: var(--foreground);
+}
+
+.categorias-modal-confirmar {
+    border: 1px solid var(--destructive);
+    background: var(--destructive);
+    color: white;
+}
+
+.categorias-modal-confirmar:disabled {
+    cursor: not-allowed;
+    opacity: 0.55;
+}
+
 @media (max-width: 820px) {
     .categorias-colunas {
         grid-template-columns: 1fr;
