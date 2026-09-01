@@ -1,0 +1,21 @@
+# Ambiente / segredos
+.env
+*.env.local
+.env.*.local
+!.env.example
+
+# Builds & dependências
+target/
+node_modules/
+dist/
+
+# IDEs
+.idea/
+.vscode/
+*.iml
+
+# Legado
+legado/
+
+# Logs
+*.log

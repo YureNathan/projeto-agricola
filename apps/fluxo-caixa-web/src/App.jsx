@@ -1,0 +1,78 @@
+import {
+    Route,
+    Routes,
+} from 'react-router'
+import PaginaInicial from './PaginaInicial.jsx'
+import EscolhaModulo from './paginas/EscolhaModulo.jsx'
+import Dashboard from './paginas/Dashboard.jsx'
+import Movimentacoes from './paginas/Movimentacoes.jsx'
+import NovaMovimentacao from './paginas/NovaMovimentacao.jsx'
+import EditarMovimentacao from './paginas/EditarMovimentacao.jsx'
+import Categorias from './paginas/Categorias.jsx'
+import ContasFinanceiras from './paginas/ContasFinanceiras.jsx'
+import NovaContaFinanceira from './paginas/NovaContaFinanceira.jsx'
+import Login from './paginas/Login.jsx'
+import Cadastro from './paginas/Cadastro.jsx'
+
+function App() {
+    return (
+        <Routes>
+            <Route
+                path="/"
+                element={<PaginaInicial />}
+            />
+
+            <Route
+                path="/login"
+                element={<Login />}
+            />
+
+            <Route
+                path="/cadastro"
+                element={<Cadastro />}
+            />
+
+            <Route
+                path="/dashboard"
+                element={<EscolhaModulo />}
+            />
+
+            <Route
+                path="/dashboard/financeiro"
+                element={<Dashboard />}
+            />
+
+            <Route
+                path="/dashboard/movimentacoes"
+                element={<Movimentacoes />}
+            />
+
+            <Route
+                path="/dashboard/movimentacoes/nova"
+                element={<NovaMovimentacao />}
+            />
+
+            <Route
+                path="/dashboard/movimentacoes/:movimentacaoId/editar"
+                element={<EditarMovimentacao />}
+            />
+
+            <Route
+                path="/dashboard/categorias"
+                element={<Categorias />}
+            />
+
+            <Route
+                path="/dashboard/contas"
+                element={<ContasFinanceiras />}
+            />
+
+            <Route
+                path="/dashboard/contas/nova"
+                element={<NovaContaFinanceira />}
+            />
+        </Routes>
+    )
+}
+
+export default App
