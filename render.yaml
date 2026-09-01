@@ -24,7 +24,7 @@ services:
         sync: false
       - key: DB_PASSWORD
         sync: false
-      - key: APP_WEB_ORIGIN
+      - key: APP_WEB_ORIGINS
         sync: false
       - key: APP_RECUPERACAO_SENHA_URL
         sync: false
