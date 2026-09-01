@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -19,6 +21,11 @@ import java.util.Optional;
 
 @Service
 public class RecuperacaoSenhaService {
+
+    private static final Logger log =
+            LoggerFactory.getLogger(
+                    RecuperacaoSenhaService.class
+            );
 
     private final UsuarioRepository usuarioRepository;
     private final RecuperacaoSenhaRepository recuperacaoSenhaRepository;
@@ -95,11 +102,23 @@ public class RecuperacaoSenhaService {
                         + "?token="
                         + token;
 
-        emailRecuperacaoSenhaService.enviar(
-                usuario.getEmail(),
-                usuario.getNome(),
-                linkRecuperacao
-        );
+        try {
+
+            emailRecuperacaoSenhaService.enviar(
+                    usuario.getEmail(),
+                    usuario.getNome(),
+                    linkRecuperacao
+            );
+
+        } catch (RuntimeException exception) {
+
+            log.error(
+                    "Falha ao enviar e-mail de recuperação de senha "
+                            + "para o usuário {}.",
+                    usuario.getId(),
+                    exception
+            );
+        }
     }
 
     @Transactional
