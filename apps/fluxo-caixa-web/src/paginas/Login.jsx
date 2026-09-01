@@ -219,6 +219,12 @@ function Login() {
                                     {mostrarSenha ? '●' : '○'}
                                 </button>
                             </div>
+
+                            <p className="autenticacao-esqueci-senha">
+                                <Link to="/esqueci-senha">
+                                    Esqueci minha senha
+                                </Link>
+                            </p>
                         </div>
 
                         <button

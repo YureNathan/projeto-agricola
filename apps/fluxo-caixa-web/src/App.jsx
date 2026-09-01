@@ -13,6 +13,8 @@ import ContasFinanceiras from './paginas/ContasFinanceiras.jsx'
 import NovaContaFinanceira from './paginas/NovaContaFinanceira.jsx'
 import Login from './paginas/Login.jsx'
 import Cadastro from './paginas/Cadastro.jsx'
+import EsqueciSenha from './paginas/EsqueciSenha.jsx'
+import RedefinirSenha from './paginas/RedefinirSenha.jsx'
 
 function App() {
     return (
@@ -30,6 +32,16 @@ function App() {
             <Route
                 path="/cadastro"
                 element={<Cadastro />}
+            />
+
+            <Route
+                path="/esqueci-senha"
+                element={<EsqueciSenha />}
+            />
+
+            <Route
+                path="/redefinir-senha"
+                element={<RedefinirSenha />}
             />
 
             <Route

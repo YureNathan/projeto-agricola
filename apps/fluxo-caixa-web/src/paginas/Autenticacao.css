@@ -249,6 +249,23 @@
     color: var(--primary);
 }
 
+.autenticacao-esqueci-senha {
+    margin: 0;
+    text-align: right;
+}
+
+.autenticacao-esqueci-senha a {
+    color: var(--muted-foreground);
+    font-size: 0.68rem;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+.autenticacao-esqueci-senha a:hover {
+    color: var(--primary);
+    filter: brightness(0.85);
+}
+
 /*
  * Escolha das atividades da propriedade
  */
