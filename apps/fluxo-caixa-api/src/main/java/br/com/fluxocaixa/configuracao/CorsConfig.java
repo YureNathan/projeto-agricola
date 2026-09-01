@@ -30,7 +30,7 @@ public class CorsConfig {
         CorsConfiguration configuracao =
                 new CorsConfiguration();
 
-        configuracao.setAllowedOrigins(
+        configuracao.setAllowedOriginPatterns(
                 Arrays
                         .stream(
                                 propriedadesSeguranca
