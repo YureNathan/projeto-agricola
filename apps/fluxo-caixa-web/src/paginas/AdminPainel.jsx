@@ -275,6 +275,10 @@ function AdminPainel() {
         navigate('/login', { replace: true })
     }
 
+    function abrirSistema() {
+        navigate('/dashboard')
+    }
+
     return (
         <main className="admin-painel">
             <header className="admin-topo">
@@ -290,13 +294,23 @@ function AdminPainel() {
                     </p>
                 </div>
 
-                <button
-                    className="admin-botao-secundario"
-                    onClick={sair}
-                    type="button"
-                >
-                    Sair da conta
-                </button>
+                <div className="admin-topo-acoes">
+                    <button
+                        className="admin-botao-primario"
+                        onClick={abrirSistema}
+                        type="button"
+                    >
+                        Ir para o sistema
+                    </button>
+
+                    <button
+                        className="admin-botao-secundario"
+                        onClick={sair}
+                        type="button"
+                    >
+                        Sair da conta
+                    </button>
+                </div>
             </header>
 
             {mensagem && (

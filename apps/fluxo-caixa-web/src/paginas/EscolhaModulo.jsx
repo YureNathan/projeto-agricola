@@ -109,6 +109,10 @@ function EscolhaModulo() {
         )
     }
 
+    function abrirAreaAdministrativa() {
+        navigate('/admin')
+    }
+
     function sair() {
         limparSessao()
 
@@ -144,13 +148,26 @@ function EscolhaModulo() {
                         </div>
                     </div>
 
-                    <button
-                        className="escolha-modulo-sair"
-                        onClick={sair}
-                        type="button"
-                    >
-                        Sair da conta
-                    </button>
+                    <div className="escolha-modulo-acoes-topo">
+                        {sessao.usuario.papel ===
+                            'ADMINISTRADOR' && (
+                            <button
+                                className="escolha-modulo-admin"
+                                onClick={abrirAreaAdministrativa}
+                                type="button"
+                            >
+                                Area administrativa
+                            </button>
+                        )}
+
+                        <button
+                            className="escolha-modulo-sair"
+                            onClick={sair}
+                            type="button"
+                        >
+                            Sair da conta
+                        </button>
+                    </div>
                 </header>
 
                 <main>

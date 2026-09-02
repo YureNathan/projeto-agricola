@@ -14,6 +14,13 @@
     max-width: 1180px;
 }
 
+.admin-topo-acoes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: flex-end;
+}
+
 .admin-marca,
 .admin-etiqueta {
     color: #2f8300;
@@ -213,6 +220,11 @@
 @media (max-width: 860px) {
     .admin-topo {
         flex-direction: column;
+    }
+
+    .admin-topo-acoes {
+        justify-content: flex-start;
+        width: 100%;
     }
 
     .admin-resumo {
