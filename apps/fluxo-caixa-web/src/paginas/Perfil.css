@@ -154,3 +154,30 @@
         width: 100%;
     }
 }
+
+/*
+ * Feedback e carregamento
+ */
+
+.perfil-aviso-erro {
+    color: #a3271c;
+    border-color: #e6c3bd;
+    background: #fff5f3;
+}
+
+.perfil-aviso-sucesso {
+    color: #235f00;
+    border-color: #cfe4c3;
+    background: #f4fbef;
+}
+
+.perfil-esqueleto {
+    display: grid;
+    gap: 16px;
+    padding: 22px;
+}
+
+.perfil-esqueleto-campo {
+    display: grid;
+    gap: 8px;
+}

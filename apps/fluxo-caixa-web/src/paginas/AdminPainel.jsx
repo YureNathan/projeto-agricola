@@ -5,6 +5,11 @@ import {
 } from 'react'
 import { useNavigate } from 'react-router'
 import { API_BASE_URL as API_URL } from '../config.js'
+import Esqueleto from '../componentes/Esqueleto.jsx'
+import {
+    aoClicarFundo,
+    useFecharModal,
+} from '../componentes/useFecharModal.js'
 import './AdminPainel.css'
 
 const STATUS_PAGAMENTO = [
@@ -113,11 +118,14 @@ function AdminPainel() {
     const [sessao] = useState(() => obterSessao())
     const [usuarios, setUsuarios] = useState([])
     const [mensagem, setMensagem] = useState('')
+    const [tipoMensagem, setTipoMensagem] = useState('sucesso')
     const [carregando, setCarregando] = useState(true)
     const [salvandoId, setSalvandoId] = useState(null)
     const [diasAcesso, setDiasAcesso] = useState({})
     const [usuarioEmEdicao, setUsuarioEmEdicao] =
         useState(null)
+
+    useFecharModal(Boolean(usuarioEmEdicao), fecharEdicao)
     const [formularioEdicao, setFormularioEdicao] =
         useState({
             nomeEmpresa: '',
@@ -202,6 +210,7 @@ function AdminPainel() {
 
             setUsuarios(await resposta.json())
         } catch (erro) {
+            setTipoMensagem('erro')
             setMensagem(
                 erro instanceof Error
                     ? erro.message
@@ -331,7 +340,9 @@ function AdminPainel() {
             )
 
             setMensagem('Alteração salva com sucesso.')
+            setTipoMensagem('sucesso')
         } catch (erro) {
+            setTipoMensagem('erro')
             setMensagem(
                 erro instanceof Error
                     ? erro.message
@@ -382,6 +393,7 @@ function AdminPainel() {
             setMensagem(
                 'Escolha Agricultura, Pecuaria ou as duas atividades.',
             )
+            setTipoMensagem('erro')
             return
         }
 
@@ -420,7 +432,9 @@ function AdminPainel() {
             )
             setUsuarioEmEdicao(null)
             setMensagem('Dados do usuario salvos com sucesso.')
+            setTipoMensagem('sucesso')
         } catch (erro) {
+            setTipoMensagem('erro')
             setMensagem(
                 erro instanceof Error
                     ? erro.message
@@ -475,7 +489,14 @@ function AdminPainel() {
             </header>
 
             {mensagem && (
-                <div className="admin-aviso" role="status">
+                <div
+                    className={`admin-aviso admin-aviso-${tipoMensagem}`}
+                    role={
+                        tipoMensagem === 'erro'
+                            ? 'alert'
+                            : 'status'
+                    }
+                >
                     {mensagem}
                 </div>
             )}
@@ -524,9 +545,19 @@ function AdminPainel() {
                 </div>
 
                 {carregando ? (
-                    <p className="admin-vazio">
-                        Carregando usuários...
-                    </p>
+                    <div
+                        aria-busy="true"
+                        aria-live="polite"
+                        className="admin-esqueleto"
+                    >
+                        {[0, 1, 2, 3, 4].map((indice) => (
+                            <Esqueleto
+                                altura="48px"
+                                key={indice}
+                                largura="100%"
+                            />
+                        ))}
+                    </div>
                 ) : (
                     <div className="admin-tabela-area">
                         <table className="admin-tabela">
@@ -804,6 +835,9 @@ function AdminPainel() {
             {usuarioEmEdicao && (
                 <div
                     className="admin-modal-fundo"
+                    onClick={(evento) =>
+                        aoClicarFundo(evento, fecharEdicao)
+                    }
                     role="presentation"
                 >
                     <form

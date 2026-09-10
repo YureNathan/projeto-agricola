@@ -1016,3 +1016,36 @@ button:hover:not(:disabled) {
         r: 3px;
     }
 }
+
+/*
+ * Estado de carregamento (skeleton)
+ */
+
+.dashboard-esqueleto {
+    display: grid;
+    min-height: 100vh;
+    padding: 34px clamp(18px, 4vw, 46px);
+    align-content: start;
+    gap: 22px;
+    background: var(--background);
+}
+
+.dashboard-esqueleto-cards {
+    display: grid;
+    gap: 14px;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+}
+
+.dashboard-esqueleto-card {
+    display: grid;
+    padding: 18px;
+    gap: 12px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--card);
+}
+
+.dashboard-esqueleto-lista {
+    display: grid;
+    gap: 10px;
+}

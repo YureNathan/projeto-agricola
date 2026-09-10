@@ -146,7 +146,7 @@ function Login() {
 
                     {mensagem && (
                         <div
-                            className="autenticacao-sucesso"
+                            className="autenticacao-alerta"
                             role="alert"
                         >
                             {mensagem}

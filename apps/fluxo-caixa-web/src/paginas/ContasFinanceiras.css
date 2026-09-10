@@ -1232,3 +1232,12 @@
         min-width: 600px;
     }
 }
+
+/*
+ * Estado de carregamento (skeleton)
+ */
+
+.contas-esqueleto {
+    display: grid;
+    gap: 12px;
+}

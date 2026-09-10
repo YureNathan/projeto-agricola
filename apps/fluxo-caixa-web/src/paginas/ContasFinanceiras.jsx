@@ -8,6 +8,11 @@ import {
     useNavigate,
 } from 'react-router'
 import AlternadorModulos from '../componentes/AlternadorModulos.jsx'
+import Esqueleto from '../componentes/Esqueleto.jsx'
+import {
+    aoClicarFundo,
+    useFecharModal,
+} from '../componentes/useFecharModal.js'
 import { API_BASE_URL as API_URL } from '../config.js'
 import './ContasFinanceiras.css'
 
@@ -500,6 +505,16 @@ function ContasFinanceiras() {
         contaParaCancelar,
         setContaParaCancelar,
     ] = useState(null)
+
+    useFecharModal(
+        Boolean(contaParaLiquidar),
+        () => setContaParaLiquidar(null),
+    )
+
+    useFecharModal(
+        Boolean(contaParaCancelar),
+        () => setContaParaCancelar(null),
+    )
 
     const [
         contaParaExcluirPermanente,
@@ -1997,8 +2012,19 @@ function ContasFinanceiras() {
                     </div>
 
                     {carregando ? (
-                        <div className="contas-vazio">
-                            Carregando contas...
+                        <div
+                            aria-busy="true"
+                            aria-live="polite"
+                            className="contas-esqueleto"
+                        >
+                            {[0, 1, 2, 3].map((indice) => (
+                                <Esqueleto
+                                    altura="88px"
+                                    key={indice}
+                                    largura="100%"
+                                    raio="var(--radius)"
+                                />
+                            ))}
                         </div>
                     ) : contasVisiveis.length === 0 ? (
                         <div className="contas-vazio">
@@ -2206,6 +2232,11 @@ function ContasFinanceiras() {
             {contaParaLiquidar && (
                 <div
                     className="contas-modal-fundo"
+                    onClick={(evento) =>
+                        aoClicarFundo(evento, () =>
+                            setContaParaLiquidar(null),
+                        )
+                    }
                     role="presentation"
                 >
                     <section
@@ -2390,6 +2421,11 @@ function ContasFinanceiras() {
             {contaParaCancelar && (
                 <div
                     className="contas-modal-fundo"
+                    onClick={(evento) =>
+                        aoClicarFundo(evento, () =>
+                            setContaParaCancelar(null),
+                        )
+                    }
                     role="presentation"
                 >
                     <section

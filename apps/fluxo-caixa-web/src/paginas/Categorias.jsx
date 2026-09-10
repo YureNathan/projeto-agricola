@@ -8,6 +8,11 @@ import {
     useNavigate,
 } from 'react-router'
 import { API_BASE_URL } from '../config.js'
+import Esqueleto from '../componentes/Esqueleto.jsx'
+import {
+    aoClicarFundo,
+    useFecharModal,
+} from '../componentes/useFecharModal.js'
 import './Categorias.css'
 
 function limparSessao() {
@@ -122,6 +127,11 @@ function Categorias() {
         avisoCategoriaBloqueada,
         setAvisoCategoriaBloqueada,
     ] = useState('')
+
+    useFecharModal(
+        Boolean(confirmacao),
+        () => setConfirmacao(null),
+    )
 
     const empresaId =
         sessao?.usuario?.empresaId
@@ -885,9 +895,31 @@ function Categorias() {
                 </div>
 
                 {carregando ? (
-                    <p className="categorias-vazio">
-                        Carregando categorias...
-                    </p>
+                    <div
+                        aria-busy="true"
+                        aria-live="polite"
+                        className="categorias-esqueleto"
+                    >
+                        <div className="categorias-esqueleto-coluna">
+                            {[0, 1, 2].map((indice) => (
+                                <Esqueleto
+                                    altura="64px"
+                                    key={indice}
+                                    largura="100%"
+                                />
+                            ))}
+                        </div>
+
+                        <div className="categorias-esqueleto-coluna">
+                            {[0, 1, 2].map((indice) => (
+                                <Esqueleto
+                                    altura="64px"
+                                    key={indice}
+                                    largura="100%"
+                                />
+                            ))}
+                        </div>
+                    </div>
                 ) : (
                     <div className="categorias-colunas">
                         <section className="categorias-grupo categorias-grupo-receitas">
@@ -954,6 +986,11 @@ function Categorias() {
             {confirmacao && (
                 <div
                     className="categorias-modal-fundo"
+                    onClick={(evento) =>
+                        aoClicarFundo(evento, () =>
+                            setConfirmacao(null),
+                        )
+                    }
                     role="presentation"
                 >
                     <section

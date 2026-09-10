@@ -1,107 +1,149 @@
 import {
+    lazy,
+    Suspense,
+} from 'react'
+import {
     Route,
     Routes,
+    useLocation,
 } from 'react-router'
 import PaginaInicial from './PaginaInicial.jsx'
-import EscolhaModulo from './paginas/EscolhaModulo.jsx'
-import Dashboard from './paginas/Dashboard.jsx'
-import Movimentacoes from './paginas/Movimentacoes.jsx'
-import NovaMovimentacao from './paginas/NovaMovimentacao.jsx'
-import EditarMovimentacao from './paginas/EditarMovimentacao.jsx'
-import Categorias from './paginas/Categorias.jsx'
-import ContasFinanceiras from './paginas/ContasFinanceiras.jsx'
-import NovaContaFinanceira from './paginas/NovaContaFinanceira.jsx'
 import Login from './paginas/Login.jsx'
 import Cadastro from './paginas/Cadastro.jsx'
-import EsqueciSenha from './paginas/EsqueciSenha.jsx'
-import RedefinirSenha from './paginas/RedefinirSenha.jsx'
-import AdminPainel from './paginas/AdminPainel.jsx'
-import Perfil from './paginas/Perfil.jsx'
-import AppMobile from './paginas/AppMobile.jsx'
+import CarregandoRota from './componentes/CarregandoRota.jsx'
+
+const EscolhaModulo = lazy(
+    () => import('./paginas/EscolhaModulo.jsx'),
+)
+const Dashboard = lazy(
+    () => import('./paginas/Dashboard.jsx'),
+)
+const Movimentacoes = lazy(
+    () => import('./paginas/Movimentacoes.jsx'),
+)
+const NovaMovimentacao = lazy(
+    () => import('./paginas/NovaMovimentacao.jsx'),
+)
+const EditarMovimentacao = lazy(
+    () => import('./paginas/EditarMovimentacao.jsx'),
+)
+const Categorias = lazy(
+    () => import('./paginas/Categorias.jsx'),
+)
+const ContasFinanceiras = lazy(
+    () => import('./paginas/ContasFinanceiras.jsx'),
+)
+const NovaContaFinanceira = lazy(
+    () => import('./paginas/NovaContaFinanceira.jsx'),
+)
+const EsqueciSenha = lazy(
+    () => import('./paginas/EsqueciSenha.jsx'),
+)
+const RedefinirSenha = lazy(
+    () => import('./paginas/RedefinirSenha.jsx'),
+)
+const AdminPainel = lazy(
+    () => import('./paginas/AdminPainel.jsx'),
+)
+const Perfil = lazy(
+    () => import('./paginas/Perfil.jsx'),
+)
+const AppMobile = lazy(
+    () => import('./paginas/AppMobile.jsx'),
+)
 
 function App() {
+    const location = useLocation()
+
     return (
-        <Routes>
-            <Route
-                path="/"
-                element={<PaginaInicial />}
-            />
+        <div
+            className="pagina-transicao"
+            key={location.pathname}
+        >
+            <Suspense fallback={<CarregandoRota />}>
+                <Routes>
+                    <Route
+                        path="/"
+                        element={<PaginaInicial />}
+                    />
 
-            <Route
-                path="/login"
-                element={<Login />}
-            />
+                    <Route
+                        path="/login"
+                        element={<Login />}
+                    />
 
-            <Route
-                path="/cadastro"
-                element={<Cadastro />}
-            />
+                    <Route
+                        path="/cadastro"
+                        element={<Cadastro />}
+                    />
 
-            <Route
-                path="/esqueci-senha"
-                element={<EsqueciSenha />}
-            />
+                    <Route
+                        path="/esqueci-senha"
+                        element={<EsqueciSenha />}
+                    />
 
-            <Route
-                path="/redefinir-senha"
-                element={<RedefinirSenha />}
-            />
+                    <Route
+                        path="/redefinir-senha"
+                        element={<RedefinirSenha />}
+                    />
 
-            <Route
-                path="/admin"
-                element={<AdminPainel />}
-            />
+                    <Route
+                        path="/admin"
+                        element={<AdminPainel />}
+                    />
 
-            <Route
-                path="/dashboard"
-                element={<EscolhaModulo />}
-            />
+                    <Route
+                        path="/dashboard"
+                        element={<EscolhaModulo />}
+                    />
 
-            <Route
-                path="/app"
-                element={<AppMobile />}
-            />
+                    <Route
+                        path="/app"
+                        element={<AppMobile />}
+                    />
 
-            <Route
-                path="/dashboard/perfil"
-                element={<Perfil />}
-            />
+                    <Route
+                        path="/dashboard/perfil"
+                        element={<Perfil />}
+                    />
 
-            <Route
-                path="/dashboard/financeiro"
-                element={<Dashboard />}
-            />
+                    <Route
+                        path="/dashboard/financeiro"
+                        element={<Dashboard />}
+                    />
 
-            <Route
-                path="/dashboard/movimentacoes"
-                element={<Movimentacoes />}
-            />
+                    <Route
+                        path="/dashboard/movimentacoes"
+                        element={<Movimentacoes />}
+                    />
 
-            <Route
-                path="/dashboard/movimentacoes/nova"
-                element={<NovaMovimentacao />}
-            />
+                    <Route
+                        path="/dashboard/movimentacoes/nova"
+                        element={<NovaMovimentacao />}
+                    />
 
-            <Route
-                path="/dashboard/movimentacoes/:movimentacaoId/editar"
-                element={<EditarMovimentacao />}
-            />
+                    <Route
+                        path="/dashboard/movimentacoes/:movimentacaoId/editar"
+                        element={<EditarMovimentacao />}
+                    />
 
-            <Route
-                path="/dashboard/categorias"
-                element={<Categorias />}
-            />
+                    <Route
+                        path="/dashboard/categorias"
+                        element={<Categorias />}
+                    />
 
-            <Route
-                path="/dashboard/contas"
-                element={<ContasFinanceiras />}
-            />
+                    <Route
+                        path="/dashboard/contas"
+                        element={<ContasFinanceiras />}
+                    />
 
-            <Route
-                path="/dashboard/contas/nova"
-                element={<NovaContaFinanceira />}
-            />
-        </Routes>
+                    <Route
+                        path="/dashboard/contas/nova"
+                        element={<NovaContaFinanceira />}
+                    />
+                </Routes>
+            </Suspense>
+        </div>
     )
 }
 

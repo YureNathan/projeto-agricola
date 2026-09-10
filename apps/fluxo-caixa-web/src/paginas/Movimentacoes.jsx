@@ -8,6 +8,11 @@ import {
     useSearchParams,
 } from 'react-router'
 import { API_BASE_URL as API_URL } from '../config.js'
+import Esqueleto from '../componentes/Esqueleto.jsx'
+import {
+    aoClicarFundo,
+    useFecharModal,
+} from '../componentes/useFecharModal.js'
 import './Movimentacoes.css'
 
 function formatarDinheiro(valor) {
@@ -158,6 +163,16 @@ function Movimentacoes() {
         movimentacaoParaConverter,
         setMovimentacaoParaConverter,
     ] = useState(null)
+
+    useFecharModal(
+        Boolean(movimentacaoParaExcluir),
+        () => setMovimentacaoParaExcluir(null),
+    )
+
+    useFecharModal(
+        Boolean(movimentacaoParaConverter),
+        () => setMovimentacaoParaConverter(null),
+    )
 
     const [
         categoriasConversao,
@@ -358,13 +373,13 @@ function Movimentacoes() {
 
     useEffect(() => {
         if (
-            searchParams.get('lixeira') === '1' &&
+            parametros.get('lixeira') === '1' &&
             !mostrandoLixeira
         ) {
             void carregarLixeira()
         }
     }, [
-        searchParams,
+        parametros,
         mostrandoLixeira,
     ])
 
@@ -823,8 +838,26 @@ function Movimentacoes() {
 
     if (carregando) {
         return (
-            <main className="movimentacoes-pagina movimentacoes-estado">
-                <p>Carregando movimentações...</p>
+            <main className="movimentacoes-pagina">
+                <div
+                    aria-busy="true"
+                    aria-live="polite"
+                    className="movimentacoes-esqueleto"
+                >
+                    <Esqueleto altura="26px" largura="240px" />
+
+                    <Esqueleto altura="14px" largura="360px" />
+
+                    <div className="movimentacoes-esqueleto-linhas">
+                        {[0, 1, 2, 3, 4, 5].map((indice) => (
+                            <Esqueleto
+                                altura="52px"
+                                key={indice}
+                                largura="100%"
+                            />
+                        ))}
+                    </div>
+                </div>
             </main>
         )
     }
@@ -1128,6 +1161,11 @@ function Movimentacoes() {
             {movimentacaoParaExcluir && (
                 <div
                     className="movimentacoes-modal-fundo"
+                    onClick={(evento) =>
+                        aoClicarFundo(evento, () =>
+                            setMovimentacaoParaExcluir(null),
+                        )
+                    }
                     role="presentation"
                 >
                     <section
@@ -1256,6 +1294,11 @@ function Movimentacoes() {
             {movimentacaoParaConverter && (
                 <div
                     className="movimentacoes-modal-fundo"
+                    onClick={(evento) =>
+                        aoClicarFundo(evento, () =>
+                            setMovimentacaoParaConverter(null),
+                        )
+                    }
                     role="presentation"
                 >
                     <section

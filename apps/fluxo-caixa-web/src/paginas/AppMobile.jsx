@@ -6,6 +6,7 @@ import {
     useNavigate,
 } from 'react-router'
 import CampoComVoz from '../componentes/CampoComVoz.jsx'
+import Esqueleto from '../componentes/Esqueleto.jsx'
 import { API_BASE_URL as API_URL } from '../config.js'
 import './AppMobile.css'
 
@@ -380,21 +381,42 @@ function AppMobile() {
             </header>
 
             <main className="app-mobile-conteudo">
-                <section className="app-mobile-resumo">
+                <section
+                    aria-busy={carregando}
+                    className="app-mobile-resumo"
+                >
                     <p>Hoje na propriedade</p>
 
                     <div>
                         <strong>
                             Entrou
                             <span>
-                                {formatarDinheiro(resumo?.totalEntrou)}
+                                {carregando ? (
+                                    <Esqueleto
+                                        altura="18px"
+                                        largura="90px"
+                                    />
+                                ) : (
+                                    formatarDinheiro(
+                                        resumo?.totalEntrou,
+                                    )
+                                )}
                             </span>
                         </strong>
 
                         <strong>
                             Saiu
                             <span>
-                                {formatarDinheiro(resumo?.totalSaiu)}
+                                {carregando ? (
+                                    <Esqueleto
+                                        altura="18px"
+                                        largura="90px"
+                                    />
+                                ) : (
+                                    formatarDinheiro(
+                                        resumo?.totalSaiu,
+                                    )
+                                )}
                             </span>
                         </strong>
                     </div>

@@ -359,3 +359,24 @@
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 }
+
+/*
+ * Feedback e carregamento
+ */
+
+.admin-aviso-erro {
+    background: #fff5f3;
+    border-color: #e6c3bd;
+    color: #a3271c;
+}
+
+.admin-aviso-sucesso {
+    background: #e9f8df;
+    border-color: #b9d5ad;
+    color: #235f00;
+}
+
+.admin-esqueleto {
+    display: grid;
+    gap: 10px;
+}

@@ -746,3 +746,19 @@
         width: 100%;
     }
 }
+
+/*
+ * Estado de carregamento (skeleton)
+ */
+
+.categorias-esqueleto {
+    display: grid;
+    gap: 18px;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+
+.categorias-esqueleto-coluna {
+    display: grid;
+    align-content: start;
+    gap: 10px;
+}

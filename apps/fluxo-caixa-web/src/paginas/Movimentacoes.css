@@ -473,3 +473,20 @@
         font-size: 15px;
     }
 }
+
+/*
+ * Estado de carregamento (skeleton)
+ */
+
+.movimentacoes-esqueleto {
+    display: grid;
+    padding: 30px clamp(18px, 4vw, 46px);
+    align-content: start;
+    gap: 16px;
+}
+
+.movimentacoes-esqueleto-linhas {
+    display: grid;
+    margin-top: 10px;
+    gap: 10px;
+}

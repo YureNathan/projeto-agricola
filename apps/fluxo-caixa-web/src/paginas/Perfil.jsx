@@ -3,6 +3,7 @@ import {
     useState,
 } from 'react'
 import { useNavigate } from 'react-router'
+import Esqueleto from '../componentes/Esqueleto.jsx'
 import { API_BASE_URL as API_URL } from '../config.js'
 import './Perfil.css'
 
@@ -62,6 +63,7 @@ function Perfil() {
         pecuariaAtiva: false,
     })
     const [mensagem, setMensagem] = useState('')
+    const [tipoMensagem, setTipoMensagem] = useState('sucesso')
     const [carregando, setCarregando] = useState(true)
     const [salvando, setSalvando] = useState(false)
 
@@ -104,6 +106,7 @@ function Perfil() {
                     JSON.stringify(usuario),
                 )
             } catch (erro) {
+                setTipoMensagem('erro')
                 setMensagem(
                     erro instanceof Error
                         ? erro.message
@@ -189,7 +192,9 @@ function Perfil() {
                 JSON.stringify(usuarioAtualizado),
             )
             setMensagem('Dados atualizados com sucesso.')
+            setTipoMensagem('sucesso')
         } catch (erro) {
+            setTipoMensagem('erro')
             setMensagem(
                 erro instanceof Error
                     ? erro.message
@@ -227,15 +232,41 @@ function Perfil() {
                 </header>
 
                 {mensagem && (
-                    <div className="perfil-aviso" role="status">
+                    <div
+                        className={`perfil-aviso perfil-aviso-${tipoMensagem}`}
+                        role={
+                            tipoMensagem === 'erro'
+                                ? 'alert'
+                                : 'status'
+                        }
+                    >
                         {mensagem}
                     </div>
                 )}
 
                 {carregando ? (
-                    <p className="perfil-carregando">
-                        Carregando dados...
-                    </p>
+                    <div
+                        aria-busy="true"
+                        aria-live="polite"
+                        className="perfil-esqueleto"
+                    >
+                        {[0, 1, 2, 3].map((indice) => (
+                            <div
+                                className="perfil-esqueleto-campo"
+                                key={indice}
+                            >
+                                <Esqueleto
+                                    altura="12px"
+                                    largura="35%"
+                                />
+
+                                <Esqueleto
+                                    altura="42px"
+                                    largura="100%"
+                                />
+                            </div>
+                        ))}
+                    </div>
                 ) : (
                     <form
                         className="perfil-formulario"

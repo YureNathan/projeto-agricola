@@ -7,6 +7,8 @@ import {
     useNavigate,
 } from 'react-router'
 import AlternadorModulos from '../componentes/AlternadorModulos.jsx'
+import Esqueleto from '../componentes/Esqueleto.jsx'
+import { useNotificacoes } from '../componentes/notificacoes-contexto.js'
 import { API_BASE_URL as API_URL } from '../config.js'
 import './Dashboard.css'
 
@@ -275,6 +277,8 @@ function criarCaminho(pontos) {
 
 function Dashboard() {
     const navigate = useNavigate()
+
+    const { notificar } = useNotificacoes()
 
     const [sessao] =
         useState(obterSessao)
@@ -675,7 +679,7 @@ function Dashboard() {
                     ? erroDoRelatorio.message
                     : 'Não foi possível gerar o relatório.'
 
-            window.alert(mensagem)
+            notificar(mensagem, 'erro')
         } finally {
             setBaixandoRelatorio('')
         }
@@ -695,10 +699,47 @@ function Dashboard() {
 
     if (carregando) {
         return (
-            <div className="dashboard-carregando">
-                <p>
-                    Carregando informações financeiras...
-                </p>
+            <div
+                aria-busy="true"
+                aria-live="polite"
+                className="dashboard-esqueleto"
+            >
+                <Esqueleto altura="24px" largura="200px" />
+
+                <div className="dashboard-esqueleto-cards">
+                    {[0, 1, 2, 3].map((indice) => (
+                        <div
+                            className="dashboard-esqueleto-card"
+                            key={indice}
+                        >
+                            <Esqueleto
+                                altura="12px"
+                                largura="60%"
+                            />
+
+                            <Esqueleto
+                                altura="24px"
+                                largura="80%"
+                            />
+                        </div>
+                    ))}
+                </div>
+
+                <Esqueleto
+                    altura="230px"
+                    largura="100%"
+                    raio="var(--radius)"
+                />
+
+                <div className="dashboard-esqueleto-lista">
+                    {[0, 1, 2, 3, 4].map((indice) => (
+                        <Esqueleto
+                            altura="44px"
+                            key={indice}
+                            largura="100%"
+                        />
+                    ))}
+                </div>
             </div>
         )
     }
