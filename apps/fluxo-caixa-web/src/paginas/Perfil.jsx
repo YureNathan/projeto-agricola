@@ -4,6 +4,7 @@ import {
 } from 'react'
 import { useNavigate } from 'react-router'
 import Esqueleto from '../componentes/Esqueleto.jsx'
+import SpinnerBotao from '../componentes/SpinnerBotao.jsx'
 import { API_BASE_URL as API_URL } from '../config.js'
 import './Perfil.css'
 
@@ -370,6 +371,8 @@ function Perfil() {
                                 disabled={salvando}
                                 type="submit"
                             >
+                                {salvando && <SpinnerBotao />}
+
                                 {salvando
                                     ? 'Salvando...'
                                     : 'Salvar dados'}

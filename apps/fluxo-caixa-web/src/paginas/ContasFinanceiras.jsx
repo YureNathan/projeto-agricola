@@ -1815,9 +1815,11 @@ function ContasFinanceiras() {
                             </div>
 
                             {carregando ? (
-                                <div className="contas-grafico-vazio">
-                                    Carregando a previsão futura...
-                                </div>
+                                <Esqueleto
+                                    altura="220px"
+                                    largura="100%"
+                                    raio="var(--radius)"
+                                />
                             ) : (
                                 <GraficoProjecaoContas
                                     pontos={pontosGrafico}

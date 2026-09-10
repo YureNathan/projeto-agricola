@@ -1,7 +1,7 @@
 .perfil-pagina {
     min-height: 100vh;
-    background: #f6fbf2;
-    color: #061407;
+    background: var(--secondary);
+    color: var(--foreground);
     padding: 32px 16px 56px;
 }
 
@@ -19,7 +19,7 @@
 }
 
 .perfil-topo span {
-    color: #2f8300;
+    color: var(--primary);
     font-size: 0.76rem;
     font-weight: 850;
     letter-spacing: 0;
@@ -33,15 +33,15 @@
 }
 
 .perfil-topo p {
-    color: #425342;
+    color: var(--muted-foreground);
     margin: 0;
 }
 
 .perfil-formulario,
 .perfil-carregando,
 .perfil-aviso {
-    background: #ffffff;
-    border: 1px solid #d5e3cf;
+    background: var(--card);
+    border: 1px solid var(--border);
     border-radius: 8px;
 }
 
@@ -59,33 +59,33 @@
 
 .perfil-formulario label,
 .perfil-formulario legend {
-    color: #233523;
+    color: var(--foreground);
     font-size: 0.82rem;
     font-weight: 850;
 }
 
 .perfil-formulario input {
-    background: #ffffff;
-    border: 1px solid #c7d9bf;
+    background: var(--card);
+    border: 1px solid var(--border);
     border-radius: 8px;
-    color: #061407;
+    color: var(--foreground);
     font: inherit;
     min-height: 42px;
     padding: 0 12px;
 }
 
 .perfil-formulario input:disabled {
-    background: #eef4ea;
-    color: #60705f;
+    background: var(--secondary);
+    color: var(--muted-foreground);
 }
 
 .perfil-formulario small {
-    color: #60705f;
+    color: var(--muted-foreground);
     font-weight: 650;
 }
 
 .perfil-formulario fieldset {
-    border: 1px solid #d5e3cf;
+    border: 1px solid var(--border);
     border-radius: 8px;
     margin: 0;
     padding: 14px;
@@ -108,7 +108,7 @@
 
 .perfil-botao-primario,
 .perfil-botao-secundario {
-    border: 1px solid #b9d5ad;
+    border: 1px solid var(--border);
     border-radius: 8px;
     cursor: pointer;
     font-weight: 850;
@@ -117,14 +117,14 @@
 }
 
 .perfil-botao-primario {
-    background: #358700;
-    border-color: #358700;
-    color: #ffffff;
+    background: var(--primary);
+    border-color: var(--primary);
+    color: var(--card);
 }
 
 .perfil-botao-secundario {
-    background: #ffffff;
-    color: #061407;
+    background: var(--card);
+    color: var(--foreground);
 }
 
 .perfil-botao-primario:disabled {
@@ -133,14 +133,14 @@
 }
 
 .perfil-aviso {
-    color: #235f00;
+    color: var(--primary);
     font-weight: 750;
     margin-bottom: 14px;
     padding: 14px 16px;
 }
 
 .perfil-carregando {
-    color: #60705f;
+    color: var(--muted-foreground);
     padding: 26px;
     text-align: center;
 }
@@ -160,15 +160,15 @@
  */
 
 .perfil-aviso-erro {
-    color: #a3271c;
-    border-color: #e6c3bd;
-    background: #fff5f3;
+    color: var(--destructive);
+    border-color: color-mix(in oklch, var(--destructive) 35%, var(--border));
+    background: color-mix(in oklch, var(--destructive) 7%, var(--card));
 }
 
 .perfil-aviso-sucesso {
-    color: #235f00;
-    border-color: #cfe4c3;
-    background: #f4fbef;
+    color: var(--primary);
+    border-color: var(--border);
+    background: var(--secondary);
 }
 
 .perfil-esqueleto {

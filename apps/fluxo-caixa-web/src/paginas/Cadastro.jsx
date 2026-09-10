@@ -9,6 +9,7 @@ import {
     API_CADASTRO_URL,
     API_LOGIN_URL,
 } from '../config.js'
+import SpinnerBotao from '../componentes/SpinnerBotao.jsx'
 import './Autenticacao.css'
 
 async function obterMensagemDeErro(
@@ -536,7 +537,11 @@ function Cadastro() {
                             disabled={carregando}
                             type="submit"
                         >
-                            <span>→</span>
+                            {carregando ? (
+                                <SpinnerBotao />
+                            ) : (
+                                <span>→</span>
+                            )}
 
                             {carregando
                                 ? 'Criando conta...'

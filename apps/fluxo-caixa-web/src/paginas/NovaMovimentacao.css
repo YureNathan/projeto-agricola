@@ -660,3 +660,16 @@
         width: 100%;
     }
 }
+/*
+ * Estado de carregamento (skeleton) — compartilhado com EditarMovimentacao
+ */
+
+.movimentacao-esqueleto {
+    display: grid;
+    gap: 18px;
+}
+
+.movimentacao-esqueleto-campo {
+    display: grid;
+    gap: 8px;
+}

@@ -8,6 +8,7 @@ import {
     useParams,
 } from 'react-router'
 import { API_BASE_URL as API_URL } from '../config.js'
+import Esqueleto from '../componentes/Esqueleto.jsx'
 import './NovaMovimentacao.css'
 
 function completarComZero(numero) {
@@ -461,10 +462,27 @@ function EditarMovimentacao() {
         return (
             <div className="movimentacao-pagina">
                 <div className="movimentacao-conteudo">
-                    <main className="movimentacao-card">
-                        <p>
-                            Carregando movimentação...
-                        </p>
+                    <main
+                        aria-busy="true"
+                        aria-live="polite"
+                        className="movimentacao-card movimentacao-esqueleto"
+                    >
+                        {[0, 1, 2, 3].map((indice) => (
+                            <div
+                                className="movimentacao-esqueleto-campo"
+                                key={indice}
+                            >
+                                <Esqueleto
+                                    altura="12px"
+                                    largura="35%"
+                                />
+
+                                <Esqueleto
+                                    altura="42px"
+                                    largura="100%"
+                                />
+                            </div>
+                        ))}
                     </main>
                 </div>
             </div>

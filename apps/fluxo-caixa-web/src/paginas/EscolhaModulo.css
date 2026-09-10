@@ -201,7 +201,7 @@
                     color-mix(
                             in oklch,
                             var(--primary) 55%,
-                            #d9a514
+                            var(--warning)
                     )
             );
 }
@@ -247,7 +247,7 @@
             color-mix(
                     in oklch,
                     var(--secondary) 72%,
-                    #fff4c5
+                    var(--warning-soft)
             );
 }
 

@@ -5,6 +5,7 @@ import {
     Link,
 } from 'react-router'
 import { API_ESQUECI_SENHA_URL } from '../config.js'
+import SpinnerBotao from '../componentes/SpinnerBotao.jsx'
 import './Autenticacao.css'
 
 async function obterMensagemDeErro(
@@ -176,7 +177,11 @@ function EsqueciSenha() {
                             disabled={carregando}
                             type="submit"
                         >
-                            <span>→</span>
+                            {carregando ? (
+                                <SpinnerBotao />
+                            ) : (
+                                <span>→</span>
+                            )}
 
                             {carregando
                                 ? 'Enviando...'

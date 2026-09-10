@@ -841,8 +841,10 @@ function AdminPainel() {
                     role="presentation"
                 >
                     <form
+                        aria-modal="true"
                         className="admin-modal"
                         onSubmit={salvarDadosUsuario}
+                        role="dialog"
                     >
                         <div className="admin-modal-topo">
                             <div>

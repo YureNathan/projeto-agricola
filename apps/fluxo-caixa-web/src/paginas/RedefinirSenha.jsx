@@ -8,6 +8,7 @@ import {
     useSearchParams,
 } from 'react-router'
 import { API_REDEFINIR_SENHA_URL } from '../config.js'
+import SpinnerBotao from '../componentes/SpinnerBotao.jsx'
 import './Autenticacao.css'
 
 async function obterMensagemDeErro(
@@ -311,7 +312,11 @@ function RedefinirSenha() {
                             disabled={carregando || !token}
                             type="submit"
                         >
-                            <span>→</span>
+                            {carregando ? (
+                                <SpinnerBotao />
+                            ) : (
+                                <span>→</span>
+                            )}
 
                             {carregando
                                 ? 'Redefinindo...'

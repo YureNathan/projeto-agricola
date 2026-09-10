@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router'
 import { API_LOGIN_URL } from '../config.js'
+import SpinnerBotao from '../componentes/SpinnerBotao.jsx'
 import './Autenticacao.css'
 
 function Login() {
@@ -228,7 +229,11 @@ function Login() {
                             disabled={carregando}
                             type="submit"
                         >
-                            <span>→</span>
+                            {carregando ? (
+                                <SpinnerBotao />
+                            ) : (
+                                <span>→</span>
+                            )}
 
                             {carregando
                                 ? 'Entrando...'
