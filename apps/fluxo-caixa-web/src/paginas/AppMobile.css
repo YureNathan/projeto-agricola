@@ -135,6 +135,19 @@
     font-size: 1.05rem;
 }
 
+.app-mobile-resumo .app-mobile-resumo-saida {
+    background: color-mix(
+            in oklch,
+            var(--destructive) 12%,
+            var(--card)
+    );
+    color: var(--destructive);
+}
+
+.app-mobile-resumo .app-mobile-resumo-saida span {
+    color: var(--destructive);
+}
+
 .app-mobile-formulario {
     padding: 18px;
 }

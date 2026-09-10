@@ -367,7 +367,7 @@ function AppMobile() {
                             </span>
                         </strong>
 
-                        <strong>
+                        <strong className="app-mobile-resumo-saida">
                             Saiu
                             <span>
                                 {carregando ? (
