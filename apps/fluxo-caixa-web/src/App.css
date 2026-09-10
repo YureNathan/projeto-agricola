@@ -889,9 +889,17 @@
 }
 
 .publica-passo-ativo > span {
-  border-color: var(--primary);
-  background: var(--primary);
-  color: var(--primary-foreground);
+  border-color: color-mix(
+          in oklch,
+          var(--primary) 45%,
+          var(--border)
+  );
+  background: color-mix(
+          in oklch,
+          var(--primary) 14%,
+          var(--card)
+  );
+  color: var(--primary);
 }
 
 .publica-chamada {
