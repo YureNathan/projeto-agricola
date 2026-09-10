@@ -1331,7 +1331,25 @@ function Dashboard() {
                                 }
                                 type="button"
                             >
-                                <span>âŒ«</span>
+                                <span>
+                                    <svg
+                                        aria-hidden="true"
+                                        fill="none"
+                                        height="18"
+                                        stroke="currentColor"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth="2"
+                                        viewBox="0 0 24 24"
+                                        width="18"
+                                    >
+                                        <path d="M3 6h18" />
+                                        <path d="M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2" />
+                                        <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
+                                        <path d="M10 11v6" />
+                                        <path d="M14 11v6" />
+                                    </svg>
+                                </span>
                                 Lixeira
                             </button>
 
@@ -1360,7 +1378,31 @@ function Dashboard() {
                                 }
                                 type="button"
                             >
-                                <span>▦</span>
+                                <span>
+                                    <svg
+                                        aria-hidden="true"
+                                        fill="none"
+                                        height="18"
+                                        stroke="currentColor"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth="2"
+                                        viewBox="0 0 24 24"
+                                        width="18"
+                                    >
+                                        <rect
+                                            height="18"
+                                            rx="2"
+                                            width="18"
+                                            x="3"
+                                            y="3"
+                                        />
+                                        <path d="M3 9h18" />
+                                        <path d="M3 15h18" />
+                                        <path d="M9 3v18" />
+                                        <path d="M15 3v18" />
+                                    </svg>
+                                </span>
                                 {
                                     baixandoRelatorio
                                     === 'excel'
@@ -1383,7 +1425,24 @@ function Dashboard() {
                                 }
                                 type="button"
                             >
-                                <span>▤</span>
+                                <span>
+                                    <svg
+                                        aria-hidden="true"
+                                        fill="none"
+                                        height="18"
+                                        stroke="currentColor"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth="2"
+                                        viewBox="0 0 24 24"
+                                        width="18"
+                                    >
+                                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                                        <path d="M14 2v6h6" />
+                                        <path d="M9 13h6" />
+                                        <path d="M9 17h6" />
+                                    </svg>
+                                </span>
                                 {
                                     baixandoRelatorio
                                     === 'pdf'

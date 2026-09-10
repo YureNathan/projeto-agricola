@@ -431,7 +431,7 @@ function Movimentacoes() {
                 throw new Error(
                     await obterMensagemDeErro(
                         resposta,
-                        'NÃ£o foi possÃ­vel excluir permanentemente a movimentaÃ§Ã£o.',
+                        'Não foi possível excluir permanentemente a movimentação.',
                     ),
                 )
             }
@@ -447,7 +447,7 @@ function Movimentacoes() {
             setErro(
                 erroDaRequisicao instanceof Error
                     ? erroDaRequisicao.message
-                    : 'NÃ£o foi possÃ­vel excluir permanentemente a movimentaÃ§Ã£o.',
+                    : 'Não foi possível excluir permanentemente a movimentação.',
             )
         } finally {
             setExcluindoId(null)
@@ -1001,7 +1001,7 @@ function Movimentacoes() {
                                                             {restaurandoId ===
                                                             movimentacao.id
                                                                 ? 'Restaurando...'
-                                                                : 'Restaurar movimentaÃ§Ã£o'}
+                                                                : 'Restaurar movimentação'}
                                                         </button>
 
                                                         <button
@@ -1176,26 +1176,26 @@ function Movimentacoes() {
                     >
                         <div className="movimentacoes-modal-topo">
                             <p className="movimentacoes-etiqueta">
-                                ExclusÃ£o definitiva
+                                Exclusão definitiva
                             </p>
 
                             <button
-                                aria-label="Fechar confirmaÃ§Ã£o"
+                                aria-label="Fechar confirmação"
                                 onClick={
                                     fecharConfirmacaoExclusaoPermanente
                                 }
                                 type="button"
                             >
-                                Ã—
+                                ×
                             </button>
                         </div>
 
                         <h2>Excluir permanentemente?</h2>
 
                         <p>
-                            A movimentaÃ§Ã£o "
+                            A movimentação "
                             {movimentacaoParaExcluirPermanente.descricao}
-                            " serÃ¡ apagada de vez e nÃ£o poderÃ¡ ser
+                            " será apagada de vez e não poderá ser
                             recuperada.
                         </p>
 
