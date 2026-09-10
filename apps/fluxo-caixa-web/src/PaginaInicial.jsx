@@ -56,6 +56,13 @@ function PaginaInicial() {
                     </Link>
 
                     <Link
+                        className="publica-botao-app publica-botao-pequeno"
+                        to="/app"
+                    >
+                        Versão app
+                    </Link>
+
+                    <Link
                         className="publica-botao publica-botao-pequeno"
                         to="/cadastro"
                     >
@@ -581,8 +588,8 @@ function PaginaInicial() {
                 </p>
 
                 <div>
-                    <Link to="/login">Entrar</Link>
-                    <Link to="/cadastro">Criar conta</Link>
+                    <span>Termos de uso</span>
+                    <span>Política de privacidade</span>
                 </div>
             </footer>
         </div>

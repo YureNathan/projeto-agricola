@@ -975,6 +975,11 @@
   color: var(--primary);
 }
 
+.publica-rodape > div span {
+  color: var(--muted-foreground);
+  font-size: 0.73rem;
+}
+
 @media (max-width: 900px) {
   .publica-menu {
     display: none;
@@ -1010,6 +1015,10 @@
 
   .publica-acoes {
     gap: 9px;
+  }
+
+  .publica-acoes .publica-botao-app {
+    display: none;
   }
 
   .publica-entrar {
