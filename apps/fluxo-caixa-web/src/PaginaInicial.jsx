@@ -16,7 +16,15 @@ import {
     IconeSetaDireita,
 } from './componentes/Icones.jsx'
 import Revelar from './componentes/Revelar.jsx'
+import ValorAnimado from './componentes/ValorAnimado.jsx'
 import './App.css'
+
+function formatarMoeda(valor) {
+    return new Intl.NumberFormat('pt-BR', {
+        style: 'currency',
+        currency: 'BRL',
+    }).format(valor)
+}
 
 function PaginaInicial() {
     const [menuAberto, setMenuAberto] = useState(false)
@@ -171,19 +179,34 @@ function PaginaInicial() {
                             <div className="publica-resumo">
                                 <article className="publica-cartao publica-receita">
                                     <span>Total que entrou</span>
-                                    <strong>R$ 15.700,00</strong>
+                                    <strong>
+                                        <ValorAnimado
+                                            formatar={formatarMoeda}
+                                            valor={15700}
+                                        />
+                                    </strong>
                                     <small>Exemplo de receitas</small>
                                 </article>
 
                                 <article className="publica-cartao publica-despesa">
                                     <span>Total que saiu</span>
-                                    <strong>R$ 850,00</strong>
+                                    <strong>
+                                        <ValorAnimado
+                                            formatar={formatarMoeda}
+                                            valor={850}
+                                        />
+                                    </strong>
                                     <small>Exemplo de despesas</small>
                                 </article>
 
                                 <article className="publica-cartao publica-saldo">
                                     <span>Quanto sobrou</span>
-                                    <strong>R$ 14.850,00</strong>
+                                    <strong>
+                                        <ValorAnimado
+                                            formatar={formatarMoeda}
+                                            valor={14850}
+                                        />
+                                    </strong>
                                     <small>Exemplo de saldo</small>
                                 </article>
                             </div>
@@ -221,11 +244,13 @@ function PaginaInicial() {
                                             <path
                                                 className="publica-linha-receita"
                                                 d="M0,145 C80,130 120,155 190,110 C270,55 320,70 390,90 C470,115 520,70 600,25"
+                                                pathLength="1"
                                             />
 
                                             <path
                                                 className="publica-linha-despesa"
                                                 d="M0,165 C90,135 150,150 230,155 C320,165 355,110 430,120 C500,130 535,150 600,158"
+                                                pathLength="1"
                                             />
                                         </svg>
                                     </div>
@@ -250,7 +275,11 @@ function PaginaInicial() {
                                         </div>
 
                                         <b className="publica-valor-entrada">
-                                            + R$ 3.200,00
+                                            +{' '}
+                                            <ValorAnimado
+                                                formatar={formatarMoeda}
+                                                valor={3200}
+                                            />
                                         </b>
                                     </div>
 
@@ -265,7 +294,11 @@ function PaginaInicial() {
                                         </div>
 
                                         <b className="publica-valor-saida">
-                                            − R$ 850,00
+                                            −{' '}
+                                            <ValorAnimado
+                                                formatar={formatarMoeda}
+                                                valor={850}
+                                            />
                                         </b>
                                     </div>
                                 </article>

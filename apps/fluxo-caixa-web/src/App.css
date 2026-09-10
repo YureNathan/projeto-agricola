@@ -52,7 +52,7 @@
   padding: 13px 4px;
   border-bottom: 1px solid var(--border);
   color: var(--foreground);
-  font-size: 0.95rem;
+  font-size: 0.75rem;
   font-weight: 700;
   text-decoration: none;
 }
@@ -93,7 +93,7 @@
 
 .publica-menu a {
   color: var(--muted-foreground);
-  font-size: 0.78rem;
+  font-size: 0.75rem;
   font-weight: 600;
   text-decoration: none;
   transition: color 160ms ease;
@@ -111,7 +111,7 @@
 
 .publica-entrar {
   color: var(--foreground);
-  font-size: 0.78rem;
+  font-size: 0.75rem;
   font-weight: 700;
   text-decoration: none;
 }
@@ -131,15 +131,21 @@
   border-radius: var(--radius);
   background: var(--primary);
   color: var(--primary-foreground);
-  font-size: 0.78rem;
+  font-size: 0.75rem;
   font-weight: 800;
   text-decoration: none;
   box-shadow: 0 12px 26px
   color-mix(in oklch, var(--primary) 18%, transparent);
   transition:
-          filter 160ms ease,
-          transform 160ms ease,
-          box-shadow 160ms ease;
+          filter var(--motion-base) var(--ease-standard),
+          transform var(--motion-base) var(--ease-standard),
+          box-shadow var(--motion-base) var(--ease-standard);
+}
+
+.publica-botao > span {
+  display: inline-grid;
+  place-items: center;
+  transition: transform var(--motion-base) var(--ease-out);
 }
 
 .publica-botao:hover {
@@ -149,10 +155,27 @@
   transform: translateY(-2px);
 }
 
+.publica-botao:hover > span {
+  transform: translateX(3px);
+}
+
+.publica-botao:focus-visible,
+.publica-botao-secundario:focus-visible,
+.publica-entrar:focus-visible,
+.publica-menu a:focus-visible,
+.publica-marca:focus-visible,
+.publica-menu-mobile a:focus-visible,
+.publica-rodape a:focus-visible,
+.publica-menu-mobile-botao:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 3px;
+  border-radius: var(--radius);
+}
+
 .publica-botao-pequeno {
   min-height: 34px;
   padding: 0 14px;
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   box-shadow: none;
 }
 
@@ -167,7 +190,7 @@
   border-radius: var(--radius);
   background: var(--secondary);
   color: var(--primary);
-  font-size: 0.78rem;
+  font-size: 0.75rem;
   font-weight: 800;
   text-decoration: none;
   transition:
@@ -232,7 +255,7 @@
           var(--background)
   );
   color: var(--primary);
-  font-size: 0.65rem;
+  font-size: 0.73rem;
   font-weight: 800;
   letter-spacing: 0.07em;
   text-transform: uppercase;
@@ -269,7 +292,7 @@
 
 .publica-botao-secundario {
   color: var(--foreground);
-  font-size: 0.78rem;
+  font-size: 0.75rem;
   font-weight: 700;
   text-decoration: none;
   transition:
@@ -340,7 +363,7 @@
 
 .publica-painel-legenda {
   color: var(--primary);
-  font-size: 0.61rem;
+  font-size: 0.73rem;
   font-weight: 800;
   letter-spacing: 0.07em;
   text-transform: uppercase;
@@ -357,7 +380,7 @@
   border: 1px solid var(--border);
   border-radius: 8px;
   color: var(--muted-foreground);
-  font-size: 0.62rem;
+  font-size: 0.73rem;
   font-weight: 700;
 }
 
@@ -401,7 +424,7 @@
 
 .publica-cartao > span {
   color: var(--muted-foreground);
-  font-size: 0.67rem;
+  font-size: 0.75rem;
   font-weight: 600;
 }
 
@@ -417,7 +440,7 @@
   display: block;
   margin-top: 6px;
   color: var(--muted-foreground);
-  font-size: 0.6rem;
+  font-size: 0.72rem;
 }
 
 .publica-painel-inferior {
@@ -445,13 +468,13 @@
 
 .publica-bloco-titulo h3 {
   margin: 0;
-  font-size: 0.82rem;
+  font-size: 0.75rem;
 }
 
 .publica-bloco-titulo p {
   margin: 4px 0 0;
   color: var(--muted-foreground);
-  font-size: 0.59rem;
+  font-size: 0.72rem;
 }
 
 .publica-bloco-titulo > span {
@@ -459,7 +482,7 @@
   border-radius: 7px;
   background: var(--muted);
   color: var(--muted-foreground);
-  font-size: 0.57rem;
+  font-size: 0.72rem;
   font-weight: 700;
 }
 
@@ -498,18 +521,32 @@
 
 .publica-area-receita {
   fill: color-mix(in oklch, var(--primary) 10%, transparent);
+  opacity: 0;
+  animation: aparecerFundo 900ms var(--ease-out) 450ms both;
 }
 
 .publica-linha-receita {
   fill: none;
   stroke: color-mix(in oklch, var(--primary) 85%, white);
   stroke-width: 2.5;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: desenharLinha 1200ms var(--ease-out) both;
 }
 
 .publica-linha-despesa {
   fill: none;
   stroke: color-mix(in oklch, var(--destructive) 60%, white);
   stroke-width: 2;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: desenharLinha 1200ms var(--ease-out) 250ms both;
+}
+
+@keyframes desenharLinha {
+  to {
+    stroke-dashoffset: 0;
+  }
 }
 
 .publica-movimentacao {
@@ -558,17 +595,17 @@
 }
 
 .publica-movimentacao strong {
-  font-size: 0.68rem;
+  font-size: 0.75rem;
 }
 
 .publica-movimentacao small {
   margin-top: 3px;
   color: var(--muted-foreground);
-  font-size: 0.55rem;
+  font-size: 0.72rem;
 }
 
 .publica-movimentacao b {
-  font-size: 0.61rem;
+  font-size: 0.73rem;
   white-space: nowrap;
 }
 
@@ -595,7 +632,7 @@
 .publica-segmentos > p {
   margin: 0;
   color: var(--muted-foreground);
-  font-size: 0.65rem;
+  font-size: 0.73rem;
   font-weight: 700;
   letter-spacing: 0.09em;
   text-transform: uppercase;
@@ -629,7 +666,7 @@
 
 .publica-segmentos-lista strong {
   color: var(--muted-foreground);
-  font-size: 0.58rem;
+  font-size: 0.72rem;
   font-weight: 600;
 }
 
@@ -658,7 +695,7 @@
 .publica-secao-titulo > p {
   margin: 0;
   color: var(--muted-foreground);
-  font-size: 0.89rem;
+  font-size: 0.75rem;
   line-height: 1.65;
 }
 
@@ -702,19 +739,19 @@
   border-radius: 10px;
   background: var(--secondary);
   color: var(--primary);
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   font-weight: 800;
 }
 
 .publica-grade-recursos h3 {
   margin: 17px 0 8px;
-  font-size: 0.9rem;
+  font-size: 0.75rem;
 }
 
 .publica-grade-recursos p {
   margin: 0;
   color: var(--muted-foreground);
-  font-size: 0.73rem;
+  font-size: 0.75rem;
   line-height: 1.6;
 }
 
@@ -736,7 +773,7 @@
   border-radius: 999px;
   background: var(--secondary);
   color: var(--primary);
-  font-size: 0.72rem;
+  font-size: 0.75rem;
   font-weight: 800;
   letter-spacing: 0.02em;
 }
@@ -761,7 +798,7 @@
 .publica-financeiro-texto > p {
   margin: 0;
   color: var(--muted-foreground);
-  font-size: 0.86rem;
+  font-size: 0.75rem;
   line-height: 1.7;
 }
 
@@ -777,7 +814,7 @@
   position: relative;
   padding-left: 27px;
   color: var(--foreground);
-  font-size: 0.76rem;
+  font-size: 0.75rem;
 }
 
 .publica-financeiro-texto li::before {
@@ -829,18 +866,18 @@
   border: 1px solid var(--border);
   border-radius: 50%;
   background: var(--card);
-  font-size: 0.72rem;
+  font-size: 0.75rem;
   font-weight: 700;
 }
 
 .publica-passos strong {
   display: block;
-  font-size: 0.77rem;
+  font-size: 0.75rem;
 }
 
 .publica-passos p {
   margin: 4px 0 0;
-  font-size: 0.62rem;
+  font-size: 0.73rem;
   line-height: 1.45;
 }
 
@@ -879,7 +916,7 @@
           var(--primary-foreground) 82%,
           transparent
   );
-  font-size: 0.82rem;
+  font-size: 0.75rem;
   line-height: 1.6;
 }
 
@@ -892,7 +929,7 @@
   border-radius: var(--radius);
   background: var(--primary-foreground);
   color: var(--primary);
-  font-size: 0.72rem;
+  font-size: 0.75rem;
   font-weight: 800;
   text-decoration: none;
   transition:
@@ -918,7 +955,7 @@
 .publica-rodape > p {
   margin: 0;
   color: var(--muted-foreground);
-  font-size: 0.63rem;
+  font-size: 0.73rem;
   text-align: center;
 }
 
@@ -930,7 +967,7 @@
 
 .publica-rodape > div a {
   color: var(--muted-foreground);
-  font-size: 0.62rem;
+  font-size: 0.73rem;
   text-decoration: none;
 }
 
@@ -976,13 +1013,13 @@
   }
 
   .publica-entrar {
-    font-size: 0.72rem;
+    font-size: 0.75rem;
   }
 
   .publica-botao-pequeno {
     min-height: 32px;
     padding: 0 11px;
-    font-size: 0.65rem;
+    font-size: 0.73rem;
   }
 
   .publica-inicio {
@@ -1066,7 +1103,7 @@
 
 @media (max-width: 420px) {
   .publica-marca {
-    font-size: 0.88rem;
+    font-size: 0.75rem;
   }
 
   .publica-marca-icone {
@@ -1079,7 +1116,7 @@
   }
 
   .publica-inicio-conteudo > p {
-    font-size: 0.85rem;
+    font-size: 0.75rem;
   }
 
   .publica-movimentacao {
