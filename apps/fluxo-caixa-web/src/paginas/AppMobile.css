@@ -44,6 +44,7 @@
 .app-mobile-topo button {
     min-height: 42px;
     padding: 0 13px;
+    flex-shrink: 0;
     border: 1px solid var(--border);
     border-radius: var(--radius);
     background: var(--card);
@@ -51,6 +52,7 @@
     font: inherit;
     font-size: 0.78rem;
     font-weight: 850;
+    white-space: nowrap;
 }
 
 .app-mobile-conteudo {
