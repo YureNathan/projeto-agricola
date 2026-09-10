@@ -27,6 +27,8 @@
 .movimentacao-cabecalho a {
     display: inline-flex;
     margin-bottom: 30px;
+    align-items: center;
+    gap: 6px;
     color: var(--muted-foreground);
     font-size: 0.88rem;
     font-weight: 700;

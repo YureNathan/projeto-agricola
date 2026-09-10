@@ -445,6 +445,9 @@
 }
 
 .autenticacao-alternativa a {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
     color: var(--primary);
     font-weight: 700;
     text-decoration: underline;

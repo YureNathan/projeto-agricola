@@ -24,6 +24,8 @@
 .movimentacoes-voltar {
     display: inline-flex;
     margin-bottom: 32px;
+    align-items: center;
+    gap: 6px;
     color: var(--foreground);
     font-size: 14px;
     font-weight: 700;

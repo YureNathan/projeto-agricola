@@ -11,8 +11,10 @@
 }
 
 .categorias-cabecalho > a {
-    display: inline-block;
+    display: inline-flex;
     margin-bottom: 20px;
+    align-items: center;
+    gap: 6px;
     color: var(--muted-foreground);
     font-size: 0.85rem;
     font-weight: 700;
