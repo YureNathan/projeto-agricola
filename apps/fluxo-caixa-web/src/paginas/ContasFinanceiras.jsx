@@ -11,6 +11,11 @@ import AlternadorModulos from '../componentes/AlternadorModulos.jsx'
 import Esqueleto from '../componentes/Esqueleto.jsx'
 import ModalAnimado from '../componentes/ModalAnimado.jsx'
 import { API_BASE_URL as API_URL } from '../config.js'
+import {
+    limparSessao,
+    montarCabecalhos,
+    obterSessao,
+} from '../servicos/sessao.js'
 import './ContasFinanceiras.css'
 
 const LARGURA_GRAFICO = 900
@@ -279,79 +284,6 @@ function GraficoProjecaoContas({ pontos }) {
     )
 }
 
-function limparSessao() {
-    localStorage.removeItem(
-        'agrogestao_token',
-    )
-
-    localStorage.removeItem(
-        'agrogestao_tipo_token',
-    )
-
-    localStorage.removeItem(
-        'agrogestao_usuario',
-    )
-
-    localStorage.removeItem(
-        'agrogestao_token_expira_em',
-    )
-}
-
-function obterSessao() {
-    try {
-        const token =
-            localStorage.getItem(
-                'agrogestao_token',
-            )
-
-        const tipoToken =
-            localStorage.getItem(
-                'agrogestao_tipo_token',
-            ) ?? 'Bearer'
-
-        const usuarioSalvo =
-            localStorage.getItem(
-                'agrogestao_usuario',
-            )
-
-        const expiraEm =
-            Number(
-                localStorage.getItem(
-                    'agrogestao_token_expira_em',
-                ),
-            )
-
-        if (!token || !usuarioSalvo) {
-            return null
-        }
-
-        if (
-            expiraEm
-            && Date.now() >= expiraEm
-        ) {
-            limparSessao()
-            return null
-        }
-
-        const usuario =
-            JSON.parse(usuarioSalvo)
-
-        if (!usuario?.empresaId) {
-            limparSessao()
-            return null
-        }
-
-        return {
-            token,
-            tipoToken,
-            usuario,
-        }
-    } catch {
-        limparSessao()
-        return null
-    }
-}
-
 async function obterMensagemDeErro(
     resposta,
     mensagemPadrao,
@@ -583,19 +515,8 @@ function ContasFinanceiras() {
     ] = useState('')
 
     const criarCabecalhos = useCallback(
-        (possuiCorpo = false) => {
-            const cabecalhos = {
-                Authorization:
-                    `${sessao.tipoToken} ${sessao.token}`,
-            }
-
-            if (possuiCorpo) {
-                cabecalhos['Content-Type'] =
-                    'application/json; charset=utf-8'
-            }
-
-            return cabecalhos
-        },
+        (possuiCorpo = false) =>
+            montarCabecalhos(sessao, possuiCorpo),
         [sessao],
     )
 

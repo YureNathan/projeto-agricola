@@ -6,46 +6,11 @@ import { useNavigate } from 'react-router'
 import Esqueleto from '../componentes/Esqueleto.jsx'
 import SpinnerBotao from '../componentes/SpinnerBotao.jsx'
 import { API_BASE_URL as API_URL } from '../config.js'
+import {
+    atualizarUsuarioSessao,
+    obterSessao,
+} from '../servicos/sessao.js'
 import './Perfil.css'
-
-function limparSessao() {
-    localStorage.removeItem('agrogestao_token')
-    localStorage.removeItem('agrogestao_tipo_token')
-    localStorage.removeItem('agrogestao_usuario')
-    localStorage.removeItem('agrogestao_token_expira_em')
-}
-
-function obterSessao() {
-    try {
-        const token = localStorage.getItem('agrogestao_token')
-        const tipoToken =
-            localStorage.getItem('agrogestao_tipo_token') ??
-            'Bearer'
-        const usuarioSalvo =
-            localStorage.getItem('agrogestao_usuario')
-        const expiraEm = Number(
-            localStorage.getItem('agrogestao_token_expira_em'),
-        )
-
-        if (!token || !usuarioSalvo) {
-            return null
-        }
-
-        if (expiraEm && Date.now() >= expiraEm) {
-            limparSessao()
-            return null
-        }
-
-        return {
-            token,
-            tipoToken,
-            usuario: JSON.parse(usuarioSalvo),
-        }
-    } catch {
-        limparSessao()
-        return null
-    }
-}
 
 async function obterMensagemDeErro(resposta) {
     const dados = await resposta.json().catch(() => null)
@@ -102,10 +67,7 @@ function Perfil() {
 
                 const usuario = await resposta.json()
                 preencherFormulario(usuario)
-                localStorage.setItem(
-                    'agrogestao_usuario',
-                    JSON.stringify(usuario),
-                )
+                atualizarUsuarioSessao(usuario)
             } catch (erro) {
                 setTipoMensagem('erro')
                 setMensagem(
@@ -188,10 +150,7 @@ function Perfil() {
 
             const usuarioAtualizado = await resposta.json()
             preencherFormulario(usuarioAtualizado)
-            localStorage.setItem(
-                'agrogestao_usuario',
-                JSON.stringify(usuarioAtualizado),
-            )
+            atualizarUsuarioSessao(usuarioAtualizado)
             setMensagem('Dados atualizados com sucesso.')
             setTipoMensagem('sucesso')
         } catch (erro) {

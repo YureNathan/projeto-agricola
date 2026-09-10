@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router'
 import { API_BASE_URL as API_URL } from '../config.js'
 import Esqueleto from '../componentes/Esqueleto.jsx'
 import ModalAnimado from '../componentes/ModalAnimado.jsx'
+import { limparSessao, obterSessao } from '../servicos/sessao.js'
 import './AdminPainel.css'
 
 const STATUS_PAGAMENTO = [
@@ -20,45 +21,6 @@ const TIPOS_ACESSO = {
     NORMAL: 'Normal',
     VITALICIO: 'Vitalicio',
     PRAZO: 'Por prazo',
-}
-
-function limparSessao() {
-    localStorage.removeItem('agrogestao_token')
-    localStorage.removeItem('agrogestao_tipo_token')
-    localStorage.removeItem('agrogestao_usuario')
-    localStorage.removeItem('agrogestao_token_expira_em')
-}
-
-function obterSessao() {
-    try {
-        const token = localStorage.getItem('agrogestao_token')
-        const tipoToken =
-            localStorage.getItem('agrogestao_tipo_token') ??
-            'Bearer'
-        const usuarioSalvo =
-            localStorage.getItem('agrogestao_usuario')
-        const expiraEm = Number(
-            localStorage.getItem('agrogestao_token_expira_em'),
-        )
-
-        if (!token || !usuarioSalvo) {
-            return null
-        }
-
-        if (expiraEm && Date.now() >= expiraEm) {
-            limparSessao()
-            return null
-        }
-
-        return {
-            token,
-            tipoToken,
-            usuario: JSON.parse(usuarioSalvo),
-        }
-    } catch {
-        limparSessao()
-        return null
-    }
 }
 
 async function obterMensagemDeErro(resposta) {

@@ -9,6 +9,7 @@ import {
     API_CADASTRO_URL,
     API_LOGIN_URL,
 } from '../config.js'
+import { salvarSessao } from '../servicos/sessao.js'
 import SpinnerBotao from '../componentes/SpinnerBotao.jsx'
 import './Autenticacao.css'
 
@@ -33,31 +34,12 @@ async function obterMensagemDeErro(
 }
 
 function armazenarSessao(dados) {
-    const expiraEm =
-        Date.now() +
-        Number(
-            dados.expiraEmSegundos ?? 3600,
-        ) * 1000
-
-    localStorage.setItem(
-        'agrogestao_token',
-        dados.token,
-    )
-
-    localStorage.setItem(
-        'agrogestao_tipo_token',
-        dados.tipo ?? 'Bearer',
-    )
-
-    localStorage.setItem(
-        'agrogestao_usuario',
-        JSON.stringify(dados.usuario),
-    )
-
-    localStorage.setItem(
-        'agrogestao_token_expira_em',
-        String(expiraEm),
-    )
+    salvarSessao({
+        token: dados.token,
+        tipoToken: dados.tipo,
+        usuario: dados.usuario,
+        expiraEmSegundos: dados.expiraEmSegundos,
+    })
 }
 
 function Cadastro() {

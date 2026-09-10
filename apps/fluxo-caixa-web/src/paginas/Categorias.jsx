@@ -10,65 +10,8 @@ import {
 import { API_BASE_URL } from '../config.js'
 import Esqueleto from '../componentes/Esqueleto.jsx'
 import ModalAnimado from '../componentes/ModalAnimado.jsx'
+import { limparSessao, obterSessao } from '../servicos/sessao.js'
 import './Categorias.css'
-
-function limparSessao() {
-    localStorage.removeItem('agrogestao_token')
-    localStorage.removeItem('agrogestao_tipo_token')
-    localStorage.removeItem('agrogestao_usuario')
-    localStorage.removeItem(
-        'agrogestao_token_expira_em',
-    )
-}
-
-function obterSessao() {
-    try {
-        const token =
-            localStorage.getItem('agrogestao_token')
-
-        const tipoToken =
-            localStorage.getItem(
-                'agrogestao_tipo_token',
-            ) ?? 'Bearer'
-
-        const usuarioSalvo =
-            localStorage.getItem(
-                'agrogestao_usuario',
-            )
-
-        const expiraEm =
-            Number(
-                localStorage.getItem(
-                    'agrogestao_token_expira_em',
-                ),
-            )
-
-        if (!token || !usuarioSalvo) {
-            return null
-        }
-
-        if (expiraEm && Date.now() >= expiraEm) {
-            limparSessao()
-            return null
-        }
-
-        const usuario = JSON.parse(usuarioSalvo)
-
-        if (!usuario?.empresaId) {
-            limparSessao()
-            return null
-        }
-
-        return {
-            token,
-            tipoToken,
-            usuario,
-        }
-    } catch {
-        limparSessao()
-        return null
-    }
-}
 
 function criarErro(mensagem, status) {
     const erro = new Error(mensagem)
