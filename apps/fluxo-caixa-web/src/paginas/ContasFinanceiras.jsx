@@ -595,19 +595,22 @@ function ContasFinanceiras() {
         setBaixandoRelatorio,
     ] = useState('')
 
-    function criarCabecalhos(possuiCorpo = false) {
-        const cabecalhos = {
-            Authorization:
-                `${sessao.tipoToken} ${sessao.token}`,
-        }
+    const criarCabecalhos = useCallback(
+        (possuiCorpo = false) => {
+            const cabecalhos = {
+                Authorization:
+                    `${sessao.tipoToken} ${sessao.token}`,
+            }
 
-        if (possuiCorpo) {
-            cabecalhos['Content-Type'] =
-                'application/json; charset=utf-8'
-        }
+            if (possuiCorpo) {
+                cabecalhos['Content-Type'] =
+                    'application/json; charset=utf-8'
+            }
 
-        return cabecalhos
-    }
+            return cabecalhos
+        },
+        [sessao],
+    )
 
     const carregarDados =
         useCallback(async () => {
@@ -866,6 +869,7 @@ function ContasFinanceiras() {
                 setCarregando(false)
             }
         }, [
+            criarCabecalhos,
             navigate,
             sessao,
         ])

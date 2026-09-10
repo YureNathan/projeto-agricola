@@ -373,11 +373,24 @@ function Movimentacoes() {
 
     useEffect(() => {
         if (
-            parametros.get('lixeira') === '1' &&
-            !mostrandoLixeira
+            parametros.get('lixeira') !== '1' ||
+            mostrandoLixeira
         ) {
-            void carregarLixeira()
+            return undefined
         }
+
+        let ativo = true
+
+        Promise.resolve().then(() => {
+            if (ativo) {
+                void carregarLixeira()
+            }
+        })
+
+        return () => {
+            ativo = false
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [
         parametros,
         mostrandoLixeira,
