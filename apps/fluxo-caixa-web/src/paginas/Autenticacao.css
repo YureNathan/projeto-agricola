@@ -184,7 +184,7 @@
 .autenticacao-campo label {
     color: var(--foreground);
     font-size: 0.73rem;
-    font-weight: 750;
+    font-weight: 700;
 }
 
 .autenticacao-campo input {
@@ -446,7 +446,7 @@
 
 .autenticacao-alternativa a {
     color: var(--primary);
-    font-weight: 750;
+    font-weight: 700;
     text-decoration: underline;
     text-underline-offset: 3px;
 }

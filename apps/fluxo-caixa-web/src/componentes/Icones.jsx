@@ -151,6 +151,16 @@ export function IconeInfo(props) {
     )
 }
 
+export function IconeMenu(props) {
+    return (
+        <Base {...props}>
+            <path d="M4 6h16" />
+            <path d="M4 12h16" />
+            <path d="M4 18h16" />
+        </Base>
+    )
+}
+
 export function IconeLista(props) {
     return (
         <Base {...props}>

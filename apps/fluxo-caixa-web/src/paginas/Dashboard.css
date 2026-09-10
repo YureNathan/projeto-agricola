@@ -222,7 +222,7 @@
     margin: 0;
     color: var(--muted-foreground);
     font-size: 0.86rem;
-    font-weight: 650;
+    font-weight: 600;
 }
 
 .dashboard-card strong {
@@ -330,7 +330,7 @@
     margin-left: auto;
     color: var(--muted-foreground);
     font-size: 0.7rem;
-    font-weight: 650;
+    font-weight: 600;
 }
 
 .dashboard-grafico-cor {
@@ -554,7 +554,7 @@
     background: var(--muted);
     color: var(--muted-foreground);
     font-size: 0.68rem;
-    font-weight: 850;
+    font-weight: 800;
     letter-spacing: 0.02em;
 }
 
@@ -594,7 +594,7 @@
     color: var(--foreground);
     font: inherit;
     font-size: 0.78rem;
-    font-weight: 750;
+    font-weight: 700;
     text-align: left;
     cursor: pointer;
     grid-template-columns:
@@ -632,7 +632,7 @@ button:hover:not(:disabled) {
     margin-top: -7px;
     color: var(--muted-foreground);
     font-size: 0.62rem;
-    font-weight: 650;
+    font-weight: 600;
 }
 
 .dashboard-modulo-opcoes button:disabled {
@@ -812,7 +812,7 @@ button:hover:not(:disabled) {
     color: var(--foreground);
     font: inherit;
     font-size: 0.87rem;
-    font-weight: 750;
+    font-weight: 700;
     text-align: left;
     cursor: pointer;
     transition:

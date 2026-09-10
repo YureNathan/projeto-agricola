@@ -279,7 +279,7 @@
 .admin-modal-topo span {
     color: var(--primary);
     font-size: 0.72rem;
-    font-weight: 850;
+    font-weight: 800;
     letter-spacing: 0;
     text-transform: uppercase;
 }
@@ -308,7 +308,7 @@
 .admin-modal legend {
     color: var(--foreground);
     font-size: 0.82rem;
-    font-weight: 850;
+    font-weight: 800;
 }
 
 .admin-modal input {

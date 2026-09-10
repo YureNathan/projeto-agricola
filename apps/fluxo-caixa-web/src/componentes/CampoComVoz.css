@@ -6,7 +6,7 @@
 .campo-voz > span {
     color: var(--foreground);
     font-size: 0.9rem;
-    font-weight: 850;
+    font-weight: 800;
 }
 
 .campo-voz-controle {

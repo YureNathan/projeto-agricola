@@ -1,11 +1,14 @@
 .publica {
   min-height: 100vh;
-  overflow: hidden;
+  overflow-x: clip;
   background: var(--background);
   color: var(--foreground);
 }
 
 .publica-cabecalho {
+  position: sticky;
+  top: 0;
+  z-index: 50;
   display: flex;
   width: min(1180px, calc(100% - 40px));
   min-height: 72px;
@@ -14,6 +17,48 @@
   justify-content: space-between;
   gap: 28px;
   border-bottom: 1px solid var(--border);
+  background: color-mix(in oklch, var(--background) 92%, transparent);
+  backdrop-filter: blur(10px);
+}
+
+.publica-menu-mobile-botao {
+  display: none;
+  width: 42px;
+  height: 42px;
+  place-items: center;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--card);
+  color: var(--foreground);
+  cursor: pointer;
+}
+
+.publica-menu-mobile {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  display: grid;
+  padding: 8px 0 16px;
+  border-bottom: 1px solid var(--border);
+  background: var(--background);
+  box-shadow: 0 22px 44px
+  color-mix(in oklch, var(--foreground) 10%, transparent);
+  animation: surgir var(--motion-base) var(--ease-out) both;
+}
+
+.publica-menu-mobile a {
+  padding: 13px 4px;
+  border-bottom: 1px solid var(--border);
+  color: var(--foreground);
+  font-size: 0.95rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.publica-menu-mobile a:last-child {
+  border-bottom: 0;
 }
 
 .publica-marca {
@@ -49,7 +94,7 @@
 .publica-menu a {
   color: var(--muted-foreground);
   font-size: 0.78rem;
-  font-weight: 650;
+  font-weight: 600;
   text-decoration: none;
   transition: color 160ms ease;
 }
@@ -123,7 +168,7 @@
   background: var(--secondary);
   color: var(--primary);
   font-size: 0.78rem;
-  font-weight: 850;
+  font-weight: 800;
   text-decoration: none;
   transition:
           border-color 160ms ease,
@@ -225,7 +270,7 @@
 .publica-botao-secundario {
   color: var(--foreground);
   font-size: 0.78rem;
-  font-weight: 750;
+  font-weight: 700;
   text-decoration: none;
   transition:
           color 160ms ease,
@@ -246,7 +291,7 @@
   border: 1px solid var(--border);
   border-radius: calc(var(--radius) * 1.4);
   background: var(--card);
-  box-shadow: 0 28px 60px rgb(22 58 25 / 0.14);
+  box-shadow: 0 28px 60px color-mix(in oklch, var(--foreground) 14%, transparent);
 }
 
 .publica-barra-janela {
@@ -270,15 +315,15 @@
 }
 
 .publica-vermelho {
-  background: #ff6b65;
+  background: var(--destructive);
 }
 
 .publica-amarelo {
-  background: #f3b940;
+  background: var(--warning);
 }
 
 .publica-verde {
-  background: #38bd6a;
+  background: var(--primary);
 }
 
 .publica-painel {
@@ -357,7 +402,7 @@
 .publica-cartao > span {
   color: var(--muted-foreground);
   font-size: 0.67rem;
-  font-weight: 650;
+  font-weight: 600;
 }
 
 .publica-cartao strong {
@@ -551,7 +596,7 @@
   margin: 0;
   color: var(--muted-foreground);
   font-size: 0.65rem;
-  font-weight: 750;
+  font-weight: 700;
   letter-spacing: 0.09em;
   text-transform: uppercase;
 }
@@ -585,7 +630,7 @@
 .publica-segmentos-lista strong {
   color: var(--muted-foreground);
   font-size: 0.58rem;
-  font-weight: 650;
+  font-weight: 600;
 }
 
 .publica-recursos {
@@ -645,7 +690,7 @@
           var(--primary) 36%,
           var(--border)
   );
-  box-shadow: 0 13px 30px rgb(22 58 25 / 0.08);
+  box-shadow: 0 13px 30px color-mix(in oklch, var(--foreground) 8%, transparent);
   transform: translateY(-3px);
 }
 
@@ -658,7 +703,7 @@
   background: var(--secondary);
   color: var(--primary);
   font-size: 0.8rem;
-  font-weight: 850;
+  font-weight: 800;
 }
 
 .publica-grade-recursos h3 {
@@ -673,42 +718,27 @@
   line-height: 1.6;
 }
 
-.publica-grade-recursos .publica-recurso-destaque {
-  border-color: var(--primary);
-  background: var(--primary);
-  color: var(--primary-foreground);
-}
-
-.publica-grade-recursos
-.publica-recurso-destaque:hover {
-  border-color: var(--primary);
-}
-
-.publica-recurso-destaque h3 {
-  color: var(--primary-foreground);
-}
-
-.publica-recurso-destaque p {
-  color: color-mix(
+.publica-recurso-proximo {
+  border-style: dashed;
+  border-color: color-mix(
           in oklch,
-          var(--primary-foreground) 82%,
-          transparent
+          var(--primary) 38%,
+          var(--border)
   );
 }
 
-.publica-recurso-destaque a {
-  display: flex;
-  min-height: 34px;
-  margin-top: 22px;
-  padding: 0 13px;
+.publica-badge {
+  display: inline-flex;
+  width: fit-content;
+  margin-top: 14px;
+  padding: 4px 11px;
   align-items: center;
-  justify-content: center;
-  border-radius: 8px;
-  background: var(--primary-foreground);
+  border-radius: 999px;
+  background: var(--secondary);
   color: var(--primary);
-  font-size: 0.68rem;
+  font-size: 0.72rem;
   font-weight: 800;
-  text-decoration: none;
+  letter-spacing: 0.02em;
 }
 
 .publica-financeiro {
@@ -800,7 +830,7 @@
   border-radius: 50%;
   background: var(--card);
   font-size: 0.72rem;
-  font-weight: 750;
+  font-weight: 700;
 }
 
 .publica-passos strong {
@@ -818,7 +848,7 @@
   border-color: var(--border);
   background: var(--card);
   color: var(--foreground);
-  box-shadow: 0 5px 13px rgb(22 58 25 / 0.07);
+  box-shadow: 0 5px 13px color-mix(in oklch, var(--foreground) 7%, transparent);
 }
 
 .publica-passo-ativo > span {
@@ -871,7 +901,7 @@
 }
 
 .publica-chamada a:hover {
-  box-shadow: 0 12px 25px rgb(0 0 0 / 0.12);
+  box-shadow: 0 12px 25px color-mix(in oklch, var(--foreground) 12%, transparent);
   transform: translateY(-2px);
 }
 
@@ -911,6 +941,10 @@
 @media (max-width: 900px) {
   .publica-menu {
     display: none;
+  }
+
+  .publica-menu-mobile-botao {
+    display: grid;
   }
 
   .publica-inicio {

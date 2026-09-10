@@ -105,7 +105,7 @@
 .categorias-campo label {
     color: var(--foreground);
     font-size: 0.82rem;
-    font-weight: 750;
+    font-weight: 700;
 }
 
 .categorias-campo input,
@@ -241,7 +241,7 @@
     background: var(--secondary);
     color: var(--secondary-foreground);
     font-size: 0.73rem;
-    font-weight: 750;
+    font-weight: 700;
     white-space: nowrap;
 }
 

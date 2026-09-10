@@ -21,7 +21,7 @@
 .perfil-topo span {
     color: var(--primary);
     font-size: 0.76rem;
-    font-weight: 850;
+    font-weight: 800;
     letter-spacing: 0;
     text-transform: uppercase;
 }
@@ -61,7 +61,7 @@
 .perfil-formulario legend {
     color: var(--foreground);
     font-size: 0.82rem;
-    font-weight: 850;
+    font-weight: 800;
 }
 
 .perfil-formulario input {
@@ -81,7 +81,7 @@
 
 .perfil-formulario small {
     color: var(--muted-foreground);
-    font-weight: 650;
+    font-weight: 600;
 }
 
 .perfil-formulario fieldset {
@@ -111,7 +111,7 @@
     border: 1px solid var(--border);
     border-radius: 8px;
     cursor: pointer;
-    font-weight: 850;
+    font-weight: 800;
     min-height: 42px;
     padding: 0 16px;
 }
@@ -134,7 +134,7 @@
 
 .perfil-aviso {
     color: var(--primary);
-    font-weight: 750;
+    font-weight: 700;
     margin-bottom: 14px;
     padding: 14px 16px;
 }

@@ -42,7 +42,7 @@
     margin: 0 0 7px;
     color: var(--primary);
     font-size: 0.78rem;
-    font-weight: 850;
+    font-weight: 800;
     letter-spacing: 0.09em;
     text-transform: uppercase;
 }
@@ -88,7 +88,7 @@
     color: var(--muted-foreground);
     font: inherit;
     font-size: 0.86rem;
-    font-weight: 750;
+    font-weight: 700;
     cursor: pointer;
     transition:
             background 160ms ease,
@@ -126,7 +126,7 @@
 .formulario-campo label {
     color: var(--foreground);
     font-size: 0.84rem;
-    font-weight: 750;
+    font-weight: 700;
 }
 
 .formulario-campo input,
@@ -227,12 +227,12 @@
 }
 
 .categoria-ajuda-criacao strong {
-    font-weight: 850;
+    font-weight: 800;
 }
 
 .categoria-ajuda-criacao span {
     color: var(--muted-foreground);
-    font-weight: 650;
+    font-weight: 600;
 }
 
 .categoria-convite-criacao {
@@ -294,7 +294,7 @@
 
 .categoria-criar-destaque > strong {
     color: inherit;
-    font-weight: 850;
+    font-weight: 800;
 }
 
 .categoria-criar-destaque:hover:not(:disabled) {
@@ -410,7 +410,7 @@
     margin: 0;
     color: var(--foreground);
     font-size: 0.86rem;
-    font-weight: 850;
+    font-weight: 800;
 }
 
 .categoria-criacao-rapida
@@ -490,7 +490,7 @@
     background: var(--secondary);
     color: var(--primary);
     font-size: 0.78rem;
-    font-weight: 750;
+    font-weight: 700;
     line-height: 1.45;
 }
 
@@ -529,7 +529,7 @@
             );
     color: var(--destructive);
     font-size: 0.86rem;
-    font-weight: 650;
+    font-weight: 600;
     line-height: 1.5;
 }
 
@@ -554,7 +554,7 @@
     background: var(--card);
     color: var(--foreground);
     font-size: 0.87rem;
-    font-weight: 750;
+    font-weight: 700;
     text-decoration: none;
     transition:
             border-color 160ms ease,
