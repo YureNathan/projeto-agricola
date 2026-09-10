@@ -1,4 +1,16 @@
 import { Link } from 'react-router'
+import {
+    IconeCamadas,
+    IconeCheck,
+    IconeFolha,
+    IconeLista,
+    IconeMenos,
+    IconePata,
+    IconeSetaBaixo,
+    IconeSetaCima,
+    IconeSetaDiagonal,
+    IconeSetaDireita,
+} from './componentes/Icones.jsx'
 import './App.css'
 
 function PaginaInicial() {
@@ -6,7 +18,7 @@ function PaginaInicial() {
         <div className="publica">
             <header className="publica-cabecalho">
                 <Link className="publica-marca" to="/">
-                    <span className="publica-marca-icone">♧</span>
+                    <span className="publica-marca-icone"><IconeFolha /></span>
                     <span>AgroGestão</span>
                 </Link>
 
@@ -65,7 +77,7 @@ function PaginaInicial() {
                                 className="publica-botao"
                                 to="/cadastro"
                             >
-                                Criar sua conta <span>→</span>
+                                Criar sua conta <span><IconeSetaDireita /></span>
                             </Link>
 
                             <Link
@@ -179,7 +191,7 @@ function PaginaInicial() {
 
                                     <div className="publica-movimentacao">
                       <span className="publica-movimentacao-icone publica-entrada">
-                        ↓
+                        <IconeSetaBaixo />
                       </span>
 
                                         <div>
@@ -194,7 +206,7 @@ function PaginaInicial() {
 
                                     <div className="publica-movimentacao">
                       <span className="publica-movimentacao-icone publica-saida">
-                        ↑
+                        <IconeSetaCima />
                       </span>
 
                                         <div>
@@ -222,12 +234,12 @@ function PaginaInicial() {
 
                     <div className="publica-segmentos-lista">
                         <article>
-                            <span>♧</span>
+                            <span><IconeFolha /></span>
                             <strong>Agricultura</strong>
                         </article>
 
                         <article>
-                            <span>◉</span>
+                            <span><IconePata /></span>
                             <strong>Pecuária</strong>
                         </article>
 
@@ -237,12 +249,12 @@ function PaginaInicial() {
                         </article>
 
                         <article>
-                            <span>−</span>
+                            <span><IconeMenos /></span>
                             <strong>Despesas</strong>
                         </article>
 
                         <article>
-                            <span>✓</span>
+                            <span><IconeCheck /></span>
                             <strong>Categorias próprias</strong>
                         </article>
                     </div>
@@ -284,7 +296,7 @@ function PaginaInicial() {
 
                         <article>
                 <span className="publica-recurso-icone">
-                  ▤
+                  <IconeLista />
                 </span>
 
                             <h3>Movimentações financeiras</h3>
@@ -297,7 +309,7 @@ function PaginaInicial() {
 
                         <article>
                 <span className="publica-recurso-icone">
-                  ✓
+                  <IconeCheck />
                 </span>
 
                             <h3>Categorias personalizadas</h3>
@@ -310,7 +322,7 @@ function PaginaInicial() {
 
                         <article>
                 <span className="publica-recurso-icone">
-                  ↗
+                  <IconeSetaDiagonal />
                 </span>
 
                             <h3>Resumo financeiro</h3>
@@ -323,7 +335,7 @@ function PaginaInicial() {
 
                         <article>
                 <span className="publica-recurso-icone">
-                  ◫
+                  <IconeCamadas />
                 </span>
 
                             <h3>Dados separados por empresa</h3>
@@ -468,7 +480,7 @@ function PaginaInicial() {
                 id="sobre"
             >
                 <Link className="publica-marca" to="/">
-                    <span className="publica-marca-icone">♧</span>
+                    <span className="publica-marca-icone"><IconeFolha /></span>
                     <span>AgroGestão</span>
                 </Link>
 

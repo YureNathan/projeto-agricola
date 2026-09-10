@@ -8,6 +8,7 @@ import {
     useSearchParams,
 } from 'react-router'
 import { API_BASE_URL as API_URL } from '../config.js'
+import { IconeSetaEsquerda } from '../componentes/Icones.jsx'
 import { limparSessao, obterSessao } from '../servicos/sessao.js'
 import './NovaContaFinanceira.css'
 
@@ -402,7 +403,7 @@ function NovaContaFinanceira() {
                         onClick={cancelar}
                         type="button"
                     >
-                        ← Voltar para as contas
+                        <IconeSetaEsquerda /> Voltar para as contas
                     </button>
 
                     <p>

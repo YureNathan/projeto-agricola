@@ -8,6 +8,18 @@ import {
 } from 'react-router'
 import AlternadorModulos from '../componentes/AlternadorModulos.jsx'
 import Esqueleto from '../componentes/Esqueleto.jsx'
+import {
+    IconeCategoria,
+    IconeDocumento,
+    IconeFolha,
+    IconeLista,
+    IconeLixeira,
+    IconeMais,
+    IconeMenos,
+    IconePlanilha,
+    IconeSetaBaixo,
+    IconeSetaCima,
+} from '../componentes/Icones.jsx'
 import { useNotificacoes } from '../componentes/notificacoes-contexto.js'
 import { API_BASE_URL as API_URL } from '../config.js'
 import { limparSessao, obterSessao } from '../servicos/sessao.js'
@@ -718,7 +730,7 @@ function Dashboard() {
                 <header className="dashboard-cabecalho">
                     <div className="dashboard-marca">
                         <div className="dashboard-marca-icone">
-                            ♧
+                            <IconeFolha />
                         </div>
 
                         <div>
@@ -795,7 +807,7 @@ function Dashboard() {
                             <p>Total que entrou</p>
 
                             <span className="dashboard-card-icone">
-                                ↓
+                                <IconeSetaBaixo />
                             </span>
                         </div>
 
@@ -815,7 +827,7 @@ function Dashboard() {
                             <p>Total que saiu</p>
 
                             <span className="dashboard-card-icone">
-                                ↑
+                                <IconeSetaCima />
                             </span>
                         </div>
 
@@ -1226,11 +1238,11 @@ function Dashboard() {
                                                         >
                                                             <div className="dashboard-movimentacao-info">
                                                                 <span className="dashboard-movimentacao-icone">
-                                                                    {
-                                                                        despesa
-                                                                            ? '↑'
-                                                                            : '↓'
-                                                                    }
+                                                                    {despesa ? (
+                                                                        <IconeSetaCima />
+                                                                    ) : (
+                                                                        <IconeSetaBaixo />
+                                                                    )}
                                                                 </span>
 
                                                                 <div>
@@ -1298,7 +1310,7 @@ function Dashboard() {
                                 }
                                 type="button"
                             >
-                                <span>＋</span>
+                                <span><IconeMais /></span>
                                 Cadastrar receita — dinheiro entrando
                             </button>
 
@@ -1309,7 +1321,7 @@ function Dashboard() {
                                 }
                                 type="button"
                             >
-                                <span>−</span>
+                                <span><IconeMenos /></span>
                                 Cadastrar despesa — dinheiro saindo
                             </button>
 
@@ -1320,7 +1332,7 @@ function Dashboard() {
                                 }
                                 type="button"
                             >
-                                <span>☷</span>
+                                <span><IconeLista /></span>
                                 Ver todas as movimentações
                             </button>
 
@@ -1331,25 +1343,7 @@ function Dashboard() {
                                 }
                                 type="button"
                             >
-                                <span>
-                                    <svg
-                                        aria-hidden="true"
-                                        fill="none"
-                                        height="18"
-                                        stroke="currentColor"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth="2"
-                                        viewBox="0 0 24 24"
-                                        width="18"
-                                    >
-                                        <path d="M3 6h18" />
-                                        <path d="M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2" />
-                                        <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
-                                        <path d="M10 11v6" />
-                                        <path d="M14 11v6" />
-                                    </svg>
-                                </span>
+                                <span><IconeLixeira /></span>
                                 Lixeira
                             </button>
 
@@ -1360,7 +1354,7 @@ function Dashboard() {
                                 }
                                 type="button"
                             >
-                                <span>⌁</span>
+                                <span><IconeCategoria /></span>
                                 Gerenciar categorias
                             </button>
 
@@ -1378,31 +1372,7 @@ function Dashboard() {
                                 }
                                 type="button"
                             >
-                                <span>
-                                    <svg
-                                        aria-hidden="true"
-                                        fill="none"
-                                        height="18"
-                                        stroke="currentColor"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth="2"
-                                        viewBox="0 0 24 24"
-                                        width="18"
-                                    >
-                                        <rect
-                                            height="18"
-                                            rx="2"
-                                            width="18"
-                                            x="3"
-                                            y="3"
-                                        />
-                                        <path d="M3 9h18" />
-                                        <path d="M3 15h18" />
-                                        <path d="M9 3v18" />
-                                        <path d="M15 3v18" />
-                                    </svg>
-                                </span>
+                                <span><IconePlanilha /></span>
                                 {
                                     baixandoRelatorio
                                     === 'excel'
@@ -1425,24 +1395,7 @@ function Dashboard() {
                                 }
                                 type="button"
                             >
-                                <span>
-                                    <svg
-                                        aria-hidden="true"
-                                        fill="none"
-                                        height="18"
-                                        stroke="currentColor"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth="2"
-                                        viewBox="0 0 24 24"
-                                        width="18"
-                                    >
-                                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-                                        <path d="M14 2v6h6" />
-                                        <path d="M9 13h6" />
-                                        <path d="M9 17h6" />
-                                    </svg>
-                                </span>
+                                <span><IconeDocumento /></span>
                                 {
                                     baixandoRelatorio
                                     === 'pdf'

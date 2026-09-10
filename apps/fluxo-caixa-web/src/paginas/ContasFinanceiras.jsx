@@ -9,6 +9,16 @@ import {
 } from 'react-router'
 import AlternadorModulos from '../componentes/AlternadorModulos.jsx'
 import Esqueleto from '../componentes/Esqueleto.jsx'
+import {
+    IconeCategoria,
+    IconeDocumento,
+    IconeFechar,
+    IconeLixeira,
+    IconePlanilha,
+    IconeSetaBaixo,
+    IconeSetaCima,
+    IconeSetaEsquerda,
+} from '../componentes/Icones.jsx'
 import ModalAnimado from '../componentes/ModalAnimado.jsx'
 import { API_BASE_URL as API_URL } from '../config.js'
 import {
@@ -1460,7 +1470,7 @@ function ContasFinanceiras() {
                             }
                             type="button"
                         >
-                            ← Voltar ao dashboard
+                            <IconeSetaEsquerda /> Voltar ao dashboard
                         </button>
 
                         <AlternadorModulos />
@@ -1779,7 +1789,7 @@ function ContasFinanceiras() {
                             onClick={abrirCategorias}
                             type="button"
                         >
-                            <span>≡</span>
+                            <span><IconeCategoria /></span>
                             Gerenciar categorias
                         </button>
 
@@ -1802,25 +1812,7 @@ function ContasFinanceiras() {
                             }}
                             type="button"
                         >
-                            <span>
-                                <svg
-                                    aria-hidden="true"
-                                    fill="none"
-                                    height="18"
-                                    stroke="currentColor"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth="2"
-                                    viewBox="0 0 24 24"
-                                    width="18"
-                                >
-                                    <path d="M3 6h18" />
-                                    <path d="M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2" />
-                                    <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
-                                    <path d="M10 11v6" />
-                                    <path d="M14 11v6" />
-                                </svg>
-                            </span>
+                            <span><IconeLixeira /></span>
                             {mostrandoLixeira
                                 ? 'Ver contas cadastradas'
                                 : 'Lixeira'}
@@ -1837,7 +1829,7 @@ function ContasFinanceiras() {
                             }
                             type="button"
                         >
-                            <span>▦</span>
+                            <span><IconePlanilha /></span>
                             {baixandoRelatorio
                             === 'excel'
                                 ? 'Gerando Excel...'
@@ -1855,7 +1847,7 @@ function ContasFinanceiras() {
                             }
                             type="button"
                         >
-                            <span>▤</span>
+                            <span><IconeDocumento /></span>
                             {baixandoRelatorio
                             === 'pdf'
                                 ? 'Gerando PDF...'
@@ -1986,9 +1978,11 @@ function ContasFinanceiras() {
                                         }`}
                                     >
                                         {conta.tipo
-                                        === 'RECEBER'
-                                            ? '↓'
-                                            : '↑'}
+                                        === 'RECEBER' ? (
+                                            <IconeSetaBaixo />
+                                        ) : (
+                                            <IconeSetaCima />
+                                        )}
                                     </div>
 
                                     <div className="contas-item-informacoes">
@@ -2187,7 +2181,7 @@ function ContasFinanceiras() {
                                 onClick={fecharModalLiquidacao}
                                 type="button"
                             >
-                                ×
+                                <IconeFechar />
                             </button>
                         </div>
 
@@ -2371,7 +2365,7 @@ function ContasFinanceiras() {
                                 onClick={fecharModalCancelamento}
                                 type="button"
                             >
-                                ×
+                                <IconeFechar />
                             </button>
                         </div>
 
@@ -2439,7 +2433,7 @@ function ContasFinanceiras() {
                                 onClick={fecharExclusaoPermanente}
                                 type="button"
                             >
-                                ×
+                                <IconeFechar />
                             </button>
                         </div>
 
@@ -2505,7 +2499,7 @@ function ContasFinanceiras() {
                                 onClick={fecharEnvioFinanceiro}
                                 type="button"
                             >
-                                ×
+                                <IconeFechar />
                             </button>
                         </div>
 

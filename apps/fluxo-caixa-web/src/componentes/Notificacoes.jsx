@@ -4,10 +4,28 @@ import {
     useState,
 } from 'react'
 import { NotificacoesContext } from './notificacoes-contexto.js'
+import {
+    IconeAlerta,
+    IconeCheck,
+    IconeFechar,
+    IconeInfo,
+} from './Icones.jsx'
 import './Notificacoes.css'
 
 const DURACAO_PADRAO = 4000
 const DURACAO_SAIDA = 180
+
+const ICONE_POR_TIPO = {
+    sucesso: IconeCheck,
+    erro: IconeAlerta,
+    info: IconeInfo,
+}
+
+function IconeNotificacao({ tipo }) {
+    const Icone = ICONE_POR_TIPO[tipo] ?? IconeInfo
+
+    return <Icone size={14} />
+}
 
 export function ProvedorNotificacoes({ children }) {
     const [notificacoes, setNotificacoes] = useState([])
@@ -54,12 +72,6 @@ export function ProvedorNotificacoes({ children }) {
         [fechar],
     )
 
-    const iconePorTipo = {
-        sucesso: '✓',
-        erro: '!',
-        info: 'i',
-    }
-
     return (
         <NotificacoesContext.Provider value={{ notificar }}>
             {children}
@@ -84,7 +96,9 @@ export function ProvedorNotificacoes({ children }) {
                             aria-hidden="true"
                             className="notificacao-icone"
                         >
-                            {iconePorTipo[notificacao.tipo] ?? 'i'}
+                            <IconeNotificacao
+                                tipo={notificacao.tipo}
+                            />
                         </span>
 
                         <p className="notificacao-mensagem">
@@ -97,7 +111,7 @@ export function ProvedorNotificacoes({ children }) {
                             onClick={() => fechar(notificacao.id)}
                             type="button"
                         >
-                            ×
+                            <IconeFechar size={16} />
                         </button>
                     </div>
                 ))}

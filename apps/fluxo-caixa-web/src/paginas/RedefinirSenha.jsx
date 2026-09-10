@@ -8,6 +8,13 @@ import {
     useSearchParams,
 } from 'react-router'
 import { API_REDEFINIR_SENHA_URL } from '../config.js'
+import {
+    IconeFolha,
+    IconeOlho,
+    IconeOlhoFechado,
+    IconeSetaDireita,
+    IconeSetaEsquerda,
+} from '../componentes/Icones.jsx'
 import SpinnerBotao from '../componentes/SpinnerBotao.jsx'
 import './Autenticacao.css'
 
@@ -155,7 +162,7 @@ function RedefinirSenha() {
                     to="/"
                 >
                     <span className="autenticacao-marca-icone">
-                        ♧
+                        <IconeFolha />
                     </span>
 
                     <span>AgroGestao</span>
@@ -255,7 +262,11 @@ function RedefinirSenha() {
                                     }
                                     type="button"
                                 >
-                                    {mostrarSenha ? '●' : '○'}
+                                    {mostrarSenha ? (
+                                        <IconeOlhoFechado />
+                                    ) : (
+                                        <IconeOlho />
+                                    )}
                                 </button>
                             </div>
                         </div>
@@ -302,7 +313,11 @@ function RedefinirSenha() {
                                     }
                                     type="button"
                                 >
-                                    {mostrarConfirmacao ? '●' : '○'}
+                                    {mostrarConfirmacao ? (
+                                        <IconeOlhoFechado />
+                                    ) : (
+                                        <IconeOlho />
+                                    )}
                                 </button>
                             </div>
                         </div>
@@ -315,7 +330,7 @@ function RedefinirSenha() {
                             {carregando ? (
                                 <SpinnerBotao />
                             ) : (
-                                <span>→</span>
+                                <IconeSetaDireita />
                             )}
 
                             {carregando
@@ -326,7 +341,7 @@ function RedefinirSenha() {
 
                     <p className="autenticacao-alternativa">
                         <Link to="/login">
-                            ← Voltar para o login
+                            <IconeSetaEsquerda /> Voltar para o login
                         </Link>
                     </p>
                 </div>

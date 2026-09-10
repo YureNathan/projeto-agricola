@@ -7,6 +7,7 @@ import {
 } from 'react-router'
 import CampoComVoz from '../componentes/CampoComVoz.jsx'
 import Esqueleto from '../componentes/Esqueleto.jsx'
+import { IconeSetaEsquerda } from '../componentes/Icones.jsx'
 import { API_BASE_URL as API_URL } from '../config.js'
 import { limparSessao, obterSessao } from '../servicos/sessao.js'
 import './AppMobile.css'
@@ -323,7 +324,7 @@ function AppMobile() {
                     onClick={() => navigate('/dashboard')}
                     type="button"
                 >
-                    <span aria-hidden="true">←</span>
+                    <IconeSetaEsquerda />
                 </button>
 
                 <div className="app-mobile-titulo">

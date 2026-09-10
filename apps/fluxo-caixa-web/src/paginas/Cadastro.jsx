@@ -10,6 +10,13 @@ import {
     API_LOGIN_URL,
 } from '../config.js'
 import { salvarSessao } from '../servicos/sessao.js'
+import {
+    IconeFolha,
+    IconeOlho,
+    IconeOlhoFechado,
+    IconeSetaDireita,
+    IconeSetaEsquerda,
+} from '../componentes/Icones.jsx'
 import SpinnerBotao from '../componentes/SpinnerBotao.jsx'
 import './Autenticacao.css'
 
@@ -233,7 +240,7 @@ function Cadastro() {
                     to="/"
                 >
                     <span className="autenticacao-marca-icone">
-                        ♧
+                        <IconeFolha />
                     </span>
 
                     <span>AgroGestão</span>
@@ -465,7 +472,11 @@ function Cadastro() {
                                     }
                                     type="button"
                                 >
-                                    {mostrarSenha ? '●' : '○'}
+                                    {mostrarSenha ? (
+                                        <IconeOlhoFechado />
+                                    ) : (
+                                        <IconeOlho />
+                                    )}
                                 </button>
                             </div>
                         </div>
@@ -507,9 +518,11 @@ function Cadastro() {
                                     }
                                     type="button"
                                 >
-                                    {mostrarConfirmacao
-                                        ? '●'
-                                        : '○'}
+                                    {mostrarConfirmacao ? (
+                                        <IconeOlhoFechado />
+                                    ) : (
+                                        <IconeOlho />
+                                    )}
                                 </button>
                             </div>
                         </div>
@@ -522,7 +535,7 @@ function Cadastro() {
                             {carregando ? (
                                 <SpinnerBotao />
                             ) : (
-                                <span>→</span>
+                                <IconeSetaDireita />
                             )}
 
                             {carregando
@@ -540,7 +553,8 @@ function Cadastro() {
 
                     <p className="autenticacao-alternativa">
                         <Link to="/">
-                            ← Voltar para a página inicial
+                            <IconeSetaEsquerda /> Voltar para a página
+                            inicial
                         </Link>
                     </p>
                 </div>

@@ -9,6 +9,13 @@ import {
 } from 'react-router'
 import { API_BASE_URL } from '../config.js'
 import Esqueleto from '../componentes/Esqueleto.jsx'
+import {
+    IconeFechar,
+    IconeSetaBaixo,
+    IconeSetaCima,
+    IconeSetaDireita,
+    IconeSetaEsquerda,
+} from '../componentes/Icones.jsx'
 import ModalAnimado from '../componentes/ModalAnimado.jsx'
 import { limparSessao, obterSessao } from '../servicos/sessao.js'
 import './Categorias.css'
@@ -615,7 +622,8 @@ function Categorias() {
                         categoria,
                     )}
                 >
-                    Ver movimentações →
+                    Ver movimentações{' '}
+                    <IconeSetaDireita />
                 </Link>
 
                 <div className="categoria-card-acoes">
@@ -681,7 +689,7 @@ function Categorias() {
         <main className="categorias-pagina">
             <header className="categorias-cabecalho">
                 <Link to="/dashboard">
-                    ← Voltar ao dashboard
+                    <IconeSetaEsquerda /> Voltar ao dashboard
                 </Link>
 
                 <p>AgroGestão</p>
@@ -860,7 +868,7 @@ function Categorias() {
                         <section className="categorias-grupo categorias-grupo-receitas">
                             <div className="categorias-grupo-cabecalho">
                                 <div>
-                                    <span>↓</span>
+                                    <span><IconeSetaBaixo /></span>
                                     <h3>Receitas</h3>
                                 </div>
 
@@ -889,7 +897,7 @@ function Categorias() {
                         <section className="categorias-grupo categorias-grupo-despesas">
                             <div className="categorias-grupo-cabecalho">
                                 <div>
-                                    <span>↑</span>
+                                    <span><IconeSetaCima /></span>
                                     <h3>Despesas</h3>
                                 </div>
 
@@ -938,7 +946,7 @@ function Categorias() {
                                 onClick={fecharConfirmacao}
                                 type="button"
                             >
-                                ×
+                                <IconeFechar />
                             </button>
                         </div>
 

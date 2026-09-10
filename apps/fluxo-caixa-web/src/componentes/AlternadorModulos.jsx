@@ -2,6 +2,7 @@ import {
     useLocation,
     useNavigate,
 } from 'react-router'
+import { IconeCalendario } from './Icones.jsx'
 import './AlternadorModulos.css'
 
 function AlternadorModulos() {
@@ -67,7 +68,7 @@ function AlternadorModulos() {
                 type="button"
             >
                 <span aria-hidden="true">
-                    📅
+                    <IconeCalendario />
                 </span>
 
                 Contas a pagar e receber

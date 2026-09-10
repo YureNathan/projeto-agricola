@@ -6,6 +6,12 @@ import {
     useNavigate,
 } from 'react-router'
 import { limparSessao, obterSessao } from '../servicos/sessao.js'
+import {
+    IconeFolha,
+    IconeRelogio,
+    IconeSetaDireita,
+    IconeTransferir,
+} from '../componentes/Icones.jsx'
 import './EscolhaModulo.css'
 
 function EscolhaModulo() {
@@ -67,7 +73,7 @@ function EscolhaModulo() {
                 <header className="escolha-modulo-cabecalho">
                     <div className="escolha-modulo-marca">
                         <span aria-hidden="true">
-                            ♧
+                            <IconeFolha />
                         </span>
 
                         <div>
@@ -151,7 +157,7 @@ function EscolhaModulo() {
                             type="button"
                         >
                             <span className="escolha-modulo-icone">
-                                ↕
+                                <IconeTransferir />
                             </span>
 
                             <div className="escolha-modulo-card-texto">
@@ -193,7 +199,7 @@ function EscolhaModulo() {
                             <strong className="escolha-modulo-acao">
                                 Abrir controle interno
                                 <span aria-hidden="true">
-                                    →
+                                    <IconeSetaDireita />
                                 </span>
                             </strong>
                         </button>
@@ -206,7 +212,7 @@ function EscolhaModulo() {
                             type="button"
                         >
                             <span className="escolha-modulo-icone">
-                                ◷
+                                <IconeRelogio />
                             </span>
 
                             <div className="escolha-modulo-card-texto">
@@ -249,7 +255,7 @@ function EscolhaModulo() {
                             <strong className="escolha-modulo-acao">
                                 Abrir contas
                                 <span aria-hidden="true">
-                                    →
+                                    <IconeSetaDireita />
                                 </span>
                             </strong>
                         </button>

@@ -9,6 +9,10 @@ import {
 } from 'react-router'
 import { API_BASE_URL as API_URL } from '../config.js'
 import Esqueleto from '../componentes/Esqueleto.jsx'
+import {
+    IconeFechar,
+    IconeSetaEsquerda,
+} from '../componentes/Icones.jsx'
 import ModalAnimado from '../componentes/ModalAnimado.jsx'
 import {
     limparSessao,
@@ -811,9 +815,10 @@ function Movimentacoes() {
                                 : '/dashboard'
                         }
                     >
+                        <IconeSetaEsquerda />{' '}
                         {categoriaId
-                            ? '← Voltar às categorias'
-                            : '← Voltar ao dashboard'}
+                            ? 'Voltar às categorias'
+                            : 'Voltar ao dashboard'}
                     </Link>
 
                     <p className="movimentacoes-etiqueta">
@@ -1119,7 +1124,7 @@ function Movimentacoes() {
                                 }
                                 type="button"
                             >
-                                ×
+                                <IconeFechar />
                             </button>
                         </div>
 
@@ -1186,7 +1191,7 @@ function Movimentacoes() {
                                 }
                                 type="button"
                             >
-                                ×
+                                <IconeFechar />
                             </button>
                         </div>
 
@@ -1257,7 +1262,7 @@ function Movimentacoes() {
                                 onClick={fecharConversao}
                                 type="button"
                             >
-                                ×
+                                <IconeFechar />
                             </button>
                         </div>
 

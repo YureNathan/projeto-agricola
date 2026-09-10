@@ -9,6 +9,7 @@ import {
 } from 'react-router'
 import { API_BASE_URL as API_URL } from '../config.js'
 import Esqueleto from '../componentes/Esqueleto.jsx'
+import { IconeSetaEsquerda } from '../componentes/Icones.jsx'
 import { limparSessao, obterSessao } from '../servicos/sessao.js'
 import './NovaMovimentacao.css'
 
@@ -436,7 +437,7 @@ function EditarMovimentacao() {
             <div className="movimentacao-conteudo">
                 <header className="movimentacao-cabecalho">
                     <Link to="/dashboard/movimentacoes">
-                        ← Voltar às movimentações
+                        <IconeSetaEsquerda /> Voltar às movimentações
                     </Link>
 
                     <p>AgroGestão</p>

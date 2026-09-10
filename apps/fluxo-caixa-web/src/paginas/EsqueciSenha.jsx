@@ -5,6 +5,11 @@ import {
     Link,
 } from 'react-router'
 import { API_ESQUECI_SENHA_URL } from '../config.js'
+import {
+    IconeFolha,
+    IconeSetaDireita,
+    IconeSetaEsquerda,
+} from '../componentes/Icones.jsx'
 import SpinnerBotao from '../componentes/SpinnerBotao.jsx'
 import './Autenticacao.css'
 
@@ -92,7 +97,7 @@ function EsqueciSenha() {
                     to="/"
                 >
                     <span className="autenticacao-marca-icone">
-                        ♧
+                        <IconeFolha />
                     </span>
 
                     <span>AgroGestao</span>
@@ -180,7 +185,7 @@ function EsqueciSenha() {
                             {carregando ? (
                                 <SpinnerBotao />
                             ) : (
-                                <span>→</span>
+                                <IconeSetaDireita />
                             )}
 
                             {carregando
@@ -191,7 +196,7 @@ function EsqueciSenha() {
 
                     <p className="autenticacao-alternativa">
                         <Link to="/login">
-                            ← Voltar para o login
+                            <IconeSetaEsquerda /> Voltar para o login
                         </Link>
                     </p>
                 </div>

@@ -8,6 +8,11 @@ import {
     useSearchParams,
 } from 'react-router'
 import { API_BASE_URL as API_URL } from '../config.js'
+import {
+    IconeCheck,
+    IconeMais,
+    IconeSetaEsquerda,
+} from '../componentes/Icones.jsx'
 import { limparSessao, obterSessao } from '../servicos/sessao.js'
 import './NovaMovimentacao.css'
 
@@ -534,7 +539,7 @@ function NovaMovimentacao() {
             <div className="movimentacao-conteudo">
                 <header className="movimentacao-cabecalho">
                     <Link to="/dashboard">
-                        ← Voltar ao dashboard
+                        <IconeSetaEsquerda /> Voltar ao dashboard
                     </Link>
 
                     <p>AgroGestão</p>
@@ -754,7 +759,7 @@ function NovaMovimentacao() {
                                             }
                                             type="button"
                                         >
-                                            <span>＋</span>
+                                            <span><IconeMais /></span>
 
                                             <strong>
                                                 Nova categoria
@@ -768,7 +773,7 @@ function NovaMovimentacao() {
                                 && !criandoCategoria
                                 && (
                                     <div className="categoria-sem-opcoes">
-                                        <span>＋</span>
+                                        <span><IconeMais /></span>
 
                                         <div>
                                             <strong>
@@ -874,7 +879,7 @@ function NovaMovimentacao() {
                                     className="categoria-criada-sucesso"
                                     role="status"
                                 >
-                                    ✓ {sucessoCategoria}
+                                    <IconeCheck /> {sucessoCategoria}
                                 </p>
                             )}
 

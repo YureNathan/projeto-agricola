@@ -2,6 +2,13 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router'
 import { API_LOGIN_URL } from '../config.js'
 import { salvarSessao } from '../servicos/sessao.js'
+import {
+    IconeFolha,
+    IconeOlho,
+    IconeOlhoFechado,
+    IconeSetaDireita,
+    IconeSetaEsquerda,
+} from '../componentes/Icones.jsx'
 import SpinnerBotao from '../componentes/SpinnerBotao.jsx'
 import './Autenticacao.css'
 
@@ -84,7 +91,7 @@ function Login() {
                     to="/"
                 >
                     <span className="autenticacao-marca-icone">
-                        ♧
+                        <IconeFolha />
                     </span>
 
                     <span>AgroGestão</span>
@@ -203,7 +210,11 @@ function Login() {
                                     }
                                     type="button"
                                 >
-                                    {mostrarSenha ? '●' : '○'}
+                                    {mostrarSenha ? (
+                                        <IconeOlhoFechado />
+                                    ) : (
+                                        <IconeOlho />
+                                    )}
                                 </button>
                             </div>
                         </div>
@@ -216,7 +227,7 @@ function Login() {
                             {carregando ? (
                                 <SpinnerBotao />
                             ) : (
-                                <span>→</span>
+                                <IconeSetaDireita />
                             )}
 
                             {carregando
@@ -240,7 +251,8 @@ function Login() {
 
                     <p className="autenticacao-alternativa">
                         <Link to="/">
-                            ← Voltar para a página inicial
+                            <IconeSetaEsquerda /> Voltar para a página
+                            inicial
                         </Link>
                     </p>
                 </div>

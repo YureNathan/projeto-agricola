@@ -128,10 +128,12 @@
     position: absolute;
     top: 0;
     left: 0;
-    color: var(--primary);
-    font-size: 0.83rem;
-    font-weight: 900;
-    content: "•";
+    width: 6px;
+    height: 6px;
+    margin-top: 5px;
+    border-radius: 50%;
+    background-color: var(--primary);
+    content: "";
 }
 
 .autenticacao-direitos {
@@ -379,11 +381,12 @@
     height: 19px;
     place-items: center;
     border-radius: 50%;
-    background: var(--primary);
-    color: var(--primary-foreground);
-    content: "✓";
-    font-size: 0.65rem;
-    font-weight: 900;
+    background-color: var(--primary);
+    background-image: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='%23f7fcf2'%20stroke-width='3'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cpath%20d='M20%206%209%2017l-5-5'/%3E%3C/svg%3E");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 12px 12px;
+    content: "";
 }
 
 .autenticacao-atividades:disabled {
