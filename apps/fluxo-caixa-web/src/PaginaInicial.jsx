@@ -544,7 +544,9 @@ function PaginaInicial() {
                         </article>
 
                         <article className="publica-passo-ativo">
-                            <span>4</span>
+                            <span>
+                                <IconeCheck />
+                            </span>
 
                             <div>
                                 <strong>Acompanhe o resultado</strong>
