@@ -438,10 +438,14 @@
 }
 
 .autenticacao-alternativa {
-    margin: 14px 0 0;
+    margin: 12px 0 0;
     color: var(--muted-foreground);
-    font-size: 0.7rem;
+    font-size: 0.75rem;
     text-align: center;
+}
+
+.autenticacao-formulario + .autenticacao-alternativa {
+    margin-top: 22px;
 }
 
 .autenticacao-alternativa a {
