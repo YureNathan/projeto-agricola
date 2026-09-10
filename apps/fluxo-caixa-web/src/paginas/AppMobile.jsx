@@ -317,7 +317,16 @@ function AppMobile() {
     return (
         <div className="app-mobile">
             <header className="app-mobile-topo">
-                <div>
+                <button
+                    aria-label="Voltar"
+                    className="app-mobile-voltar"
+                    onClick={() => navigate('/dashboard')}
+                    type="button"
+                >
+                    <span aria-hidden="true">←</span>
+                </button>
+
+                <div className="app-mobile-titulo">
                     <span>AgroGestao</span>
                     <strong>
                         {sessao.usuario.nomeEmpresa}
@@ -325,6 +334,7 @@ function AppMobile() {
                 </div>
 
                 <button
+                    className="app-mobile-site"
                     onClick={() => navigate('/dashboard')}
                     type="button"
                 >
