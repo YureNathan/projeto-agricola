@@ -1,4 +1,12 @@
-import { useEffect } from 'react'
+/*
+ * A animação de saída exige manter o elemento montado durante o fechamento,
+ * o que implica setState dentro do efeito. É intencional e controlado.
+ */
+/* eslint-disable react-hooks/set-state-in-effect */
+import {
+    useEffect,
+    useState,
+} from 'react'
 
 const SELETOR_FOCAVEL =
     'a[href], button:not([disabled]), textarea:not([disabled]), ' +
@@ -91,4 +99,32 @@ export function aoClicarFundo(evento, aoFechar) {
     if (evento.target === evento.currentTarget) {
         aoFechar()
     }
+}
+
+export function useSaidaAnimada(aberto, duracao = 180) {
+    const [montado, setMontado] = useState(aberto)
+    const [saindo, setSaindo] = useState(false)
+
+    useEffect(() => {
+        if (aberto) {
+            setMontado(true)
+            setSaindo(false)
+            return undefined
+        }
+
+        if (!montado) {
+            return undefined
+        }
+
+        setSaindo(true)
+
+        const temporizador = window.setTimeout(
+            () => setMontado(false),
+            duracao,
+        )
+
+        return () => window.clearTimeout(temporizador)
+    }, [aberto, montado, duracao])
+
+    return { montado, saindo }
 }

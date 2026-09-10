@@ -246,6 +246,33 @@ svg {
   animation: surgirEscala var(--motion-slow) var(--ease-out) both;
 }
 
+@keyframes sumirFundo {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes sumirEscala {
+  to {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+  }
+}
+
+.movimentacoes-modal-fundo.modal-saindo,
+.categorias-modal-fundo.modal-saindo,
+.contas-modal-fundo.modal-saindo,
+.admin-modal-fundo.modal-saindo {
+  animation: sumirFundo var(--motion-base) var(--ease-in) both;
+}
+
+.movimentacoes-modal-fundo.modal-saindo > *,
+.categorias-modal-fundo.modal-saindo > *,
+.contas-modal-fundo.modal-saindo > *,
+.admin-modal-fundo.modal-saindo > * {
+  animation: sumirEscala var(--motion-base) var(--ease-in) both;
+}
+
 /*
  * Botões — estado de progresso (spinner inline).
  */

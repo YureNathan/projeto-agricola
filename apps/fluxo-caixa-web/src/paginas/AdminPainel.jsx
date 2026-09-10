@@ -6,10 +6,7 @@ import {
 import { useNavigate } from 'react-router'
 import { API_BASE_URL as API_URL } from '../config.js'
 import Esqueleto from '../componentes/Esqueleto.jsx'
-import {
-    aoClicarFundo,
-    useFecharModal,
-} from '../componentes/useFecharModal.js'
+import ModalAnimado from '../componentes/ModalAnimado.jsx'
 import './AdminPainel.css'
 
 const STATUS_PAGAMENTO = [
@@ -124,8 +121,6 @@ function AdminPainel() {
     const [diasAcesso, setDiasAcesso] = useState({})
     const [usuarioEmEdicao, setUsuarioEmEdicao] =
         useState(null)
-
-    useFecharModal(Boolean(usuarioEmEdicao), fecharEdicao)
     const [formularioEdicao, setFormularioEdicao] =
         useState({
             nomeEmpresa: '',
@@ -832,14 +827,11 @@ function AdminPainel() {
                 )}
             </section>
 
-            {usuarioEmEdicao && (
-                <div
-                    className="admin-modal-fundo"
-                    onClick={(evento) =>
-                        aoClicarFundo(evento, fecharEdicao)
-                    }
-                    role="presentation"
-                >
+            <ModalAnimado
+                aberto={Boolean(usuarioEmEdicao)}
+                aoFechar={fecharEdicao}
+                classeFundo="admin-modal-fundo"
+            >
                     <form
                         aria-modal="true"
                         className="admin-modal"
@@ -980,8 +972,7 @@ function AdminPainel() {
                             </button>
                         </div>
                     </form>
-                </div>
-            )}
+            </ModalAnimado>
         </main>
     )
 }

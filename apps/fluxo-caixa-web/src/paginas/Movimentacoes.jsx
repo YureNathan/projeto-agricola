@@ -9,10 +9,7 @@ import {
 } from 'react-router'
 import { API_BASE_URL as API_URL } from '../config.js'
 import Esqueleto from '../componentes/Esqueleto.jsx'
-import {
-    aoClicarFundo,
-    useFecharModal,
-} from '../componentes/useFecharModal.js'
+import ModalAnimado from '../componentes/ModalAnimado.jsx'
 import './Movimentacoes.css'
 
 function formatarDinheiro(valor) {
@@ -164,15 +161,6 @@ function Movimentacoes() {
         setMovimentacaoParaConverter,
     ] = useState(null)
 
-    useFecharModal(
-        Boolean(movimentacaoParaExcluir),
-        () => setMovimentacaoParaExcluir(null),
-    )
-
-    useFecharModal(
-        Boolean(movimentacaoParaConverter),
-        () => setMovimentacaoParaConverter(null),
-    )
 
     const [
         categoriasConversao,
@@ -1171,16 +1159,13 @@ function Movimentacoes() {
                 )}
             </section>
 
-            {movimentacaoParaExcluir && (
-                <div
-                    className="movimentacoes-modal-fundo"
-                    onClick={(evento) =>
-                        aoClicarFundo(evento, () =>
-                            setMovimentacaoParaExcluir(null),
-                        )
-                    }
-                    role="presentation"
-                >
+            <ModalAnimado
+                aberto={Boolean(movimentacaoParaExcluir)}
+                aoFechar={() =>
+                    setMovimentacaoParaExcluir(null)
+                }
+                classeFundo="movimentacoes-modal-fundo"
+            >
                     <section
                         aria-modal="true"
                         className="movimentacoes-modal"
@@ -1236,14 +1221,17 @@ function Movimentacoes() {
                             </button>
                         </div>
                     </section>
-                </div>
-            )}
+            </ModalAnimado>
 
-            {movimentacaoParaExcluirPermanente && (
-                <div
-                    className="movimentacoes-modal-fundo"
-                    role="presentation"
-                >
+            <ModalAnimado
+                aberto={Boolean(
+                    movimentacaoParaExcluirPermanente,
+                )}
+                aoFechar={() =>
+                    setMovimentacaoParaExcluirPermanente(null)
+                }
+                classeFundo="movimentacoes-modal-fundo"
+            >
                     <section
                         aria-modal="true"
                         className="movimentacoes-modal"
@@ -1301,19 +1289,15 @@ function Movimentacoes() {
                             </button>
                         </div>
                     </section>
-                </div>
-            )}
+            </ModalAnimado>
 
-            {movimentacaoParaConverter && (
-                <div
-                    className="movimentacoes-modal-fundo"
-                    onClick={(evento) =>
-                        aoClicarFundo(evento, () =>
-                            setMovimentacaoParaConverter(null),
-                        )
-                    }
-                    role="presentation"
-                >
+            <ModalAnimado
+                aberto={Boolean(movimentacaoParaConverter)}
+                aoFechar={() =>
+                    setMovimentacaoParaConverter(null)
+                }
+                classeFundo="movimentacoes-modal-fundo"
+            >
                     <section
                         aria-modal="true"
                         className="movimentacoes-modal"
@@ -1460,8 +1444,7 @@ function Movimentacoes() {
                             </div>
                         </form>
                     </section>
-                </div>
-            )}
+            </ModalAnimado>
         </main>
     )
 }

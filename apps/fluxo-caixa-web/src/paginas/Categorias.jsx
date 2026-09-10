@@ -9,10 +9,7 @@ import {
 } from 'react-router'
 import { API_BASE_URL } from '../config.js'
 import Esqueleto from '../componentes/Esqueleto.jsx'
-import {
-    aoClicarFundo,
-    useFecharModal,
-} from '../componentes/useFecharModal.js'
+import ModalAnimado from '../componentes/ModalAnimado.jsx'
 import './Categorias.css'
 
 function limparSessao() {
@@ -127,11 +124,6 @@ function Categorias() {
         avisoCategoriaBloqueada,
         setAvisoCategoriaBloqueada,
     ] = useState('')
-
-    useFecharModal(
-        Boolean(confirmacao),
-        () => setConfirmacao(null),
-    )
 
     const empresaId =
         sessao?.usuario?.empresaId
@@ -983,16 +975,11 @@ function Categorias() {
                 )}
             </section>
 
-            {confirmacao && (
-                <div
-                    className="categorias-modal-fundo"
-                    onClick={(evento) =>
-                        aoClicarFundo(evento, () =>
-                            setConfirmacao(null),
-                        )
-                    }
-                    role="presentation"
-                >
+            <ModalAnimado
+                aberto={Boolean(confirmacao)}
+                aoFechar={() => setConfirmacao(null)}
+                classeFundo="categorias-modal-fundo"
+            >
                     <section
                         aria-modal="true"
                         className="categorias-modal"
@@ -1063,14 +1050,13 @@ function Categorias() {
                             </button>
                         </div>
                     </section>
-                </div>
-            )}
+            </ModalAnimado>
 
-            {avisoCategoriaBloqueada && (
-                <div
-                    className="categorias-modal-fundo"
-                    role="presentation"
-                >
+            <ModalAnimado
+                aberto={Boolean(avisoCategoriaBloqueada)}
+                aoFechar={() => setAvisoCategoriaBloqueada('')}
+                classeFundo="categorias-modal-fundo"
+            >
                     <section
                         aria-modal="true"
                         className="categorias-modal"
@@ -1100,8 +1086,7 @@ function Categorias() {
                             </button>
                         </div>
                     </section>
-                </div>
-            )}
+            </ModalAnimado>
         </main>
     )
 }
