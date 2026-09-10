@@ -1,4 +1,5 @@
 import {
+    useCallback,
     useEffect,
     useState,
 } from 'react'
@@ -97,6 +98,41 @@ function AppMobile() {
 
     const empresaId =
         sessao?.usuario?.empresaId
+
+    const carregarResumo = useCallback(async () => {
+        if (!sessao || !empresaId) {
+            return
+        }
+
+        try {
+            const resposta = await fetch(
+                `${API_URL}/empresas/${empresaId}/dashboard/resumo`,
+                {
+                    headers: {
+                        Authorization:
+                            `${sessao.tipoToken} ${sessao.token}`,
+                    },
+                },
+            )
+
+            if (
+                resposta.status === 401 ||
+                resposta.status === 403
+            ) {
+                limparSessao()
+                navigate('/login', { replace: true })
+                return
+            }
+
+            if (!resposta.ok) {
+                return
+            }
+
+            setResumo(await resposta.json())
+        } catch {
+            // mantém o resumo atual se a atualização falhar
+        }
+    }, [empresaId, navigate, sessao])
 
     useEffect(() => {
         if (!sessao || !empresaId) {
@@ -300,6 +336,8 @@ function AppMobile() {
             setValor('')
             setObservacao('')
             setMensagem('Lancamento salvo no dashboard.')
+
+            await carregarResumo()
         } catch (erroDaRequisicao) {
             setErro(
                 erroDaRequisicao instanceof Error
