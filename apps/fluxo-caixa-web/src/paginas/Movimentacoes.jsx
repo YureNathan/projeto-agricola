@@ -1101,7 +1101,7 @@ function Movimentacoes() {
                     setMovimentacaoParaExcluir(null)
                 }
                 classeFundo="movimentacoes-modal-fundo"
-            >
+            >{movimentacaoParaExcluir && (
                     <section
                         aria-modal="true"
                         className="movimentacoes-modal"
@@ -1157,6 +1157,7 @@ function Movimentacoes() {
                             </button>
                         </div>
                     </section>
+            )}
             </ModalAnimado>
 
             <ModalAnimado
@@ -1167,7 +1168,7 @@ function Movimentacoes() {
                     setMovimentacaoParaExcluirPermanente(null)
                 }
                 classeFundo="movimentacoes-modal-fundo"
-            >
+            >{movimentacaoParaExcluirPermanente && (
                     <section
                         aria-modal="true"
                         className="movimentacoes-modal"
@@ -1225,6 +1226,7 @@ function Movimentacoes() {
                             </button>
                         </div>
                     </section>
+            )}
             </ModalAnimado>
 
             <ModalAnimado
@@ -1233,7 +1235,7 @@ function Movimentacoes() {
                     setMovimentacaoParaConverter(null)
                 }
                 classeFundo="movimentacoes-modal-fundo"
-            >
+            >{movimentacaoParaConverter && (
                     <section
                         aria-modal="true"
                         className="movimentacoes-modal"
@@ -1380,6 +1382,7 @@ function Movimentacoes() {
                             </div>
                         </form>
                     </section>
+            )}
             </ModalAnimado>
         </main>
     )

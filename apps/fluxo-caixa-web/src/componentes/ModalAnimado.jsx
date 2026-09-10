@@ -1,3 +1,4 @@
+import { useRef } from 'react'
 import {
     aoClicarFundo,
     useFecharModal,
@@ -11,6 +12,17 @@ function ModalAnimado({
     children,
 }) {
     const { montado, saindo } = useSaidaAnimada(aberto)
+    const conteudoRef = useRef(null)
+
+    if (children) {
+        // eslint-disable-next-line react-hooks/refs
+        conteudoRef.current = children
+    }
+
+    // Mantém o último conteúdo válido durante a animação de saída,
+    // quando o item no componente pai já virou null.
+    // eslint-disable-next-line react-hooks/refs
+    const conteudoAtual = children || conteudoRef.current
 
     useFecharModal(aberto, aoFechar)
 
@@ -28,7 +40,7 @@ function ModalAnimado({
             }
             role="presentation"
         >
-            {children}
+            {conteudoAtual}
         </div>
     )
 }

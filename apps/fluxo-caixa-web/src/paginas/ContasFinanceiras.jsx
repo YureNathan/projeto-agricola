@@ -2147,7 +2147,7 @@ function ContasFinanceiras() {
                 aberto={Boolean(contaParaLiquidar)}
                 aoFechar={() => setContaParaLiquidar(null)}
                 classeFundo="contas-modal-fundo"
-            >
+            >{contaParaLiquidar && (
                     <section
                         aria-modal="true"
                         className="contas-modal"
@@ -2324,13 +2324,14 @@ function ContasFinanceiras() {
                             </div>
                         </form>
                     </section>
+            )}
             </ModalAnimado>
 
             <ModalAnimado
                 aberto={Boolean(contaParaCancelar)}
                 aoFechar={() => setContaParaCancelar(null)}
                 classeFundo="contas-modal-fundo"
-            >
+            >{contaParaCancelar && (
                     <section
                         aria-modal="true"
                         className="contas-modal contas-modal-perigo"
@@ -2389,6 +2390,7 @@ function ContasFinanceiras() {
                             </button>
                         </div>
                     </section>
+            )}
             </ModalAnimado>
 
             <ModalAnimado
@@ -2397,7 +2399,7 @@ function ContasFinanceiras() {
                     setContaParaExcluirPermanente(null)
                 }
                 classeFundo="contas-modal-fundo"
-            >
+            >{contaParaExcluirPermanente && (
                     <section
                         aria-modal="true"
                         className="contas-modal contas-modal-perigo"
@@ -2454,6 +2456,7 @@ function ContasFinanceiras() {
                             </button>
                         </div>
                     </section>
+            )}
             </ModalAnimado>
 
             <ModalAnimado
@@ -2462,7 +2465,7 @@ function ContasFinanceiras() {
                     setContaParaEnviarFinanceiro(null)
                 }
                 classeFundo="contas-modal-fundo"
-            >
+            >{contaParaEnviarFinanceiro && (
                     <section
                         aria-modal="true"
                         className="contas-modal"
@@ -2591,6 +2594,7 @@ function ContasFinanceiras() {
                             </div>
                         </form>
                     </section>
+            )}
             </ModalAnimado>
         </div>
     )

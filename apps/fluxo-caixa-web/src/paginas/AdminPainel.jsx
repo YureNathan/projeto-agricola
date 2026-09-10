@@ -793,7 +793,7 @@ function AdminPainel() {
                 aberto={Boolean(usuarioEmEdicao)}
                 aoFechar={fecharEdicao}
                 classeFundo="admin-modal-fundo"
-            >
+            >{usuarioEmEdicao && (
                     <form
                         aria-modal="true"
                         className="admin-modal"
@@ -934,6 +934,7 @@ function AdminPainel() {
                             </button>
                         </div>
                     </form>
+            )}
             </ModalAnimado>
         </main>
     )

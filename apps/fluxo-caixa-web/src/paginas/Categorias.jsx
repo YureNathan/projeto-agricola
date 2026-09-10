@@ -922,7 +922,7 @@ function Categorias() {
                 aberto={Boolean(confirmacao)}
                 aoFechar={() => setConfirmacao(null)}
                 classeFundo="categorias-modal-fundo"
-            >
+            >{confirmacao && (
                     <section
                         aria-modal="true"
                         className="categorias-modal"
@@ -993,13 +993,14 @@ function Categorias() {
                             </button>
                         </div>
                     </section>
+            )}
             </ModalAnimado>
 
             <ModalAnimado
                 aberto={Boolean(avisoCategoriaBloqueada)}
                 aoFechar={() => setAvisoCategoriaBloqueada('')}
                 classeFundo="categorias-modal-fundo"
-            >
+            >{avisoCategoriaBloqueada && (
                     <section
                         aria-modal="true"
                         className="categorias-modal"
@@ -1029,6 +1030,7 @@ function Categorias() {
                             </button>
                         </div>
                     </section>
+            )}
             </ModalAnimado>
         </main>
     )
