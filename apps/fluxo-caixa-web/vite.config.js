@@ -7,9 +7,23 @@ export default defineConfig({
   build: {
     rollupOptions: {
       output: {
-        manualChunks: {
-          react: ['react', 'react-dom'],
-          roteador: ['react-router'],
+        manualChunks(id) {
+          if (!id.includes('node_modules')) {
+            return undefined
+          }
+
+          if (id.includes('react-router')) {
+            return 'roteador'
+          }
+
+          if (
+            id.includes('/react-dom/') ||
+            id.includes('/react/')
+          ) {
+            return 'react'
+          }
+
+          return undefined
         },
       },
     },
