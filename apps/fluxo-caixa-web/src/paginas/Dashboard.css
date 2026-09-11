@@ -107,6 +107,34 @@
     line-height: 1.6;
 }
 
+.dashboard-perfil-atividade {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 10px;
+    max-width: 680px;
+    margin-top: 14px;
+    padding: 10px 13px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background:
+            color-mix(
+                    in oklch,
+                    var(--secondary) 58%,
+                    white
+            );
+}
+
+.dashboard-perfil-atividade strong {
+    color: var(--primary);
+    font-size: 0.86rem;
+}
+
+.dashboard-perfil-atividade span {
+    color: var(--muted-foreground);
+    font-size: 0.84rem;
+}
+
 .dashboard-acoes {
     display: flex;
     flex-shrink: 0;
@@ -222,7 +250,7 @@
     margin: 0;
     color: var(--muted-foreground);
     font-size: 0.86rem;
-    font-weight: 600;
+    font-weight: 650;
 }
 
 .dashboard-card strong {
@@ -377,7 +405,7 @@
     margin-left: auto;
     color: var(--muted-foreground);
     font-size: 0.7rem;
-    font-weight: 600;
+    font-weight: 650;
 }
 
 .dashboard-grafico-cor {
@@ -601,7 +629,7 @@
     background: var(--muted);
     color: var(--muted-foreground);
     font-size: 0.68rem;
-    font-weight: 800;
+    font-weight: 850;
     letter-spacing: 0.02em;
 }
 
@@ -641,7 +669,7 @@
     color: var(--foreground);
     font: inherit;
     font-size: 0.78rem;
-    font-weight: 700;
+    font-weight: 750;
     text-align: left;
     cursor: pointer;
     grid-template-columns:
@@ -679,7 +707,7 @@ button:hover:not(:disabled) {
     margin-top: -7px;
     color: var(--muted-foreground);
     font-size: 0.62rem;
-    font-weight: 600;
+    font-weight: 650;
 }
 
 .dashboard-modulo-opcoes button:disabled {
@@ -859,7 +887,7 @@ button:hover:not(:disabled) {
     color: var(--foreground);
     font: inherit;
     font-size: 0.87rem;
-    font-weight: 700;
+    font-weight: 750;
     text-align: left;
     cursor: pointer;
     transition:
@@ -1073,37 +1101,4 @@ button:hover:not(:disabled) {
     .dashboard-grafico-ponto-despesa {
         r: 3px;
     }
-}
-
-/*
- * Estado de carregamento (skeleton)
- */
-
-.dashboard-esqueleto {
-    display: grid;
-    min-height: 100vh;
-    padding: 34px clamp(18px, 4vw, 46px);
-    align-content: start;
-    gap: 22px;
-    background: var(--background);
-}
-
-.dashboard-esqueleto-cards {
-    display: grid;
-    gap: 14px;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-}
-
-.dashboard-esqueleto-card {
-    display: grid;
-    padding: 18px;
-    gap: 12px;
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    background: var(--card);
-}
-
-.dashboard-esqueleto-lista {
-    display: grid;
-    gap: 10px;
 }

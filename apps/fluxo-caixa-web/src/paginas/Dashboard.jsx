@@ -7,28 +7,35 @@ import {
     useNavigate,
 } from 'react-router'
 import AlternadorModulos from '../componentes/AlternadorModulos.jsx'
-import Esqueleto from '../componentes/Esqueleto.jsx'
-import {
-    IconeCategoria,
-    IconeDocumento,
-    IconeFolha,
-    IconeLista,
-    IconeLixeira,
-    IconeMais,
-    IconeMenos,
-    IconePlanilha,
-    IconeSetaBaixo,
-    IconeSetaCima,
-} from '../componentes/Icones.jsx'
-import { useNotificacoes } from '../componentes/notificacoes-contexto.js'
 import { API_BASE_URL as API_URL } from '../config.js'
-import { limparSessao, obterSessao } from '../servicos/sessao.js'
 import './Dashboard.css'
 
 const LARGURA_GRAFICO = 720
 const ALTURA_GRAFICO = 220
 const ESPACO_SUPERIOR = 18
 const ESPACO_INFERIOR = 20
+
+function IconeLixeira() {
+    return (
+        <svg
+            aria-hidden="true"
+            fill="none"
+            height="18"
+            stroke="currentColor"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
+            viewBox="0 0 24 24"
+            width="18"
+        >
+            <path d="M3 6h18" />
+            <path d="M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2" />
+            <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
+            <path d="M10 11v6" />
+            <path d="M14 11v6" />
+        </svg>
+    )
+}
 
 function formatarDinheiro(valor) {
     return new Intl.NumberFormat('pt-BR', {
@@ -109,6 +116,108 @@ function obterPeriodo(dias) {
             formatarDataParaApi(dataInicial),
         dataFinal:
             formatarDataParaApi(dataFinal),
+    }
+}
+
+function obterPerfilAtividade(usuario) {
+    const agriculturaAtiva =
+        usuario?.agriculturaAtiva ?? true
+    const pecuariaAtiva =
+        usuario?.pecuariaAtiva ?? false
+
+    if (agriculturaAtiva && pecuariaAtiva) {
+        return {
+            titulo: 'Agricultura e pecuária',
+            descricao:
+                'Categorias preparadas para lavoura, criação e manejo.',
+        }
+    }
+
+    if (pecuariaAtiva) {
+        return {
+            titulo: 'Pecuária',
+            descricao:
+                'Categorias preparadas para animais, leite e manejo.',
+        }
+    }
+
+    return {
+        titulo: 'Agricultura',
+        descricao:
+            'Categorias preparadas para lavoura, safra e insumos.',
+    }
+}
+
+function limparSessao() {
+    localStorage.removeItem(
+        'agrogestao_token',
+    )
+
+    localStorage.removeItem(
+        'agrogestao_tipo_token',
+    )
+
+    localStorage.removeItem(
+        'agrogestao_usuario',
+    )
+
+    localStorage.removeItem(
+        'agrogestao_token_expira_em',
+    )
+}
+
+function obterSessao() {
+    try {
+        const token =
+            localStorage.getItem(
+                'agrogestao_token',
+            )
+
+        const tipoToken =
+            localStorage.getItem(
+                'agrogestao_tipo_token',
+            ) ?? 'Bearer'
+
+        const usuarioSalvo =
+            localStorage.getItem(
+                'agrogestao_usuario',
+            )
+
+        const expiraEm =
+            Number(
+                localStorage.getItem(
+                    'agrogestao_token_expira_em',
+                ),
+            )
+
+        if (!token || !usuarioSalvo) {
+            return null
+        }
+
+        if (
+            expiraEm
+            && Date.now() >= expiraEm
+        ) {
+            limparSessao()
+            return null
+        }
+
+        const usuario =
+            JSON.parse(usuarioSalvo)
+
+        if (!usuario?.empresaId) {
+            limparSessao()
+            return null
+        }
+
+        return {
+            token,
+            tipoToken,
+            usuario,
+        }
+    } catch {
+        limparSessao()
+        return null
     }
 }
 
@@ -218,10 +327,10 @@ function criarCaminho(pontos) {
 function Dashboard() {
     const navigate = useNavigate()
 
-    const { notificar } = useNotificacoes()
-
     const [sessao] =
         useState(obterSessao)
+    const perfilAtividade =
+        obterPerfilAtividade(sessao?.usuario)
 
     const [resumo, setResumo] =
         useState(null)
@@ -682,7 +791,7 @@ function Dashboard() {
                     ? erroDoRelatorio.message
                     : 'Não foi possível gerar o relatório.'
 
-            notificar(mensagem, 'erro')
+            window.alert(mensagem)
         } finally {
             setBaixandoRelatorio('')
         }
@@ -702,47 +811,10 @@ function Dashboard() {
 
     if (carregando) {
         return (
-            <div
-                aria-busy="true"
-                aria-live="polite"
-                className="dashboard-esqueleto"
-            >
-                <Esqueleto altura="24px" largura="200px" />
-
-                <div className="dashboard-esqueleto-cards">
-                    {[0, 1, 2, 3].map((indice) => (
-                        <div
-                            className="dashboard-esqueleto-card"
-                            key={indice}
-                        >
-                            <Esqueleto
-                                altura="12px"
-                                largura="60%"
-                            />
-
-                            <Esqueleto
-                                altura="24px"
-                                largura="80%"
-                            />
-                        </div>
-                    ))}
-                </div>
-
-                <Esqueleto
-                    altura="230px"
-                    largura="100%"
-                    raio="var(--radius)"
-                />
-
-                <div className="dashboard-esqueleto-lista">
-                    {[0, 1, 2, 3, 4].map((indice) => (
-                        <Esqueleto
-                            altura="44px"
-                            key={indice}
-                            largura="100%"
-                        />
-                    ))}
-                </div>
+            <div className="dashboard-carregando">
+                <p>
+                    Carregando informações financeiras...
+                </p>
             </div>
         )
     }
@@ -793,7 +865,7 @@ function Dashboard() {
                 <header className="dashboard-cabecalho">
                     <div className="dashboard-marca">
                         <div className="dashboard-marca-icone">
-                            <IconeFolha />
+                            ♧
                         </div>
 
                         <div>
@@ -839,6 +911,16 @@ function Dashboard() {
                             resultado da sua
                             propriedade.
                         </p>
+
+                        <div className="dashboard-perfil-atividade">
+                            <strong>
+                                {perfilAtividade.titulo}
+                            </strong>
+
+                            <span>
+                                {perfilAtividade.descricao}
+                            </span>
+                        </div>
                     </div>
 
                     <div className="dashboard-acoes">
@@ -870,7 +952,7 @@ function Dashboard() {
                             <p>Total que entrou</p>
 
                             <span className="dashboard-card-icone">
-                                <IconeSetaBaixo />
+                                ↓
                             </span>
                         </div>
 
@@ -890,7 +972,7 @@ function Dashboard() {
                             <p>Total que saiu</p>
 
                             <span className="dashboard-card-icone">
-                                <IconeSetaCima />
+                                ↑
                             </span>
                         </div>
 
@@ -1359,11 +1441,11 @@ function Dashboard() {
                                                         >
                                                             <div className="dashboard-movimentacao-info">
                                                                 <span className="dashboard-movimentacao-icone">
-                                                                    {despesa ? (
-                                                                        <IconeSetaCima />
-                                                                    ) : (
-                                                                        <IconeSetaBaixo />
-                                                                    )}
+                                                                    {
+                                                                        despesa
+                                                                            ? '↑'
+                                                                            : '↓'
+                                                                    }
                                                                 </span>
 
                                                                 <div>
@@ -1431,7 +1513,7 @@ function Dashboard() {
                                 }
                                 type="button"
                             >
-                                <span><IconeMais /></span>
+                                <span>＋</span>
                                 Cadastrar receita — dinheiro entrando
                             </button>
 
@@ -1442,7 +1524,7 @@ function Dashboard() {
                                 }
                                 type="button"
                             >
-                                <span><IconeMenos /></span>
+                                <span>−</span>
                                 Cadastrar despesa — dinheiro saindo
                             </button>
 
@@ -1453,7 +1535,7 @@ function Dashboard() {
                                 }
                                 type="button"
                             >
-                                <span><IconeLista /></span>
+                                <span>☷</span>
                                 Ver todas as movimentações
                             </button>
 
@@ -1475,7 +1557,7 @@ function Dashboard() {
                                 }
                                 type="button"
                             >
-                                <span><IconeCategoria /></span>
+                                <span>⌁</span>
                                 Gerenciar categorias
                             </button>
 
@@ -1493,7 +1575,7 @@ function Dashboard() {
                                 }
                                 type="button"
                             >
-                                <span><IconePlanilha /></span>
+                                <span>▦</span>
                                 {
                                     baixandoRelatorio
                                     === 'excel'
@@ -1516,7 +1598,7 @@ function Dashboard() {
                                 }
                                 type="button"
                             >
-                                <span><IconeDocumento /></span>
+                                <span>▤</span>
                                 {
                                     baixandoRelatorio
                                     === 'pdf'
