@@ -11,6 +11,7 @@ import { API_BASE_URL as API_URL } from '../config.js'
 import Esqueleto from '../componentes/Esqueleto.jsx'
 import {
     IconeFechar,
+    IconeLixeira,
     IconeSetaEsquerda,
 } from '../componentes/Icones.jsx'
 import ModalAnimado from '../componentes/ModalAnimado.jsx'
@@ -909,6 +910,7 @@ function Movimentacoes() {
                         }}
                         type="button"
                     >
+                        <IconeLixeira />
                         {mostrandoLixeira
                             ? 'Ver movimentações'
                             : 'Lixeira'}
