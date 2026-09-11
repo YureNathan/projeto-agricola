@@ -8,17 +8,86 @@ import {
     useNavigate,
 } from 'react-router'
 import { API_BASE_URL } from '../config.js'
-import Esqueleto from '../componentes/Esqueleto.jsx'
-import {
-    IconeFechar,
-    IconeSetaBaixo,
-    IconeSetaCima,
-    IconeSetaDireita,
-    IconeSetaEsquerda,
-} from '../componentes/Icones.jsx'
-import ModalAnimado from '../componentes/ModalAnimado.jsx'
-import { limparSessao, obterSessao } from '../servicos/sessao.js'
 import './Categorias.css'
+
+const AREAS_CATEGORIA = [
+    {
+        valor: 'GERAL',
+        rotulo: 'Geral',
+    },
+    {
+        valor: 'AGRICULTURA',
+        rotulo: 'Agricultura',
+    },
+    {
+        valor: 'PECUARIA',
+        rotulo: 'Pecuaria',
+    },
+]
+
+function obterRotuloArea(area) {
+    return AREAS_CATEGORIA.find(
+        (item) => item.valor === area,
+    )?.rotulo ?? 'Geral'
+}
+
+function limparSessao() {
+    localStorage.removeItem('agrogestao_token')
+    localStorage.removeItem('agrogestao_tipo_token')
+    localStorage.removeItem('agrogestao_usuario')
+    localStorage.removeItem(
+        'agrogestao_token_expira_em',
+    )
+}
+
+function obterSessao() {
+    try {
+        const token =
+            localStorage.getItem('agrogestao_token')
+
+        const tipoToken =
+            localStorage.getItem(
+                'agrogestao_tipo_token',
+            ) ?? 'Bearer'
+
+        const usuarioSalvo =
+            localStorage.getItem(
+                'agrogestao_usuario',
+            )
+
+        const expiraEm =
+            Number(
+                localStorage.getItem(
+                    'agrogestao_token_expira_em',
+                ),
+            )
+
+        if (!token || !usuarioSalvo) {
+            return null
+        }
+
+        if (expiraEm && Date.now() >= expiraEm) {
+            limparSessao()
+            return null
+        }
+
+        const usuario = JSON.parse(usuarioSalvo)
+
+        if (!usuario?.empresaId) {
+            limparSessao()
+            return null
+        }
+
+        return {
+            token,
+            tipoToken,
+            usuario,
+        }
+    } catch {
+        limparSessao()
+        return null
+    }
+}
 
 function criarErro(mensagem, status) {
     const erro = new Error(mensagem)
@@ -66,6 +135,7 @@ function Categorias() {
 
     const [nome, setNome] = useState('')
     const [tipo, setTipo] = useState('RECEITA')
+    const [area, setArea] = useState('GERAL')
     const [erro, setErro] = useState('')
     const [sucesso, setSucesso] = useState('')
     const [confirmacao, setConfirmacao] =
@@ -249,6 +319,7 @@ function Categorias() {
         setCategoriaEmEdicao(null)
         setNome('')
         setTipo('RECEITA')
+        setArea('GERAL')
         setErro('')
     }
 
@@ -256,6 +327,7 @@ function Categorias() {
         setCategoriaEmEdicao(categoria)
         setNome(categoria.nome)
         setTipo(categoria.tipo)
+        setArea(categoria.area ?? 'GERAL')
         setErro('')
         setSucesso('')
 
@@ -307,10 +379,12 @@ function Categorias() {
         const corpo = editando
             ? {
                 nome: nome.trim(),
+                area,
             }
             : {
                 nome: nome.trim(),
                 tipo,
+                area,
             }
 
         try {
@@ -344,6 +418,7 @@ function Categorias() {
             setCategoriaEmEdicao(null)
             setNome('')
             setTipo('RECEITA')
+            setArea('GERAL')
 
             await carregarCategorias()
         } catch (erroDaRequisicao) {
@@ -613,6 +688,10 @@ function Categorias() {
                     </span>
                 </div>
 
+                <span className="categoria-area">
+                    {obterRotuloArea(categoria.area)}
+                </span>
+
                 <h4>{categoria.nome}</h4>
                 <p>{categoria.explicacao}</p>
 
@@ -622,8 +701,7 @@ function Categorias() {
                         categoria,
                     )}
                 >
-                    Ver movimentações{' '}
-                    <IconeSetaDireita />
+                    Ver movimentações →
                 </Link>
 
                 <div className="categoria-card-acoes">
@@ -689,7 +767,7 @@ function Categorias() {
         <main className="categorias-pagina">
             <header className="categorias-cabecalho">
                 <Link to="/dashboard">
-                    <IconeSetaEsquerda /> Voltar ao dashboard
+                    ← Voltar ao dashboard
                 </Link>
 
                 <p>AgroGestão</p>
@@ -775,6 +853,34 @@ function Categorias() {
                                 </option>
                             </select>
                         </div>
+
+                        <div className="categorias-campo">
+                            <label htmlFor="areaCategoria">
+                                Area
+                            </label>
+
+                            <select
+                                disabled={salvando}
+                                id="areaCategoria"
+                                onChange={(evento) =>
+                                    setArea(
+                                        evento.target.value,
+                                    )
+                                }
+                                value={area}
+                            >
+                                {AREAS_CATEGORIA.map(
+                                    (item) => (
+                                        <option
+                                            key={item.valor}
+                                            value={item.valor}
+                                        >
+                                            {item.rotulo}
+                                        </option>
+                                    ),
+                                )}
+                            </select>
+                        </div>
                     </div>
 
                     <div className="categorias-formulario-acoes">
@@ -838,37 +944,15 @@ function Categorias() {
                 </div>
 
                 {carregando ? (
-                    <div
-                        aria-busy="true"
-                        aria-live="polite"
-                        className="categorias-esqueleto"
-                    >
-                        <div className="categorias-esqueleto-coluna">
-                            {[0, 1, 2].map((indice) => (
-                                <Esqueleto
-                                    altura="64px"
-                                    key={indice}
-                                    largura="100%"
-                                />
-                            ))}
-                        </div>
-
-                        <div className="categorias-esqueleto-coluna">
-                            {[0, 1, 2].map((indice) => (
-                                <Esqueleto
-                                    altura="64px"
-                                    key={indice}
-                                    largura="100%"
-                                />
-                            ))}
-                        </div>
-                    </div>
+                    <p className="categorias-vazio">
+                        Carregando categorias...
+                    </p>
                 ) : (
                     <div className="categorias-colunas">
                         <section className="categorias-grupo categorias-grupo-receitas">
                             <div className="categorias-grupo-cabecalho">
                                 <div>
-                                    <span><IconeSetaBaixo /></span>
+                                    <span>↓</span>
                                     <h3>Receitas</h3>
                                 </div>
 
@@ -897,7 +981,7 @@ function Categorias() {
                         <section className="categorias-grupo categorias-grupo-despesas">
                             <div className="categorias-grupo-cabecalho">
                                 <div>
-                                    <span><IconeSetaCima /></span>
+                                    <span>↑</span>
                                     <h3>Despesas</h3>
                                 </div>
 
@@ -926,11 +1010,11 @@ function Categorias() {
                 )}
             </section>
 
-            <ModalAnimado
-                aberto={Boolean(confirmacao)}
-                aoFechar={() => setConfirmacao(null)}
-                classeFundo="categorias-modal-fundo"
-            >{confirmacao && (
+            {confirmacao && (
+                <div
+                    className="categorias-modal-fundo"
+                    role="presentation"
+                >
                     <section
                         aria-modal="true"
                         className="categorias-modal"
@@ -946,7 +1030,7 @@ function Categorias() {
                                 onClick={fecharConfirmacao}
                                 type="button"
                             >
-                                <IconeFechar />
+                                ×
                             </button>
                         </div>
 
@@ -1001,14 +1085,14 @@ function Categorias() {
                             </button>
                         </div>
                     </section>
+                </div>
             )}
-            </ModalAnimado>
 
-            <ModalAnimado
-                aberto={Boolean(avisoCategoriaBloqueada)}
-                aoFechar={() => setAvisoCategoriaBloqueada('')}
-                classeFundo="categorias-modal-fundo"
-            >{avisoCategoriaBloqueada && (
+            {avisoCategoriaBloqueada && (
+                <div
+                    className="categorias-modal-fundo"
+                    role="presentation"
+                >
                     <section
                         aria-modal="true"
                         className="categorias-modal"
@@ -1038,8 +1122,8 @@ function Categorias() {
                             </button>
                         </div>
                     </section>
+                </div>
             )}
-            </ModalAnimado>
         </main>
     )
 }
