@@ -38,17 +38,14 @@
 }
 
 .contas-voltar {
-    display: inline-flex;
     margin-bottom: 25px;
     padding: 0;
-    align-items: center;
-    gap: 6px;
     border: 0;
     background: transparent;
     color: var(--muted-foreground);
     font: inherit;
     font-size: 0.84rem;
-    font-weight: 700;
+    font-weight: 750;
     cursor: pointer;
     transition: color 160ms ease;
 }
@@ -72,7 +69,7 @@
     margin: 0 0 7px;
     color: var(--primary);
     font-size: 0.76rem;
-    font-weight: 800;
+    font-weight: 850;
     letter-spacing: 0.09em;
     text-transform: uppercase;
 }
@@ -284,7 +281,7 @@
     margin: 0;
     color: var(--muted-foreground);
     font-size: 0.78rem;
-    font-weight: 700;
+    font-weight: 750;
 }
 
 .contas-card strong {
@@ -379,6 +376,15 @@
     background: var(--secondary);
     color: var(--primary);
     font-weight: 900;
+}
+
+.contas-atalhos span svg {
+    width: 16px;
+    height: 16px;
+}
+
+.contas-atalho-lixeira span:nth-of-type(2) {
+    display: none;
 }
 
 .contas-lista-topo {
@@ -511,7 +517,7 @@
     padding: 5px 8px;
     border-radius: 999px;
     font-size: 0.62rem;
-    font-weight: 800;
+    font-weight: 850;
 }
 
 .contas-status-pendente {
@@ -599,7 +605,7 @@
     border-radius: 8px;
     font: inherit;
     font-size: 0.69rem;
-    font-weight: 800;
+    font-weight: 850;
     cursor: pointer;
     transition:
             filter 160ms ease,
@@ -703,7 +709,7 @@
 .contas-modal-texto {
     color: var(--foreground);
     font-size: 0.76rem;
-    font-weight: 700;
+    font-weight: 750;
 }
 
 .contas-modal-linha {
@@ -753,7 +759,7 @@
     color: var(--primary);
     font: inherit;
     font-size: 0.74rem;
-    font-weight: 800;
+    font-weight: 850;
     text-decoration: underline;
     cursor: pointer;
 }
@@ -772,7 +778,7 @@
             );
     color: var(--destructive);
     font-size: 0.74rem;
-    font-weight: 700;
+    font-weight: 750;
 }
 
 .contas-modal-texto {
@@ -797,7 +803,7 @@
     color: var(--foreground);
     font: inherit;
     font-size: 0.76rem;
-    font-weight: 800;
+    font-weight: 850;
     cursor: pointer;
 }
 
@@ -951,7 +957,7 @@
     margin-top: 22px;
     color: var(--muted-foreground);
     font-size: 0.78rem;
-    font-weight: 700;
+    font-weight: 750;
 }
 
 .contas-grafico-legenda span {
@@ -1011,7 +1017,7 @@
 .contas-grafico-data {
     fill: var(--muted-foreground);
     font-size: 11px;
-    font-weight: 600;
+    font-weight: 650;
 }
 
 .contas-grafico-linha {
@@ -1234,13 +1240,4 @@
     .contas-grafico-svg {
         min-width: 600px;
     }
-}
-
-/*
- * Estado de carregamento (skeleton)
- */
-
-.contas-esqueleto {
-    display: grid;
-    gap: 12px;
 }

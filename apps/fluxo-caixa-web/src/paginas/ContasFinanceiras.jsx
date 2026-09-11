@@ -8,24 +8,7 @@ import {
     useNavigate,
 } from 'react-router'
 import AlternadorModulos from '../componentes/AlternadorModulos.jsx'
-import Esqueleto from '../componentes/Esqueleto.jsx'
-import {
-    IconeCategoria,
-    IconeDocumento,
-    IconeFechar,
-    IconeLixeira,
-    IconePlanilha,
-    IconeSetaBaixo,
-    IconeSetaCima,
-    IconeSetaEsquerda,
-} from '../componentes/Icones.jsx'
-import ModalAnimado from '../componentes/ModalAnimado.jsx'
 import { API_BASE_URL as API_URL } from '../config.js'
-import {
-    limparSessao,
-    montarCabecalhos,
-    obterSessao,
-} from '../servicos/sessao.js'
 import './ContasFinanceiras.css'
 
 const LARGURA_GRAFICO = 900
@@ -33,6 +16,28 @@ const ALTURA_GRAFICO = 280
 const ESPACO_HORIZONTAL = 54
 const ESPACO_SUPERIOR = 24
 const ESPACO_INFERIOR = 42
+
+function IconeLixeira() {
+    return (
+        <svg
+            aria-hidden="true"
+            fill="none"
+            height="18"
+            stroke="currentColor"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
+            viewBox="0 0 24 24"
+            width="18"
+        >
+            <path d="M3 6h18" />
+            <path d="M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2" />
+            <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
+            <path d="M10 11v6" />
+            <path d="M14 11v6" />
+        </svg>
+    )
+}
 
 function formatarDinheiro(valor) {
     return new Intl.NumberFormat('pt-BR', {
@@ -294,6 +299,79 @@ function GraficoProjecaoContas({ pontos }) {
     )
 }
 
+function limparSessao() {
+    localStorage.removeItem(
+        'agrogestao_token',
+    )
+
+    localStorage.removeItem(
+        'agrogestao_tipo_token',
+    )
+
+    localStorage.removeItem(
+        'agrogestao_usuario',
+    )
+
+    localStorage.removeItem(
+        'agrogestao_token_expira_em',
+    )
+}
+
+function obterSessao() {
+    try {
+        const token =
+            localStorage.getItem(
+                'agrogestao_token',
+            )
+
+        const tipoToken =
+            localStorage.getItem(
+                'agrogestao_tipo_token',
+            ) ?? 'Bearer'
+
+        const usuarioSalvo =
+            localStorage.getItem(
+                'agrogestao_usuario',
+            )
+
+        const expiraEm =
+            Number(
+                localStorage.getItem(
+                    'agrogestao_token_expira_em',
+                ),
+            )
+
+        if (!token || !usuarioSalvo) {
+            return null
+        }
+
+        if (
+            expiraEm
+            && Date.now() >= expiraEm
+        ) {
+            limparSessao()
+            return null
+        }
+
+        const usuario =
+            JSON.parse(usuarioSalvo)
+
+        if (!usuario?.empresaId) {
+            limparSessao()
+            return null
+        }
+
+        return {
+            token,
+            tipoToken,
+            usuario,
+        }
+    } catch {
+        limparSessao()
+        return null
+    }
+}
+
 async function obterMensagemDeErro(
     resposta,
     mensagemPadrao,
@@ -524,11 +602,19 @@ function ContasFinanceiras() {
         setBaixandoRelatorio,
     ] = useState('')
 
-    const criarCabecalhos = useCallback(
-        (possuiCorpo = false) =>
-            montarCabecalhos(sessao, possuiCorpo),
-        [sessao],
-    )
+    function criarCabecalhos(possuiCorpo = false) {
+        const cabecalhos = {
+            Authorization:
+                `${sessao.tipoToken} ${sessao.token}`,
+        }
+
+        if (possuiCorpo) {
+            cabecalhos['Content-Type'] =
+                'application/json; charset=utf-8'
+        }
+
+        return cabecalhos
+    }
 
     const carregarDados =
         useCallback(async () => {
@@ -764,7 +850,7 @@ function ContasFinanceiras() {
                     throw new Error(
                         await obterMensagemDeErro(
                             resposta,
-                            'Não foi possível carregar a lixeira de contas.',
+                            'NÃ£o foi possÃ­vel carregar a lixeira de contas.',
                         ),
                     )
                 }
@@ -781,13 +867,12 @@ function ContasFinanceiras() {
                 setErro(
                     erroDaRequisicao instanceof Error
                         ? erroDaRequisicao.message
-                        : 'Não foi possível carregar a lixeira de contas.',
+                        : 'NÃ£o foi possÃ­vel carregar a lixeira de contas.',
                 )
             } finally {
                 setCarregando(false)
             }
         }, [
-            criarCabecalhos,
             navigate,
             sessao,
         ])
@@ -1249,7 +1334,7 @@ function ContasFinanceiras() {
                 throw new Error(
                     await obterMensagemDeErro(
                         resposta,
-                        'Não foi possível restaurar a conta.',
+                        'NÃ£o foi possÃ­vel restaurar a conta.',
                     ),
                 )
             }
@@ -1264,7 +1349,7 @@ function ContasFinanceiras() {
             setErro(
                 erroDaRequisicao instanceof Error
                     ? erroDaRequisicao.message
-                    : 'Não foi possível restaurar a conta.',
+                    : 'NÃ£o foi possÃ­vel restaurar a conta.',
             )
         } finally {
             setRestaurandoContaId(null)
@@ -1322,7 +1407,7 @@ function ContasFinanceiras() {
                 throw new Error(
                     await obterMensagemDeErro(
                         resposta,
-                        'Não foi possível excluir definitivamente a conta.',
+                        'NÃ£o foi possÃ­vel excluir definitivamente a conta.',
                     ),
                 )
             }
@@ -1341,7 +1426,7 @@ function ContasFinanceiras() {
             setErroModal(
                 erroDaRequisicao instanceof Error
                     ? erroDaRequisicao.message
-                    : 'Não foi possível excluir definitivamente a conta.',
+                    : 'NÃ£o foi possÃ­vel excluir definitivamente a conta.',
             )
         } finally {
             setExcluindoContaPermanente(false)
@@ -1435,7 +1520,7 @@ function ContasFinanceiras() {
                 throw new Error(
                     await obterMensagemDeErro(
                         resposta,
-                        'Não foi possível enviar a conta ao financeiro.',
+                        'NÃ£o foi possÃ­vel enviar a conta ao financeiro.',
                     ),
                 )
             }
@@ -1447,7 +1532,7 @@ function ContasFinanceiras() {
             setErroModal(
                 erroDaRequisicao instanceof Error
                     ? erroDaRequisicao.message
-                    : 'Não foi possível enviar a conta ao financeiro.',
+                    : 'NÃ£o foi possÃ­vel enviar a conta ao financeiro.',
             )
         } finally {
             setEnviandoFinanceiro(false)
@@ -1470,7 +1555,7 @@ function ContasFinanceiras() {
                             }
                             type="button"
                         >
-                            <IconeSetaEsquerda /> Voltar ao dashboard
+                            ← Voltar ao dashboard
                         </button>
 
                         <AlternadorModulos />
@@ -1733,11 +1818,9 @@ function ContasFinanceiras() {
                             </div>
 
                             {carregando ? (
-                                <Esqueleto
-                                    altura="220px"
-                                    largura="100%"
-                                    raio="var(--radius)"
-                                />
+                                <div className="contas-grafico-vazio">
+                                    Carregando a previsão futura...
+                                </div>
                             ) : (
                                 <GraficoProjecaoContas
                                     pontos={pontosGrafico}
@@ -1789,7 +1872,7 @@ function ContasFinanceiras() {
                             onClick={abrirCategorias}
                             type="button"
                         >
-                            <span><IconeCategoria /></span>
+                            <span>≡</span>
                             Gerenciar categorias
                         </button>
 
@@ -1802,6 +1885,7 @@ function ContasFinanceiras() {
                         </button>
 
                         <button
+                            className="contas-atalho-lixeira"
                             onClick={() => {
                                 if (mostrandoLixeira) {
                                     setMostrandoLixeira(false)
@@ -1812,7 +1896,10 @@ function ContasFinanceiras() {
                             }}
                             type="button"
                         >
-                            <span><IconeLixeira /></span>
+                            <span>
+                                <IconeLixeira />
+                            </span>
+                            <span>âŒ«</span>
                             {mostrandoLixeira
                                 ? 'Ver contas cadastradas'
                                 : 'Lixeira'}
@@ -1829,7 +1916,7 @@ function ContasFinanceiras() {
                             }
                             type="button"
                         >
-                            <span><IconePlanilha /></span>
+                            <span>▦</span>
                             {baixandoRelatorio
                             === 'excel'
                                 ? 'Gerando Excel...'
@@ -1847,7 +1934,7 @@ function ContasFinanceiras() {
                             }
                             type="button"
                         >
-                            <span><IconeDocumento /></span>
+                            <span>▤</span>
                             {baixandoRelatorio
                             === 'pdf'
                                 ? 'Gerando PDF...'
@@ -1936,24 +2023,15 @@ function ContasFinanceiras() {
                     </div>
 
                     {carregando ? (
-                        <div
-                            aria-busy="true"
-                            aria-live="polite"
-                            className="contas-esqueleto"
-                        >
-                            {[0, 1, 2, 3].map((indice) => (
-                                <Esqueleto
-                                    altura="88px"
-                                    key={indice}
-                                    largura="100%"
-                                    raio="var(--radius)"
-                                />
-                            ))}
+                        <div className="contas-vazio">
+                            Carregando contas...
                         </div>
                     ) : contasVisiveis.length === 0 ? (
                         <div className="contas-vazio">
                             <strong>
-                                Nenhuma conta encontrada
+                                {mostrandoLixeira
+                                    ? 'A lixeira está vazia'
+                                    : 'Nenhuma conta encontrada'}
                             </strong>
 
                             <p>
@@ -1978,11 +2056,9 @@ function ContasFinanceiras() {
                                         }`}
                                     >
                                         {conta.tipo
-                                        === 'RECEBER' ? (
-                                            <IconeSetaBaixo />
-                                        ) : (
-                                            <IconeSetaCima />
-                                        )}
+                                        === 'RECEBER'
+                                            ? '↓'
+                                            : '↑'}
                                     </div>
 
                                     <div className="contas-item-informacoes">
@@ -2155,11 +2231,11 @@ function ContasFinanceiras() {
                 </section>
             </div>
 
-            <ModalAnimado
-                aberto={Boolean(contaParaLiquidar)}
-                aoFechar={() => setContaParaLiquidar(null)}
-                classeFundo="contas-modal-fundo"
-            >{contaParaLiquidar && (
+            {contaParaLiquidar && (
+                <div
+                    className="contas-modal-fundo"
+                    role="presentation"
+                >
                     <section
                         aria-modal="true"
                         className="contas-modal"
@@ -2181,7 +2257,7 @@ function ContasFinanceiras() {
                                 onClick={fecharModalLiquidacao}
                                 type="button"
                             >
-                                <IconeFechar />
+                                ×
                             </button>
                         </div>
 
@@ -2336,14 +2412,14 @@ function ContasFinanceiras() {
                             </div>
                         </form>
                     </section>
+                </div>
             )}
-            </ModalAnimado>
 
-            <ModalAnimado
-                aberto={Boolean(contaParaCancelar)}
-                aoFechar={() => setContaParaCancelar(null)}
-                classeFundo="contas-modal-fundo"
-            >{contaParaCancelar && (
+            {contaParaCancelar && (
+                <div
+                    className="contas-modal-fundo"
+                    role="presentation"
+                >
                     <section
                         aria-modal="true"
                         className="contas-modal contas-modal-perigo"
@@ -2365,7 +2441,7 @@ function ContasFinanceiras() {
                                 onClick={fecharModalCancelamento}
                                 type="button"
                             >
-                                <IconeFechar />
+                                ×
                             </button>
                         </div>
 
@@ -2402,16 +2478,14 @@ function ContasFinanceiras() {
                             </button>
                         </div>
                     </section>
+                </div>
             )}
-            </ModalAnimado>
 
-            <ModalAnimado
-                aberto={Boolean(contaParaExcluirPermanente)}
-                aoFechar={() =>
-                    setContaParaExcluirPermanente(null)
-                }
-                classeFundo="contas-modal-fundo"
-            >{contaParaExcluirPermanente && (
+            {contaParaExcluirPermanente && (
+                <div
+                    className="contas-modal-fundo"
+                    role="presentation"
+                >
                     <section
                         aria-modal="true"
                         className="contas-modal contas-modal-perigo"
@@ -2420,7 +2494,7 @@ function ContasFinanceiras() {
                         <div className="contas-modal-topo">
                             <div>
                                 <p className="contas-etiqueta">
-                                    Exclusão definitiva
+                                    ExclusÃ£o definitiva
                                 </p>
 
                                 <h2>
@@ -2433,13 +2507,13 @@ function ContasFinanceiras() {
                                 onClick={fecharExclusaoPermanente}
                                 type="button"
                             >
-                                <IconeFechar />
+                                Ã—
                             </button>
                         </div>
 
                         <p className="contas-modal-texto">
-                            Esta conta será apagada permanentemente.
-                            Depois disso não será possível recuperar.
+                            Esta conta serÃ¡ apagada permanentemente.
+                            Depois disso nÃ£o serÃ¡ possÃ­vel recuperar.
                         </p>
 
                         {erroModal && (
@@ -2468,16 +2542,14 @@ function ContasFinanceiras() {
                             </button>
                         </div>
                     </section>
+                </div>
             )}
-            </ModalAnimado>
 
-            <ModalAnimado
-                aberto={Boolean(contaParaEnviarFinanceiro)}
-                aoFechar={() =>
-                    setContaParaEnviarFinanceiro(null)
-                }
-                classeFundo="contas-modal-fundo"
-            >{contaParaEnviarFinanceiro && (
+            {contaParaEnviarFinanceiro && (
+                <div
+                    className="contas-modal-fundo"
+                    role="presentation"
+                >
                     <section
                         aria-modal="true"
                         className="contas-modal"
@@ -2499,7 +2571,7 @@ function ContasFinanceiras() {
                                 onClick={fecharEnvioFinanceiro}
                                 type="button"
                             >
-                                <IconeFechar />
+                                Ã—
                             </button>
                         </div>
 
@@ -2508,8 +2580,8 @@ function ContasFinanceiras() {
                             onSubmit={enviarContaAoFinanceiro}
                         >
                             <p className="contas-modal-texto">
-                                O valor pendente será lançado no Dashboard
-                                financeiro e esta conta sairá da previsão futura.
+                                O valor pendente serÃ¡ lanÃ§ado no Dashboard
+                                financeiro e esta conta sairÃ¡ da previsÃ£o futura.
                             </p>
 
                             <label>
@@ -2566,7 +2638,7 @@ function ContasFinanceiras() {
                             </label>
 
                             <label>
-                                Observação
+                                ObservaÃ§Ã£o
                                 <textarea
                                     disabled={enviandoFinanceiro}
                                     maxLength="500"
@@ -2606,8 +2678,8 @@ function ContasFinanceiras() {
                             </div>
                         </form>
                     </section>
+                </div>
             )}
-            </ModalAnimado>
         </div>
     )
 }
