@@ -221,7 +221,13 @@
 .movimentacoes-acoes {
     display: flex;
     align-items: center;
+    flex-wrap: wrap;
     gap: 8px;
+}
+
+.movimentacoes-acoes-lixeira {
+    min-width: 270px;
+    align-items: stretch;
 }
 
 .movimentacoes-editar,
@@ -234,6 +240,8 @@
     font-family: inherit;
     font-size: 13px;
     font-weight: 800;
+    line-height: 1.2;
+    text-align: center;
     cursor: pointer;
     transition:
             background 0.2s ease,
@@ -243,6 +251,7 @@
 .movimentacoes-editar {
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     border: 1px solid var(--border);
     color: var(--primary);
     text-decoration: none;
@@ -279,8 +288,16 @@
 }
 
 .movimentacoes-trocar {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     border: 1px solid var(--border);
     color: var(--primary);
+}
+
+.movimentacoes-acoes-lixeira .movimentacoes-trocar,
+.movimentacoes-acoes-lixeira .movimentacoes-excluir {
+    min-width: 185px;
 }
 
 .movimentacoes-trocar:hover:not(:disabled) {
@@ -289,6 +306,9 @@
 }
 
 .movimentacoes-excluir {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     border: 1px solid color-mix(in oklch, var(--destructive) 35%, var(--border));
     color: var(--destructive);
 }
@@ -330,7 +350,7 @@
 }
 
 .movimentacoes-modal {
-    width: min(100%, 470px);
+    width: min(100%, 540px);
     padding: 22px;
     border: 1px solid var(--border);
     border-radius: 8px;
@@ -375,6 +395,38 @@
     display: grid;
     gap: 10px;
     margin-top: 18px;
+}
+
+.movimentacoes-restauracao-opcoes {
+    display: grid;
+    gap: 8px;
+    padding: 12px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--secondary);
+}
+
+.movimentacoes-restauracao-opcoes strong {
+    color: var(--foreground);
+    font-size: 0.8rem;
+}
+
+.movimentacoes-opcao-original {
+    min-height: 42px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--card);
+    color: var(--primary);
+    font-family: inherit;
+    font-size: 0.85rem;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.movimentacoes-opcao-original.selecionada {
+    border-color: var(--primary);
+    background: color-mix(in oklch, var(--primary) 12%, var(--card));
+    box-shadow: inset 0 0 0 1px var(--primary);
 }
 
 .movimentacoes-modal-form label {

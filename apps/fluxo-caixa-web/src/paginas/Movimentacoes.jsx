@@ -48,6 +48,24 @@ async function obterMensagemDeErro(
     return dadosErro?.mensagem ?? mensagemPadrao
 }
 
+function normalizarParaComparacao(texto) {
+    return String(texto ?? '')
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .trim()
+        .toLowerCase()
+}
+
+function categoriaEhOriginal(categoria, movimentacao) {
+    return (
+        categoria?.tipo === movimentacao?.tipo &&
+        normalizarParaComparacao(categoria?.nome) ===
+            normalizarParaComparacao(
+                movimentacao?.categoriaNome,
+            )
+    )
+}
+
 function Movimentacoes() {
     const navigate = useNavigate()
     const [parametros] = useSearchParams()
@@ -138,6 +156,23 @@ function Movimentacoes() {
     const movimentacoesExibidas = mostrandoLixeira
         ? movimentacoesLixeira
         : movimentacoes
+
+    const categoriaOriginalRestauracao =
+        movimentacaoParaConverter
+            ?.acaoCategoria === 'restaurar'
+            ? categoriasConversao.find((categoria) =>
+                  categoriaEhOriginal(
+                      categoria,
+                      movimentacaoParaConverter,
+                  ),
+              )
+            : null
+
+    const usandoCategoriaOriginal =
+        Boolean(categoriaOriginalRestauracao) &&
+        categoriaConversaoId ===
+            String(categoriaOriginalRestauracao.id) &&
+        !novaCategoriaNome.trim()
 
     function criarCabecalhos(possuiCorpo = false) {
         return montarCabecalhos(sessao, possuiCorpo)
@@ -571,9 +606,23 @@ function Movimentacoes() {
 
             setCategoriasConversao(categoriasAtivas)
 
-            if (categoriasAtivas.length > 0) {
+            const categoriaOriginal =
+                acao === 'restaurar'
+                    ? categoriasAtivas.find(
+                          (categoria) =>
+                              categoriaEhOriginal(
+                                  categoria,
+                                  movimentacao,
+                              ),
+                      )
+                    : null
+
+            const categoriaInicial =
+                categoriaOriginal ?? categoriasAtivas[0]
+
+            if (categoriaInicial) {
                 setCategoriaConversaoId(
-                    String(categoriasAtivas[0].id),
+                    String(categoriaInicial.id),
                 )
             }
         } catch (erroDaRequisicao) {
@@ -987,7 +1036,13 @@ function Movimentacoes() {
                                         </td>
 
                                         <td>
-                                            <div className="movimentacoes-acoes">
+                                            <div
+                                                className={
+                                                    mostrandoLixeira
+                                                        ? 'movimentacoes-acoes movimentacoes-acoes-lixeira'
+                                                        : 'movimentacoes-acoes'
+                                                }
+                                            >
                                                 {mostrandoLixeira ? (
                                                     <>
                                                         <button
@@ -1289,14 +1344,66 @@ function Movimentacoes() {
                             className="movimentacoes-modal-form"
                             onSubmit={confirmarConversao}
                         >
+                            {movimentacaoParaConverter.acaoCategoria ===
+                                'restaurar' && (
+                                <div className="movimentacoes-restauracao-opcoes">
+                                    <strong>
+                                        Categoria original
+                                    </strong>
+
+                                    {categoriaOriginalRestauracao ? (
+                                        <button
+                                            className={
+                                                usandoCategoriaOriginal
+                                                    ? 'movimentacoes-opcao-original selecionada'
+                                                    : 'movimentacoes-opcao-original'
+                                            }
+                                            disabled={
+                                                carregandoCategoriasConversao ||
+                                                Boolean(restaurandoId)
+                                            }
+                                            onClick={() => {
+                                                setCategoriaConversaoId(
+                                                    String(
+                                                        categoriaOriginalRestauracao.id,
+                                                    ),
+                                                )
+                                                setNovaCategoriaNome('')
+                                            }}
+                                            type="button"
+                                        >
+                                            Restaurar em{' '}
+                                            {
+                                                categoriaOriginalRestauracao.nome
+                                            }
+                                        </button>
+                                    ) : (
+                                        <p>
+                                            A categoria original "
+                                            {
+                                                movimentacaoParaConverter.categoriaNome
+                                            }
+                                            " não está ativa ou não
+                                            existe mais. Escolha outra
+                                            categoria abaixo ou crie uma
+                                            nova.
+                                        </p>
+                                    )}
+                                </div>
+                            )}
+
                             <label htmlFor="categoriaConversao">
-                                Categoria de destino
+                                {movimentacaoParaConverter.acaoCategoria ===
+                                'restaurar'
+                                    ? 'Restaurar para outra categoria'
+                                    : 'Categoria de destino'}
                             </label>
 
                             <select
                                 disabled={
                                     carregandoCategoriasConversao ||
-                                    Boolean(convertendoId)
+                                    Boolean(convertendoId) ||
+                                    Boolean(restaurandoId)
                                 }
                                 id="categoriaConversao"
                                 onChange={(evento) =>
@@ -1382,7 +1489,10 @@ function Movimentacoes() {
                                 >
                                     {convertendoId || restaurandoId
                                         ? 'Salvando...'
-                                        : 'Confirmar troca'}
+                                        : movimentacaoParaConverter.acaoCategoria ===
+                                            'restaurar'
+                                          ? 'Restaurar movimentação'
+                                          : 'Confirmar troca'}
                                 </button>
                             </div>
                         </form>
