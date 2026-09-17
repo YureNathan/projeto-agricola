@@ -5,12 +5,6 @@ import {
     Link,
 } from 'react-router'
 import { API_ESQUECI_SENHA_URL } from '../config.js'
-import {
-    IconeFolha,
-    IconeSetaDireita,
-    IconeSetaEsquerda,
-} from '../componentes/Icones.jsx'
-import SpinnerBotao from '../componentes/SpinnerBotao.jsx'
 import './Autenticacao.css'
 
 async function obterMensagemDeErro(
@@ -97,7 +91,7 @@ function EsqueciSenha() {
                     to="/"
                 >
                     <span className="autenticacao-marca-icone">
-                        <IconeFolha />
+                        ♧
                     </span>
 
                     <span>AgroGestao</span>
@@ -182,11 +176,7 @@ function EsqueciSenha() {
                             disabled={carregando}
                             type="submit"
                         >
-                            {carregando ? (
-                                <SpinnerBotao />
-                            ) : (
-                                <IconeSetaDireita />
-                            )}
+                            <span>→</span>
 
                             {carregando
                                 ? 'Enviando...'
@@ -196,7 +186,7 @@ function EsqueciSenha() {
 
                     <p className="autenticacao-alternativa">
                         <Link to="/login">
-                            <IconeSetaEsquerda /> Voltar para o login
+                            ← Voltar para o login
                         </Link>
                     </p>
                 </div>

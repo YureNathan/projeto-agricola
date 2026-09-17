@@ -1,7 +1,7 @@
 .admin-painel {
     min-height: 100vh;
-    background: var(--secondary);
-    color: var(--foreground);
+    background: #f6fbf2;
+    color: #061407;
     padding: 32px clamp(16px, 4vw, 64px);
 }
 
@@ -23,7 +23,7 @@
 
 .admin-marca,
 .admin-etiqueta {
-    color: var(--primary);
+    color: #2f8300;
     font-size: 0.78rem;
     font-weight: 800;
     letter-spacing: 0;
@@ -37,7 +37,7 @@
 }
 
 .admin-topo p {
-    color: var(--muted-foreground);
+    color: #425342;
     margin: 0;
     max-width: 560px;
 }
@@ -45,7 +45,7 @@
 .admin-botao-secundario,
 .admin-botao-primario,
 .admin-botao-perigo {
-    border: 1px solid var(--border);
+    border: 1px solid #b9d5ad;
     border-radius: 8px;
     cursor: pointer;
     font-weight: 800;
@@ -54,20 +54,20 @@
 }
 
 .admin-botao-secundario {
-    background: var(--card);
-    color: var(--foreground);
+    background: #ffffff;
+    color: #061407;
 }
 
 .admin-botao-primario {
-    background: var(--primary);
-    border-color: var(--primary);
-    color: var(--card);
+    background: #358700;
+    border-color: #358700;
+    color: #ffffff;
 }
 
 .admin-botao-perigo {
-    background: color-mix(in oklch, var(--destructive) 7%, var(--card));
-    border-color: color-mix(in oklch, var(--destructive) 35%, var(--border));
-    color: var(--destructive);
+    background: #fff4f1;
+    border-color: #f3b2a5;
+    color: #b42318;
 }
 
 .admin-aviso,
@@ -79,10 +79,10 @@
 }
 
 .admin-aviso {
-    background: var(--secondary);
-    border: 1px solid var(--border);
+    background: #e9f8df;
+    border: 1px solid #b9d5ad;
     border-radius: 8px;
-    color: var(--primary);
+    color: #235f00;
     font-weight: 700;
     margin-bottom: 16px;
     padding: 14px 16px;
@@ -97,8 +97,8 @@
 
 .admin-resumo article,
 .admin-tabela-bloco {
-    background: var(--card);
-    border: 1px solid var(--border);
+    background: #ffffff;
+    border: 1px solid #d5e3cf;
     border-radius: 8px;
 }
 
@@ -107,7 +107,7 @@
 }
 
 .admin-resumo span {
-    color: var(--muted-foreground);
+    color: #4c5f4d;
     display: block;
     font-size: 0.78rem;
     font-weight: 700;
@@ -136,7 +136,7 @@
 
 .admin-tabela-cabecalho p,
 .admin-vazio {
-    color: var(--muted-foreground);
+    color: #5d6d5c;
     margin: 0;
 }
 
@@ -157,21 +157,21 @@
 
 .admin-tabela th,
 .admin-tabela td {
-    border-top: 1px solid var(--border);
+    border-top: 1px solid #e0ebda;
     padding: 14px;
     text-align: left;
     vertical-align: middle;
 }
 
 .admin-tabela th {
-    background: var(--secondary);
-    color: var(--muted-foreground);
+    background: #f8fcf5;
+    color: #405241;
     font-size: 0.76rem;
     text-transform: uppercase;
 }
 
 .admin-tabela td > span {
-    color: var(--muted-foreground);
+    color: #647263;
     display: block;
     font-size: 0.82rem;
     margin-top: 4px;
@@ -179,10 +179,10 @@
 
 .admin-tabela select,
 .admin-tabela input {
-    background: var(--card);
-    border: 1px solid var(--border);
+    background: #ffffff;
+    border: 1px solid #c7d9bf;
     border-radius: 8px;
-    color: var(--foreground);
+    color: #061407;
     min-height: 38px;
     padding: 0 10px;
     width: 100%;
@@ -224,24 +224,24 @@
 }
 
 .admin-status-em_dia {
-    background: var(--secondary);
-    color: var(--primary);
+    background: #e7f8da;
+    color: #256a00;
 }
 
 .admin-status-bloqueado,
 .admin-status-atrasado {
-    background: color-mix(in oklch, var(--destructive) 7%, var(--card));
-    color: var(--destructive);
+    background: #ffe8e3;
+    color: #b42318;
 }
 
 .admin-status-usando_sem_pagar {
-    background: var(--warning-soft);
-    color: var(--warning-foreground);
+    background: #fff1d6;
+    color: #8a4b00;
 }
 
 .admin-status-sem_uso {
-    background: var(--secondary);
-    color: var(--muted-foreground);
+    background: #eef1ec;
+    color: #405241;
 }
 
 .admin-modal-fundo {
@@ -256,8 +256,8 @@
 }
 
 .admin-modal {
-    background: var(--card);
-    border: 1px solid var(--border);
+    background: #ffffff;
+    border: 1px solid #d5e3cf;
     border-radius: 8px;
     box-shadow: 0 28px 80px rgb(6 20 7 / 0.22);
     display: grid;
@@ -277,9 +277,9 @@
 }
 
 .admin-modal-topo span {
-    color: var(--primary);
+    color: #2f8300;
     font-size: 0.72rem;
-    font-weight: 800;
+    font-weight: 850;
     letter-spacing: 0;
     text-transform: uppercase;
 }
@@ -289,8 +289,8 @@
 }
 
 .admin-modal-fechar {
-    background: var(--card);
-    border: 1px solid var(--border);
+    background: #ffffff;
+    border: 1px solid #b9d5ad;
     border-radius: 8px;
     cursor: pointer;
     font-weight: 800;
@@ -306,23 +306,23 @@
 
 .admin-modal label,
 .admin-modal legend {
-    color: var(--foreground);
+    color: #233523;
     font-size: 0.82rem;
-    font-weight: 800;
+    font-weight: 850;
 }
 
 .admin-modal input {
-    background: var(--card);
-    border: 1px solid var(--border);
+    background: #ffffff;
+    border: 1px solid #c7d9bf;
     border-radius: 8px;
-    color: var(--foreground);
+    color: #061407;
     font: inherit;
     min-height: 42px;
     padding: 0 12px;
 }
 
 .admin-modal fieldset {
-    border: 1px solid var(--border);
+    border: 1px solid #d5e3cf;
     border-radius: 8px;
     margin: 0;
     padding: 14px;
@@ -358,25 +358,4 @@
     .admin-resumo {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
-}
-
-/*
- * Feedback e carregamento
- */
-
-.admin-aviso-erro {
-    background: color-mix(in oklch, var(--destructive) 7%, var(--card));
-    border-color: color-mix(in oklch, var(--destructive) 35%, var(--border));
-    color: var(--destructive);
-}
-
-.admin-aviso-sucesso {
-    background: var(--secondary);
-    border-color: var(--border);
-    color: var(--primary);
-}
-
-.admin-esqueleto {
-    display: grid;
-    gap: 10px;
 }

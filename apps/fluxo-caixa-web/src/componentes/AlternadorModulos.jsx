@@ -2,7 +2,6 @@ import {
     useLocation,
     useNavigate,
 } from 'react-router'
-import { IconeCalendario } from './Icones.jsx'
 import './AlternadorModulos.css'
 
 function AlternadorModulos() {
@@ -17,6 +16,11 @@ function AlternadorModulos() {
     const contasFinanceirasAtivas =
         location.pathname.startsWith(
             '/dashboard/contas',
+        )
+
+    const fornecedoresAtivos =
+        location.pathname.startsWith(
+            '/dashboard/fornecedores',
         )
 
     return (
@@ -68,10 +72,35 @@ function AlternadorModulos() {
                 type="button"
             >
                 <span aria-hidden="true">
-                    <IconeCalendario />
+                    📅
                 </span>
 
                 Contas a pagar e receber
+            </button>
+
+            <button
+                aria-current={
+                    fornecedoresAtivos
+                        ? 'page'
+                        : undefined
+                }
+                className={
+                    fornecedoresAtivos
+                        ? 'alternador-modulos-botao ativo'
+                        : 'alternador-modulos-botao'
+                }
+                onClick={() =>
+                    navigate(
+                        '/dashboard/fornecedores',
+                    )
+                }
+                type="button"
+            >
+                <span aria-hidden="true">
+                    F
+                </span>
+
+                Fornecedores
             </button>
         </nav>
     )

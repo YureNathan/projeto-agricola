@@ -1,43 +1,12 @@
-import { useState } from 'react'
 import { Link } from 'react-router'
-import {
-    IconeCalendario,
-    IconeCamadas,
-    IconeCheck,
-    IconeFechar,
-    IconeFolha,
-    IconeLista,
-    IconeMenu,
-    IconeMenos,
-    IconePata,
-    IconeSetaBaixo,
-    IconeSetaCima,
-    IconeSetaDiagonal,
-    IconeSetaDireita,
-} from './componentes/Icones.jsx'
-import Revelar from './componentes/Revelar.jsx'
-import ValorAnimado from './componentes/ValorAnimado.jsx'
 import './App.css'
 
-function formatarMoeda(valor) {
-    return new Intl.NumberFormat('pt-BR', {
-        style: 'currency',
-        currency: 'BRL',
-    }).format(valor)
-}
-
 function PaginaInicial() {
-    const [menuAberto, setMenuAberto] = useState(false)
-
-    function fecharMenu() {
-        setMenuAberto(false)
-    }
-
     return (
         <div className="publica">
             <header className="publica-cabecalho">
                 <Link className="publica-marca" to="/">
-                    <span className="publica-marca-icone"><IconeFolha /></span>
+                    <span className="publica-marca-icone">♧</span>
                     <span>AgroGestão</span>
                 </Link>
 
@@ -45,6 +14,7 @@ function PaginaInicial() {
                     <a href="#atividades">Atividades</a>
                     <a href="#recursos">Recursos</a>
                     <a href="#financeiro">Como funciona</a>
+                    <a href="#sobre">Sobre</a>
                 </nav>
 
                 <div className="publica-acoes">
@@ -56,73 +26,19 @@ function PaginaInicial() {
                     </Link>
 
                     <Link
-                        className="publica-botao-app publica-botao-pequeno"
-                        to="/app"
-                    >
-                        Versão app
-                    </Link>
-
-                    <Link
                         className="publica-botao publica-botao-pequeno"
                         to="/cadastro"
                     >
                         Criar conta
                     </Link>
 
-                    <button
-                        aria-expanded={menuAberto}
-                        aria-label={
-                            menuAberto
-                                ? 'Fechar menu'
-                                : 'Abrir menu'
-                        }
-                        className="publica-menu-mobile-botao"
-                        onClick={() =>
-                            setMenuAberto(
-                                (valorAtual) => !valorAtual,
-                            )
-                        }
-                        type="button"
+                    <Link
+                        className="publica-botao-app publica-botao-pequeno"
+                        to="/app"
                     >
-                        {menuAberto ? (
-                            <IconeFechar />
-                        ) : (
-                            <IconeMenu />
-                        )}
-                    </button>
+                        Versao app
+                    </Link>
                 </div>
-
-                {menuAberto && (
-                    <nav className="publica-menu-mobile">
-                        <a
-                            href="#atividades"
-                            onClick={fecharMenu}
-                        >
-                            Atividades
-                        </a>
-
-                        <a
-                            href="#recursos"
-                            onClick={fecharMenu}
-                        >
-                            Recursos
-                        </a>
-
-                        <a
-                            href="#financeiro"
-                            onClick={fecharMenu}
-                        >
-                            Como funciona
-                        </a>
-
-                        <Link
-                            onClick={fecharMenu}
-                            to="/app"
-                        >
-                            Versão app
-                        </Link>
-                    </nav>
-                )}
             </header>
 
             <main>
@@ -149,7 +65,14 @@ function PaginaInicial() {
                                 className="publica-botao"
                                 to="/cadastro"
                             >
-                                Criar conta grátis <span><IconeSetaDireita /></span>
+                                Criar sua conta <span>→</span>
+                            </Link>
+
+                            <Link
+                                className="publica-botao-app"
+                                to="/app"
+                            >
+                                Versao app
                             </Link>
 
                             <a
@@ -186,34 +109,19 @@ function PaginaInicial() {
                             <div className="publica-resumo">
                                 <article className="publica-cartao publica-receita">
                                     <span>Total que entrou</span>
-                                    <strong>
-                                        <ValorAnimado
-                                            formatar={formatarMoeda}
-                                            valor={15700}
-                                        />
-                                    </strong>
+                                    <strong>R$ 15.700,00</strong>
                                     <small>Exemplo de receitas</small>
                                 </article>
 
                                 <article className="publica-cartao publica-despesa">
                                     <span>Total que saiu</span>
-                                    <strong>
-                                        <ValorAnimado
-                                            formatar={formatarMoeda}
-                                            valor={850}
-                                        />
-                                    </strong>
+                                    <strong>R$ 850,00</strong>
                                     <small>Exemplo de despesas</small>
                                 </article>
 
                                 <article className="publica-cartao publica-saldo">
                                     <span>Quanto sobrou</span>
-                                    <strong>
-                                        <ValorAnimado
-                                            formatar={formatarMoeda}
-                                            valor={14850}
-                                        />
-                                    </strong>
+                                    <strong>R$ 14.850,00</strong>
                                     <small>Exemplo de saldo</small>
                                 </article>
                             </div>
@@ -251,13 +159,11 @@ function PaginaInicial() {
                                             <path
                                                 className="publica-linha-receita"
                                                 d="M0,145 C80,130 120,155 190,110 C270,55 320,70 390,90 C470,115 520,70 600,25"
-                                                pathLength="1"
                                             />
 
                                             <path
                                                 className="publica-linha-despesa"
                                                 d="M0,165 C90,135 150,150 230,155 C320,165 355,110 430,120 C500,130 535,150 600,158"
-                                                pathLength="1"
                                             />
                                         </svg>
                                     </div>
@@ -273,7 +179,7 @@ function PaginaInicial() {
 
                                     <div className="publica-movimentacao">
                       <span className="publica-movimentacao-icone publica-entrada">
-                        <IconeSetaBaixo />
+                        ↓
                       </span>
 
                                         <div>
@@ -282,17 +188,13 @@ function PaginaInicial() {
                                         </div>
 
                                         <b className="publica-valor-entrada">
-                                            +{' '}
-                                            <ValorAnimado
-                                                formatar={formatarMoeda}
-                                                valor={3200}
-                                            />
+                                            + R$ 3.200,00
                                         </b>
                                     </div>
 
                                     <div className="publica-movimentacao">
                       <span className="publica-movimentacao-icone publica-saida">
-                        <IconeSetaCima />
+                        ↑
                       </span>
 
                                         <div>
@@ -301,11 +203,7 @@ function PaginaInicial() {
                                         </div>
 
                                         <b className="publica-valor-saida">
-                                            −{' '}
-                                            <ValorAnimado
-                                                formatar={formatarMoeda}
-                                                valor={850}
-                                            />
+                                            − R$ 850,00
                                         </b>
                                     </div>
                                 </article>
@@ -318,19 +216,18 @@ function PaginaInicial() {
                     className="publica-segmentos"
                     id="atividades"
                 >
-                    <Revelar as="p">
-                        Feito para a rotina do produtor rural — adapta as
-                        categorias à atividade escolhida.
-                    </Revelar>
+                    <p>
+                        O sistema adapta as categorias à atividade escolhida
+                    </p>
 
-                    <Revelar className="publica-segmentos-lista">
+                    <div className="publica-segmentos-lista">
                         <article>
-                            <span><IconeFolha /></span>
+                            <span>♧</span>
                             <strong>Agricultura</strong>
                         </article>
 
                         <article>
-                            <span><IconePata /></span>
+                            <span>◉</span>
                             <strong>Pecuária</strong>
                         </article>
 
@@ -340,124 +237,115 @@ function PaginaInicial() {
                         </article>
 
                         <article>
-                            <span><IconeMenos /></span>
+                            <span>−</span>
                             <strong>Despesas</strong>
                         </article>
 
                         <article>
-                            <span><IconeCheck /></span>
+                            <span>✓</span>
                             <strong>Categorias próprias</strong>
                         </article>
-                    </Revelar>
+                    </div>
                 </section>
 
                 <section
                     className="publica-recursos"
                     id="recursos"
                 >
-                    <Revelar className="publica-secao-titulo">
-                        <span className="publica-etiqueta">
-                            Recursos
-                        </span>
+                    <div className="publica-secao-titulo">
+              <span className="publica-etiqueta">
+                Recursos existentes no sistema
+              </span>
 
                         <h2>
-                            O que você resolve com o AgroGestão
+                            Recursos reais para organizar sua propriedade
                         </h2>
 
                         <p>
-                            Registre receitas e despesas, organize
-                            categorias e acompanhe o resultado da
-                            sua propriedade em um só lugar.
+                            A plataforma foi construída para apresentar as
+                            informações financeiras de forma simples, organizada
+                            e separada para cada propriedade cadastrada.
                         </p>
-                    </Revelar>
+                    </div>
 
                     <div className="publica-grade-recursos">
-                        <Revelar as="article" atraso={0}>
-                            <span className="publica-recurso-icone">
-                                R$
-                            </span>
+                        <article>
+                <span className="publica-recurso-icone">
+                  R$
+                </span>
 
                             <h3>Receitas e despesas</h3>
 
                             <p>
-                                Cadastre entradas e gastos com
-                                valor, data e observações.
+                                Cadastre o dinheiro que entrou e os gastos da
+                                propriedade, com valor, data e observações.
                             </p>
-                        </Revelar>
+                        </article>
 
-                        <Revelar as="article" atraso={60}>
-                            <span className="publica-recurso-icone">
-                                <IconeLista />
-                            </span>
+                        <article>
+                <span className="publica-recurso-icone">
+                  ▤
+                </span>
 
-                            <h3>Movimentações organizadas</h3>
+                            <h3>Movimentações financeiras</h3>
 
                             <p>
-                                Consulte e filtre os lançamentos
-                                registrados na propriedade.
+                                Consulte e organize os lançamentos financeiros
+                                registrados na sua propriedade.
                             </p>
-                        </Revelar>
+                        </article>
 
-                        <Revelar as="article" atraso={120}>
-                            <span className="publica-recurso-icone">
-                                <IconeCheck />
-                            </span>
+                        <article>
+                <span className="publica-recurso-icone">
+                  ✓
+                </span>
 
-                            <h3>Categorias do seu jeito</h3>
+                            <h3>Categorias personalizadas</h3>
 
                             <p>
-                                Use categorias iniciais ou crie
-                                novas sem sair do lançamento.
+                                Utilize categorias iniciais ou crie novas categorias
+                                de receita e despesa sem sair do lançamento.
                             </p>
-                        </Revelar>
+                        </article>
 
-                        <Revelar as="article" atraso={180}>
-                            <span className="publica-recurso-icone">
-                                <IconeSetaDiagonal />
-                            </span>
+                        <article>
+                <span className="publica-recurso-icone">
+                  ↗
+                </span>
 
                             <h3>Resumo financeiro</h3>
 
                             <p>
-                                Veja quanto entrou, quanto saiu,
-                                o saldo e os indicadores.
+                                Acompanhe quanto entrou, quanto saiu, o saldo e
+                                indicadores calculados com seus próprios registros.
                             </p>
-                        </Revelar>
+                        </article>
 
-                        <Revelar as="article" atraso={240}>
-                            <span className="publica-recurso-icone">
-                                <IconeCamadas />
-                            </span>
+                        <article>
+                <span className="publica-recurso-icone">
+                  ◫
+                </span>
 
-                            <h3>Dados por propriedade</h3>
+                            <h3>Dados separados por empresa</h3>
 
                             <p>
-                                Cada conta acessa apenas as
-                                informações da sua empresa.
+                                Cada usuário acessa somente as informações
+                                pertencentes à sua própria empresa.
                             </p>
-                        </Revelar>
+                        </article>
 
-                        <Revelar
-                            as="article"
-                            atraso={300}
-                            className="publica-recurso-proximo"
-                        >
-                            <span className="publica-recurso-icone">
-                                <IconeCalendario />
-                            </span>
-
+                        <article className="publica-recurso-destaque">
                             <h3>Contas a pagar e receber</h3>
 
                             <p>
-                                Previsões, vencimentos e
-                                lembretes para os próximos
-                                pagamentos.
+                                Módulo em desenvolvimento para previsões,
+                                vencimentos e lembretes financeiros.
                             </p>
 
-                            <span className="publica-badge">
-                                Em breve
-                            </span>
-                        </Revelar>
+                            <span>
+                  Em desenvolvimento
+                </span>
+                        </article>
                     </div>
                 </section>
 
@@ -465,19 +353,20 @@ function PaginaInicial() {
                     className="publica-financeiro"
                     id="financeiro"
                 >
-                    <Revelar className="publica-financeiro-texto">
-                        <span className="publica-etiqueta">
-                            Como funciona
-                        </span>
+                    <div className="publica-financeiro-texto">
+              <span className="publica-etiqueta">
+                Funcionamento simples
+              </span>
 
                         <h2>
-                            Do cadastro ao resultado, em poucos passos
+                            As informações pertencem à sua propriedade
                         </h2>
 
                         <p>
-                            O painel usa os registros da sua própria conta.
-                            Os exemplos desta página são demonstrações
-                            visuais e estão identificados como tal.
+                            Depois de entrar, o painel utiliza os registros
+                            financeiros cadastrados na sua própria conta.
+                            Os exemplos desta página são apenas demonstrações
+                            visuais e estão identificados dessa forma.
                         </p>
 
                         <ul>
@@ -501,9 +390,9 @@ function PaginaInicial() {
                                 Dados separados entre as empresas
                             </li>
                         </ul>
-                    </Revelar>
+                    </div>
 
-                    <Revelar className="publica-passos">
+                    <div className="publica-passos">
                         <article>
                             <span>1</span>
 
@@ -544,9 +433,7 @@ function PaginaInicial() {
                         </article>
 
                         <article className="publica-passo-ativo">
-                            <span>
-                                <IconeCheck />
-                            </span>
+                            <span>4</span>
 
                             <div>
                                 <strong>Acompanhe o resultado</strong>
@@ -557,21 +444,21 @@ function PaginaInicial() {
                                 </p>
                             </div>
                         </article>
-                    </Revelar>
+                    </div>
                 </section>
 
                 <section className="publica-chamada">
                     <h2>
-                        Comece a organizar as finanças da sua propriedade
+                        Comece a organizar as finanças da propriedade
                     </h2>
 
                     <p>
-                        Crie sua conta gratuitamente e acompanhe resultados
-                        calculados a partir das suas movimentações.
+                        Cadastre seus próprios dados e acompanhe resultados
+                        calculados a partir das movimentações registradas.
                     </p>
 
                     <Link to="/cadastro">
-                        Criar conta grátis
+                        Criar sua conta
                     </Link>
                 </section>
             </main>
@@ -581,7 +468,7 @@ function PaginaInicial() {
                 id="sobre"
             >
                 <Link className="publica-marca" to="/">
-                    <span className="publica-marca-icone"><IconeFolha /></span>
+                    <span className="publica-marca-icone">♧</span>
                     <span>AgroGestão</span>
                 </Link>
 
@@ -590,8 +477,8 @@ function PaginaInicial() {
                 </p>
 
                 <div>
-                    <span>Termos de uso</span>
-                    <span>Política de privacidade</span>
+                    <span>Termos de uso em preparação</span>
+                    <span>Política de privacidade em preparação</span>
                 </div>
             </footer>
         </div>

@@ -45,7 +45,7 @@
                     transparent
             );
     font-size: 0.7rem;
-    font-weight: 800;
+    font-weight: 850;
 }
 
 .alternador-modulos-botao:hover {
@@ -90,7 +90,7 @@
         display: grid;
         width: 100%;
         grid-template-columns:
-            repeat(2, minmax(0, 1fr));
+            repeat(3, minmax(0, 1fr));
     }
 
     .alternador-modulos-botao {

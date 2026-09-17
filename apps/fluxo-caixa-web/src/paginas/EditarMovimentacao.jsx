@@ -8,9 +8,6 @@ import {
     useParams,
 } from 'react-router'
 import { API_BASE_URL as API_URL } from '../config.js'
-import Esqueleto from '../componentes/Esqueleto.jsx'
-import { IconeSetaEsquerda } from '../componentes/Icones.jsx'
-import { limparSessao, obterSessao } from '../servicos/sessao.js'
 import './NovaMovimentacao.css'
 
 function completarComZero(numero) {
@@ -31,6 +28,65 @@ function obterDataAtual() {
     )
 
     return `${ano}-${mes}-${dia}`
+}
+
+function limparSessao() {
+    localStorage.removeItem('agrogestao_token')
+    localStorage.removeItem('agrogestao_tipo_token')
+    localStorage.removeItem('agrogestao_usuario')
+
+    localStorage.removeItem(
+        'agrogestao_token_expira_em',
+    )
+}
+
+function obterSessao() {
+    try {
+        const token =
+            localStorage.getItem('agrogestao_token')
+
+        const tipoToken =
+            localStorage.getItem(
+                'agrogestao_tipo_token',
+            ) ?? 'Bearer'
+
+        const usuarioSalvo =
+            localStorage.getItem(
+                'agrogestao_usuario',
+            )
+
+        const expiraEm =
+            Number(
+                localStorage.getItem(
+                    'agrogestao_token_expira_em',
+                ),
+            )
+
+        if (!token || !usuarioSalvo) {
+            return null
+        }
+
+        if (expiraEm && Date.now() >= expiraEm) {
+            limparSessao()
+            return null
+        }
+
+        const usuario = JSON.parse(usuarioSalvo)
+
+        if (!usuario?.empresaId) {
+            limparSessao()
+            return null
+        }
+
+        return {
+            token,
+            tipoToken,
+            usuario,
+        }
+    } catch {
+        limparSessao()
+        return null
+    }
 }
 
 async function obterMensagemDeErro(
@@ -405,27 +461,10 @@ function EditarMovimentacao() {
         return (
             <div className="movimentacao-pagina">
                 <div className="movimentacao-conteudo">
-                    <main
-                        aria-busy="true"
-                        aria-live="polite"
-                        className="movimentacao-card movimentacao-esqueleto"
-                    >
-                        {[0, 1, 2, 3].map((indice) => (
-                            <div
-                                className="movimentacao-esqueleto-campo"
-                                key={indice}
-                            >
-                                <Esqueleto
-                                    altura="12px"
-                                    largura="35%"
-                                />
-
-                                <Esqueleto
-                                    altura="42px"
-                                    largura="100%"
-                                />
-                            </div>
-                        ))}
+                    <main className="movimentacao-card">
+                        <p>
+                            Carregando movimentação...
+                        </p>
                     </main>
                 </div>
             </div>
@@ -437,7 +476,7 @@ function EditarMovimentacao() {
             <div className="movimentacao-conteudo">
                 <header className="movimentacao-cabecalho">
                     <Link to="/dashboard/movimentacoes">
-                        <IconeSetaEsquerda /> Voltar às movimentações
+                        ← Voltar às movimentações
                     </Link>
 
                     <p>AgroGestão</p>

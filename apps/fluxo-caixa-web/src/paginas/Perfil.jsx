@@ -3,14 +3,47 @@ import {
     useState,
 } from 'react'
 import { useNavigate } from 'react-router'
-import Esqueleto from '../componentes/Esqueleto.jsx'
-import SpinnerBotao from '../componentes/SpinnerBotao.jsx'
 import { API_BASE_URL as API_URL } from '../config.js'
-import {
-    atualizarUsuarioSessao,
-    obterSessao,
-} from '../servicos/sessao.js'
 import './Perfil.css'
+
+function limparSessao() {
+    localStorage.removeItem('agrogestao_token')
+    localStorage.removeItem('agrogestao_tipo_token')
+    localStorage.removeItem('agrogestao_usuario')
+    localStorage.removeItem('agrogestao_token_expira_em')
+}
+
+function obterSessao() {
+    try {
+        const token = localStorage.getItem('agrogestao_token')
+        const tipoToken =
+            localStorage.getItem('agrogestao_tipo_token') ??
+            'Bearer'
+        const usuarioSalvo =
+            localStorage.getItem('agrogestao_usuario')
+        const expiraEm = Number(
+            localStorage.getItem('agrogestao_token_expira_em'),
+        )
+
+        if (!token || !usuarioSalvo) {
+            return null
+        }
+
+        if (expiraEm && Date.now() >= expiraEm) {
+            limparSessao()
+            return null
+        }
+
+        return {
+            token,
+            tipoToken,
+            usuario: JSON.parse(usuarioSalvo),
+        }
+    } catch {
+        limparSessao()
+        return null
+    }
+}
 
 async function obterMensagemDeErro(resposta) {
     const dados = await resposta.json().catch(() => null)
@@ -29,7 +62,6 @@ function Perfil() {
         pecuariaAtiva: false,
     })
     const [mensagem, setMensagem] = useState('')
-    const [tipoMensagem, setTipoMensagem] = useState('sucesso')
     const [carregando, setCarregando] = useState(true)
     const [salvando, setSalvando] = useState(false)
 
@@ -67,9 +99,11 @@ function Perfil() {
 
                 const usuario = await resposta.json()
                 preencherFormulario(usuario)
-                atualizarUsuarioSessao(usuario)
+                localStorage.setItem(
+                    'agrogestao_usuario',
+                    JSON.stringify(usuario),
+                )
             } catch (erro) {
-                setTipoMensagem('erro')
                 setMensagem(
                     erro instanceof Error
                         ? erro.message
@@ -150,11 +184,12 @@ function Perfil() {
 
             const usuarioAtualizado = await resposta.json()
             preencherFormulario(usuarioAtualizado)
-            atualizarUsuarioSessao(usuarioAtualizado)
+            localStorage.setItem(
+                'agrogestao_usuario',
+                JSON.stringify(usuarioAtualizado),
+            )
             setMensagem('Dados atualizados com sucesso.')
-            setTipoMensagem('sucesso')
         } catch (erro) {
-            setTipoMensagem('erro')
             setMensagem(
                 erro instanceof Error
                     ? erro.message
@@ -192,41 +227,15 @@ function Perfil() {
                 </header>
 
                 {mensagem && (
-                    <div
-                        className={`perfil-aviso perfil-aviso-${tipoMensagem}`}
-                        role={
-                            tipoMensagem === 'erro'
-                                ? 'alert'
-                                : 'status'
-                        }
-                    >
+                    <div className="perfil-aviso" role="status">
                         {mensagem}
                     </div>
                 )}
 
                 {carregando ? (
-                    <div
-                        aria-busy="true"
-                        aria-live="polite"
-                        className="perfil-esqueleto"
-                    >
-                        {[0, 1, 2, 3].map((indice) => (
-                            <div
-                                className="perfil-esqueleto-campo"
-                                key={indice}
-                            >
-                                <Esqueleto
-                                    altura="12px"
-                                    largura="35%"
-                                />
-
-                                <Esqueleto
-                                    altura="42px"
-                                    largura="100%"
-                                />
-                            </div>
-                        ))}
-                    </div>
+                    <p className="perfil-carregando">
+                        Carregando dados...
+                    </p>
                 ) : (
                     <form
                         className="perfil-formulario"
@@ -330,8 +339,6 @@ function Perfil() {
                                 disabled={salvando}
                                 type="submit"
                             >
-                                {salvando && <SpinnerBotao />}
-
                                 {salvando
                                     ? 'Salvando...'
                                     : 'Salvar dados'}

@@ -9,15 +9,6 @@ import {
     API_CADASTRO_URL,
     API_LOGIN_URL,
 } from '../config.js'
-import { salvarSessao } from '../servicos/sessao.js'
-import {
-    IconeFolha,
-    IconeOlho,
-    IconeOlhoFechado,
-    IconeSetaDireita,
-    IconeSetaEsquerda,
-} from '../componentes/Icones.jsx'
-import SpinnerBotao from '../componentes/SpinnerBotao.jsx'
 import './Autenticacao.css'
 
 async function obterMensagemDeErro(
@@ -41,12 +32,31 @@ async function obterMensagemDeErro(
 }
 
 function armazenarSessao(dados) {
-    salvarSessao({
-        token: dados.token,
-        tipoToken: dados.tipo,
-        usuario: dados.usuario,
-        expiraEmSegundos: dados.expiraEmSegundos,
-    })
+    const expiraEm =
+        Date.now() +
+        Number(
+            dados.expiraEmSegundos ?? 3600,
+        ) * 1000
+
+    localStorage.setItem(
+        'agrogestao_token',
+        dados.token,
+    )
+
+    localStorage.setItem(
+        'agrogestao_tipo_token',
+        dados.tipo ?? 'Bearer',
+    )
+
+    localStorage.setItem(
+        'agrogestao_usuario',
+        JSON.stringify(dados.usuario),
+    )
+
+    localStorage.setItem(
+        'agrogestao_token_expira_em',
+        String(expiraEm),
+    )
 }
 
 function Cadastro() {
@@ -240,7 +250,7 @@ function Cadastro() {
                     to="/"
                 >
                     <span className="autenticacao-marca-icone">
-                        <IconeFolha />
+                        ♧
                     </span>
 
                     <span>AgroGestão</span>
@@ -472,11 +482,7 @@ function Cadastro() {
                                     }
                                     type="button"
                                 >
-                                    {mostrarSenha ? (
-                                        <IconeOlhoFechado />
-                                    ) : (
-                                        <IconeOlho />
-                                    )}
+                                    {mostrarSenha ? '●' : '○'}
                                 </button>
                             </div>
                         </div>
@@ -518,11 +524,9 @@ function Cadastro() {
                                     }
                                     type="button"
                                 >
-                                    {mostrarConfirmacao ? (
-                                        <IconeOlhoFechado />
-                                    ) : (
-                                        <IconeOlho />
-                                    )}
+                                    {mostrarConfirmacao
+                                        ? '●'
+                                        : '○'}
                                 </button>
                             </div>
                         </div>
@@ -532,11 +536,7 @@ function Cadastro() {
                             disabled={carregando}
                             type="submit"
                         >
-                            {carregando ? (
-                                <SpinnerBotao />
-                            ) : (
-                                <IconeSetaDireita />
-                            )}
+                            <span>→</span>
 
                             {carregando
                                 ? 'Criando conta...'
@@ -553,8 +553,7 @@ function Cadastro() {
 
                     <p className="autenticacao-alternativa">
                         <Link to="/">
-                            <IconeSetaEsquerda /> Voltar para a página
-                            inicial
+                            ← Voltar para a página inicial
                         </Link>
                     </p>
                 </div>

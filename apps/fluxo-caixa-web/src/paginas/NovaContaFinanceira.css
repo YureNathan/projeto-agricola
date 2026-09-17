@@ -25,17 +25,14 @@
 }
 
 .nova-conta-cabecalho > button {
-    display: inline-flex;
     margin-bottom: 27px;
     padding: 0;
-    align-items: center;
-    gap: 6px;
     border: 0;
     background: transparent;
     color: var(--muted-foreground);
     font: inherit;
     font-size: 0.84rem;
-    font-weight: 700;
+    font-weight: 750;
     cursor: pointer;
     transition: color 160ms ease;
 }
@@ -48,7 +45,7 @@
     margin: 0 0 7px;
     color: var(--primary);
     font-size: 0.76rem;
-    font-weight: 800;
+    font-weight: 850;
     letter-spacing: 0.09em;
     text-transform: uppercase;
 }
@@ -149,7 +146,14 @@
 .nova-conta-campo > label {
     color: var(--foreground);
     font-size: 0.82rem;
-    font-weight: 700;
+    font-weight: 750;
+}
+
+.nova-conta-campo-topo {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
 }
 
 .nova-conta-campo input,
@@ -223,6 +227,57 @@
     cursor: pointer;
 }
 
+.nova-conta-link-categoria:disabled {
+    cursor: not-allowed;
+    opacity: 0.55;
+}
+
+.nova-conta-fornecedor-rapido {
+    display: grid;
+    gap: 12px;
+    padding: 14px;
+    border: 1px solid
+    color-mix(
+            in oklch,
+            var(--primary) 24%,
+            var(--border)
+    );
+    border-left: 4px solid var(--primary);
+    border-radius: var(--radius);
+    background:
+            color-mix(
+                    in oklch,
+                    var(--secondary) 38%,
+                    var(--card)
+            );
+}
+
+.nova-conta-fornecedor-rapido strong {
+    display: block;
+    font-size: 0.86rem;
+}
+
+.nova-conta-fornecedor-rapido span {
+    display: block;
+    margin-top: 3px;
+    color: var(--muted-foreground);
+    font-size: 0.78rem;
+    font-weight: 650;
+}
+
+.nova-conta-fornecedor-rapido > div:last-child {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.nova-conta-sucesso {
+    margin: 0;
+    color: var(--primary);
+    font-size: 0.8rem;
+    font-weight: 800;
+}
+
 .nova-conta-lembrete {
     display: flex;
     align-items: center;
@@ -276,7 +331,7 @@ input[type="checkbox"] {
 }
 
 .nova-conta-lembrete > div label {
-    font-weight: 700;
+    font-weight: 750;
 }
 
 .nova-conta-lembrete
@@ -290,7 +345,7 @@ input[type="number"] {
     background: var(--card);
     color: var(--foreground);
     font: inherit;
-    font-weight: 700;
+    font-weight: 750;
     text-align: center;
 }
 

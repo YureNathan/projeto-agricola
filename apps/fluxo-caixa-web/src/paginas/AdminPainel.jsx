@@ -5,9 +5,6 @@ import {
 } from 'react'
 import { useNavigate } from 'react-router'
 import { API_BASE_URL as API_URL } from '../config.js'
-import Esqueleto from '../componentes/Esqueleto.jsx'
-import ModalAnimado from '../componentes/ModalAnimado.jsx'
-import { limparSessao, obterSessao } from '../servicos/sessao.js'
 import './AdminPainel.css'
 
 const STATUS_PAGAMENTO = [
@@ -21,6 +18,45 @@ const TIPOS_ACESSO = {
     NORMAL: 'Normal',
     VITALICIO: 'Vitalicio',
     PRAZO: 'Por prazo',
+}
+
+function limparSessao() {
+    localStorage.removeItem('agrogestao_token')
+    localStorage.removeItem('agrogestao_tipo_token')
+    localStorage.removeItem('agrogestao_usuario')
+    localStorage.removeItem('agrogestao_token_expira_em')
+}
+
+function obterSessao() {
+    try {
+        const token = localStorage.getItem('agrogestao_token')
+        const tipoToken =
+            localStorage.getItem('agrogestao_tipo_token') ??
+            'Bearer'
+        const usuarioSalvo =
+            localStorage.getItem('agrogestao_usuario')
+        const expiraEm = Number(
+            localStorage.getItem('agrogestao_token_expira_em'),
+        )
+
+        if (!token || !usuarioSalvo) {
+            return null
+        }
+
+        if (expiraEm && Date.now() >= expiraEm) {
+            limparSessao()
+            return null
+        }
+
+        return {
+            token,
+            tipoToken,
+            usuario: JSON.parse(usuarioSalvo),
+        }
+    } catch {
+        limparSessao()
+        return null
+    }
 }
 
 async function obterMensagemDeErro(resposta) {
@@ -77,7 +113,6 @@ function AdminPainel() {
     const [sessao] = useState(() => obterSessao())
     const [usuarios, setUsuarios] = useState([])
     const [mensagem, setMensagem] = useState('')
-    const [tipoMensagem, setTipoMensagem] = useState('sucesso')
     const [carregando, setCarregando] = useState(true)
     const [salvandoId, setSalvandoId] = useState(null)
     const [diasAcesso, setDiasAcesso] = useState({})
@@ -167,7 +202,6 @@ function AdminPainel() {
 
             setUsuarios(await resposta.json())
         } catch (erro) {
-            setTipoMensagem('erro')
             setMensagem(
                 erro instanceof Error
                     ? erro.message
@@ -297,9 +331,7 @@ function AdminPainel() {
             )
 
             setMensagem('Alteração salva com sucesso.')
-            setTipoMensagem('sucesso')
         } catch (erro) {
-            setTipoMensagem('erro')
             setMensagem(
                 erro instanceof Error
                     ? erro.message
@@ -350,7 +382,6 @@ function AdminPainel() {
             setMensagem(
                 'Escolha Agricultura, Pecuaria ou as duas atividades.',
             )
-            setTipoMensagem('erro')
             return
         }
 
@@ -389,9 +420,7 @@ function AdminPainel() {
             )
             setUsuarioEmEdicao(null)
             setMensagem('Dados do usuario salvos com sucesso.')
-            setTipoMensagem('sucesso')
         } catch (erro) {
-            setTipoMensagem('erro')
             setMensagem(
                 erro instanceof Error
                     ? erro.message
@@ -446,14 +475,7 @@ function AdminPainel() {
             </header>
 
             {mensagem && (
-                <div
-                    className={`admin-aviso admin-aviso-${tipoMensagem}`}
-                    role={
-                        tipoMensagem === 'erro'
-                            ? 'alert'
-                            : 'status'
-                    }
-                >
+                <div className="admin-aviso" role="status">
                     {mensagem}
                 </div>
             )}
@@ -502,19 +524,9 @@ function AdminPainel() {
                 </div>
 
                 {carregando ? (
-                    <div
-                        aria-busy="true"
-                        aria-live="polite"
-                        className="admin-esqueleto"
-                    >
-                        {[0, 1, 2, 3, 4].map((indice) => (
-                            <Esqueleto
-                                altura="48px"
-                                key={indice}
-                                largura="100%"
-                            />
-                        ))}
-                    </div>
+                    <p className="admin-vazio">
+                        Carregando usuários...
+                    </p>
                 ) : (
                     <div className="admin-tabela-area">
                         <table className="admin-tabela">
@@ -789,16 +801,14 @@ function AdminPainel() {
                 )}
             </section>
 
-            <ModalAnimado
-                aberto={Boolean(usuarioEmEdicao)}
-                aoFechar={fecharEdicao}
-                classeFundo="admin-modal-fundo"
-            >{usuarioEmEdicao && (
+            {usuarioEmEdicao && (
+                <div
+                    className="admin-modal-fundo"
+                    role="presentation"
+                >
                     <form
-                        aria-modal="true"
                         className="admin-modal"
                         onSubmit={salvarDadosUsuario}
-                        role="dialog"
                     >
                         <div className="admin-modal-topo">
                             <div>
@@ -934,8 +944,8 @@ function AdminPainel() {
                             </button>
                         </div>
                     </form>
+                </div>
             )}
-            </ModalAnimado>
         </main>
     )
 }

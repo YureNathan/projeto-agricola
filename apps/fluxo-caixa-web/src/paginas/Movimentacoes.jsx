@@ -8,18 +8,6 @@ import {
     useSearchParams,
 } from 'react-router'
 import { API_BASE_URL as API_URL } from '../config.js'
-import Esqueleto from '../componentes/Esqueleto.jsx'
-import {
-    IconeFechar,
-    IconeLixeira,
-    IconeSetaEsquerda,
-} from '../componentes/Icones.jsx'
-import ModalAnimado from '../componentes/ModalAnimado.jsx'
-import {
-    limparSessao,
-    montarCabecalhos,
-    obterSessao,
-} from '../servicos/sessao.js'
 import './Movimentacoes.css'
 
 function formatarDinheiro(valor) {
@@ -29,6 +17,28 @@ function formatarDinheiro(valor) {
     }).format(valor ?? 0)
 }
 
+function IconeLixeira() {
+    return (
+        <svg
+            aria-hidden="true"
+            fill="none"
+            height="18"
+            stroke="currentColor"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
+            viewBox="0 0 24 24"
+            width="18"
+        >
+            <path d="M3 6h18" />
+            <path d="M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2" />
+            <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
+            <path d="M10 11v6" />
+            <path d="M14 11v6" />
+        </svg>
+    )
+}
+
 function formatarData(data) {
     if (!data) {
         return ''
@@ -36,6 +46,65 @@ function formatarData(data) {
 
     const [ano, mes, dia] = data.split('-')
     return `${dia}/${mes}/${ano}`
+}
+
+function limparSessao() {
+    localStorage.removeItem('agrogestao_token')
+    localStorage.removeItem('agrogestao_tipo_token')
+    localStorage.removeItem('agrogestao_usuario')
+
+    localStorage.removeItem(
+        'agrogestao_token_expira_em',
+    )
+}
+
+function obterSessao() {
+    try {
+        const token =
+            localStorage.getItem('agrogestao_token')
+
+        const tipoToken =
+            localStorage.getItem(
+                'agrogestao_tipo_token',
+            ) ?? 'Bearer'
+
+        const usuarioSalvo =
+            localStorage.getItem(
+                'agrogestao_usuario',
+            )
+
+        const expiraEm =
+            Number(
+                localStorage.getItem(
+                    'agrogestao_token_expira_em',
+                ),
+            )
+
+        if (!token || !usuarioSalvo) {
+            return null
+        }
+
+        if (expiraEm && Date.now() >= expiraEm) {
+            limparSessao()
+            return null
+        }
+
+        const usuario = JSON.parse(usuarioSalvo)
+
+        if (!usuario?.empresaId) {
+            limparSessao()
+            return null
+        }
+
+        return {
+            token,
+            tipoToken,
+            usuario,
+        }
+    } catch {
+        limparSessao()
+        return null
+    }
 }
 
 async function obterMensagemDeErro(
@@ -61,9 +130,9 @@ function categoriaEhOriginal(categoria, movimentacao) {
     return (
         categoria?.tipo === movimentacao?.tipo &&
         normalizarParaComparacao(categoria?.nome) ===
-            normalizarParaComparacao(
-                movimentacao?.categoriaNome,
-            )
+        normalizarParaComparacao(
+            movimentacao?.categoriaNome,
+        )
     )
 }
 
@@ -130,7 +199,6 @@ function Movimentacoes() {
         setMovimentacaoParaConverter,
     ] = useState(null)
 
-
     const [
         categoriasConversao,
         setCategoriasConversao,
@@ -162,21 +230,31 @@ function Movimentacoes() {
         movimentacaoParaConverter
             ?.acaoCategoria === 'restaurar'
             ? categoriasConversao.find((categoria) =>
-                  categoriaEhOriginal(
-                      categoria,
-                      movimentacaoParaConverter,
-                  ),
-              )
+                categoriaEhOriginal(
+                    categoria,
+                    movimentacaoParaConverter,
+                ),
+            )
             : null
 
     const usandoCategoriaOriginal =
         Boolean(categoriaOriginalRestauracao) &&
         categoriaConversaoId ===
-            String(categoriaOriginalRestauracao.id) &&
+        String(categoriaOriginalRestauracao.id) &&
         !novaCategoriaNome.trim()
 
     function criarCabecalhos(possuiCorpo = false) {
-        return montarCabecalhos(sessao, possuiCorpo)
+        const cabecalhos = {
+            Authorization:
+                `${sessao.tipoToken} ${sessao.token}`,
+        }
+
+        if (possuiCorpo) {
+            cabecalhos['Content-Type'] =
+                'application/json; charset=utf-8'
+        }
+
+        return cabecalhos
     }
 
     useEffect(() => {
@@ -337,24 +415,11 @@ function Movimentacoes() {
 
     useEffect(() => {
         if (
-            parametros.get('lixeira') !== '1' ||
-            mostrandoLixeira
+            parametros.get('lixeira') === '1' &&
+            !mostrandoLixeira
         ) {
-            return undefined
+            void carregarLixeira()
         }
-
-        let ativo = true
-
-        Promise.resolve().then(() => {
-            if (ativo) {
-                void carregarLixeira()
-            }
-        })
-
-        return () => {
-            ativo = false
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [
         parametros,
         mostrandoLixeira,
@@ -610,12 +675,12 @@ function Movimentacoes() {
             const categoriaOriginal =
                 acao === 'restaurar'
                     ? categoriasAtivas.find(
-                          (categoria) =>
-                              categoriaEhOriginal(
-                                  categoria,
-                                  movimentacao,
-                              ),
-                      )
+                        (categoria) =>
+                            categoriaEhOriginal(
+                                categoria,
+                                movimentacao,
+                            ),
+                    )
                     : null
 
             const categoriaInicial =
@@ -829,26 +894,8 @@ function Movimentacoes() {
 
     if (carregando) {
         return (
-            <main className="movimentacoes-pagina">
-                <div
-                    aria-busy="true"
-                    aria-live="polite"
-                    className="movimentacoes-esqueleto"
-                >
-                    <Esqueleto altura="26px" largura="240px" />
-
-                    <Esqueleto altura="14px" largura="360px" />
-
-                    <div className="movimentacoes-esqueleto-linhas">
-                        {[0, 1, 2, 3, 4, 5].map((indice) => (
-                            <Esqueleto
-                                altura="52px"
-                                key={indice}
-                                largura="100%"
-                            />
-                        ))}
-                    </div>
-                </div>
+            <main className="movimentacoes-pagina movimentacoes-estado">
+                <p>Carregando movimentações...</p>
             </main>
         )
     }
@@ -865,10 +912,9 @@ function Movimentacoes() {
                                 : '/dashboard'
                         }
                     >
-                        <IconeSetaEsquerda />{' '}
                         {categoriaId
-                            ? 'Voltar às categorias'
-                            : 'Voltar ao dashboard'}
+                            ? '← Voltar às categorias'
+                            : '← Voltar ao dashboard'}
                     </Link>
 
                     <p className="movimentacoes-etiqueta">
@@ -993,6 +1039,16 @@ function Movimentacoes() {
                                                     {
                                                         movimentacao.observacao
                                                     }
+                                                </small>
+                                            )}
+
+                                            {movimentacao.fornecedorNome && (
+                                                <small>
+                                                    Fornecedor:{' '}
+                                                    {movimentacao.fornecedorNome}
+                                                    {movimentacao.compradorNome
+                                                        ? ` - Comprador: ${movimentacao.compradorNome}`
+                                                        : ''}
                                                 </small>
                                             )}
                                         </td>
@@ -1157,13 +1213,11 @@ function Movimentacoes() {
                 )}
             </section>
 
-            <ModalAnimado
-                aberto={Boolean(movimentacaoParaExcluir)}
-                aoFechar={() =>
-                    setMovimentacaoParaExcluir(null)
-                }
-                classeFundo="movimentacoes-modal-fundo"
-            >{movimentacaoParaExcluir && (
+            {movimentacaoParaExcluir && (
+                <div
+                    className="movimentacoes-modal-fundo"
+                    role="presentation"
+                >
                     <section
                         aria-modal="true"
                         className="movimentacoes-modal"
@@ -1181,7 +1235,7 @@ function Movimentacoes() {
                                 }
                                 type="button"
                             >
-                                <IconeFechar />
+                                ×
                             </button>
                         </div>
 
@@ -1219,18 +1273,14 @@ function Movimentacoes() {
                             </button>
                         </div>
                     </section>
+                </div>
             )}
-            </ModalAnimado>
 
-            <ModalAnimado
-                aberto={Boolean(
-                    movimentacaoParaExcluirPermanente,
-                )}
-                aoFechar={() =>
-                    setMovimentacaoParaExcluirPermanente(null)
-                }
-                classeFundo="movimentacoes-modal-fundo"
-            >{movimentacaoParaExcluirPermanente && (
+            {movimentacaoParaExcluirPermanente && (
+                <div
+                    className="movimentacoes-modal-fundo"
+                    role="presentation"
+                >
                     <section
                         aria-modal="true"
                         className="movimentacoes-modal"
@@ -1248,7 +1298,7 @@ function Movimentacoes() {
                                 }
                                 type="button"
                             >
-                                <IconeFechar />
+                                ×
                             </button>
                         </div>
 
@@ -1288,16 +1338,14 @@ function Movimentacoes() {
                             </button>
                         </div>
                     </section>
+                </div>
             )}
-            </ModalAnimado>
 
-            <ModalAnimado
-                aberto={Boolean(movimentacaoParaConverter)}
-                aoFechar={() =>
-                    setMovimentacaoParaConverter(null)
-                }
-                classeFundo="movimentacoes-modal-fundo"
-            >{movimentacaoParaConverter && (
+            {movimentacaoParaConverter && (
+                <div
+                    className="movimentacoes-modal-fundo"
+                    role="presentation"
+                >
                     <section
                         aria-modal="true"
                         className="movimentacoes-modal"
@@ -1307,7 +1355,7 @@ function Movimentacoes() {
                             <p className="movimentacoes-etiqueta">
                                 {movimentacaoParaConverter.acaoCategoria ===
                                 'restaurar'
-                                    ? 'Restaurar movimentação'
+                                          ? 'Restaurar movimentação'
                                     : movimentacaoParaConverter.acaoCategoria ===
                                         'categoria'
                                       ? 'Trocar categoria'
@@ -1319,7 +1367,7 @@ function Movimentacoes() {
                                 onClick={fecharConversao}
                                 type="button"
                             >
-                                <IconeFechar />
+                                ×
                             </button>
                         </div>
 
@@ -1393,7 +1441,6 @@ function Movimentacoes() {
                                     )}
                                 </div>
                             )}
-
                             <label htmlFor="categoriaConversao">
                                 {movimentacaoParaConverter.acaoCategoria ===
                                 'restaurar'
@@ -1491,16 +1538,17 @@ function Movimentacoes() {
                                 >
                                     {convertendoId || restaurandoId
                                         ? 'Salvando...'
-                                        : movimentacaoParaConverter.acaoCategoria ===
-                                            'restaurar'
+                                        : movimentacaoParaConverter
+                                            .acaoCategoria ===
+                                          'restaurar'
                                           ? 'Restaurar movimentação'
                                           : 'Confirmar troca'}
                                 </button>
                             </div>
                         </form>
                     </section>
+                </div>
             )}
-            </ModalAnimado>
         </main>
     )
 }

@@ -8,14 +8,6 @@ import {
     useSearchParams,
 } from 'react-router'
 import { API_REDEFINIR_SENHA_URL } from '../config.js'
-import {
-    IconeFolha,
-    IconeOlho,
-    IconeOlhoFechado,
-    IconeSetaDireita,
-    IconeSetaEsquerda,
-} from '../componentes/Icones.jsx'
-import SpinnerBotao from '../componentes/SpinnerBotao.jsx'
 import './Autenticacao.css'
 
 async function obterMensagemDeErro(
@@ -162,7 +154,7 @@ function RedefinirSenha() {
                     to="/"
                 >
                     <span className="autenticacao-marca-icone">
-                        <IconeFolha />
+                        ♧
                     </span>
 
                     <span>AgroGestao</span>
@@ -262,11 +254,7 @@ function RedefinirSenha() {
                                     }
                                     type="button"
                                 >
-                                    {mostrarSenha ? (
-                                        <IconeOlhoFechado />
-                                    ) : (
-                                        <IconeOlho />
-                                    )}
+                                    {mostrarSenha ? '●' : '○'}
                                 </button>
                             </div>
                         </div>
@@ -313,11 +301,7 @@ function RedefinirSenha() {
                                     }
                                     type="button"
                                 >
-                                    {mostrarConfirmacao ? (
-                                        <IconeOlhoFechado />
-                                    ) : (
-                                        <IconeOlho />
-                                    )}
+                                    {mostrarConfirmacao ? '●' : '○'}
                                 </button>
                             </div>
                         </div>
@@ -327,11 +311,7 @@ function RedefinirSenha() {
                             disabled={carregando || !token}
                             type="submit"
                         >
-                            {carregando ? (
-                                <SpinnerBotao />
-                            ) : (
-                                <IconeSetaDireita />
-                            )}
+                            <span>→</span>
 
                             {carregando
                                 ? 'Redefinindo...'
@@ -341,7 +321,7 @@ function RedefinirSenha() {
 
                     <p className="autenticacao-alternativa">
                         <Link to="/login">
-                            <IconeSetaEsquerda /> Voltar para o login
+                            ← Voltar para o login
                         </Link>
                     </p>
                 </div>

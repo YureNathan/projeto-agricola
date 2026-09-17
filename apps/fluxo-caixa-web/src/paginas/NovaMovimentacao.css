@@ -27,8 +27,6 @@
 .movimentacao-cabecalho a {
     display: inline-flex;
     margin-bottom: 30px;
-    align-items: center;
-    gap: 6px;
     color: var(--muted-foreground);
     font-size: 0.88rem;
     font-weight: 700;
@@ -44,7 +42,7 @@
     margin: 0 0 7px;
     color: var(--primary);
     font-size: 0.78rem;
-    font-weight: 800;
+    font-weight: 850;
     letter-spacing: 0.09em;
     text-transform: uppercase;
 }
@@ -90,7 +88,7 @@
     color: var(--muted-foreground);
     font: inherit;
     font-size: 0.86rem;
-    font-weight: 700;
+    font-weight: 750;
     cursor: pointer;
     transition:
             background 160ms ease,
@@ -128,7 +126,7 @@
 .formulario-campo label {
     color: var(--foreground);
     font-size: 0.84rem;
-    font-weight: 700;
+    font-weight: 750;
 }
 
 .formulario-campo input,
@@ -229,12 +227,12 @@
 }
 
 .categoria-ajuda-criacao strong {
-    font-weight: 800;
+    font-weight: 850;
 }
 
 .categoria-ajuda-criacao span {
     color: var(--muted-foreground);
-    font-weight: 600;
+    font-weight: 650;
 }
 
 .categoria-convite-criacao {
@@ -296,7 +294,7 @@
 
 .categoria-criar-destaque > strong {
     color: inherit;
-    font-weight: 800;
+    font-weight: 850;
 }
 
 .categoria-criar-destaque:hover:not(:disabled) {
@@ -412,7 +410,7 @@
     margin: 0;
     color: var(--foreground);
     font-size: 0.86rem;
-    font-weight: 800;
+    font-weight: 850;
 }
 
 .categoria-criacao-rapida
@@ -492,7 +490,7 @@
     background: var(--secondary);
     color: var(--primary);
     font-size: 0.78rem;
-    font-weight: 700;
+    font-weight: 750;
     line-height: 1.45;
 }
 
@@ -531,7 +529,7 @@
             );
     color: var(--destructive);
     font-size: 0.86rem;
-    font-weight: 600;
+    font-weight: 650;
     line-height: 1.5;
 }
 
@@ -556,7 +554,7 @@
     background: var(--card);
     color: var(--foreground);
     font-size: 0.87rem;
-    font-weight: 700;
+    font-weight: 750;
     text-decoration: none;
     transition:
             border-color 160ms ease,
@@ -661,17 +659,4 @@
     .formulario-acoes button {
         width: 100%;
     }
-}
-/*
- * Estado de carregamento (skeleton) — compartilhado com EditarMovimentacao
- */
-
-.movimentacao-esqueleto {
-    display: grid;
-    gap: 18px;
-}
-
-.movimentacao-esqueleto-campo {
-    display: grid;
-    gap: 8px;
 }

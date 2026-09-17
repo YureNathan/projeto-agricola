@@ -1,5 +1,4 @@
 import {
-    useCallback,
     useEffect,
     useState,
 } from 'react'
@@ -7,11 +6,57 @@ import {
     useNavigate,
 } from 'react-router'
 import CampoComVoz from '../componentes/CampoComVoz.jsx'
-import Esqueleto from '../componentes/Esqueleto.jsx'
-import { IconeSetaEsquerda } from '../componentes/Icones.jsx'
 import { API_BASE_URL as API_URL } from '../config.js'
-import { limparSessao, obterSessao } from '../servicos/sessao.js'
 import './AppMobile.css'
+
+function limparSessao() {
+    localStorage.removeItem('agrogestao_token')
+    localStorage.removeItem('agrogestao_tipo_token')
+    localStorage.removeItem('agrogestao_usuario')
+    localStorage.removeItem('agrogestao_token_expira_em')
+}
+
+function obterSessao() {
+    try {
+        const token =
+            localStorage.getItem('agrogestao_token')
+
+        const tipoToken =
+            localStorage.getItem('agrogestao_tipo_token') ?? 'Bearer'
+
+        const usuarioSalvo =
+            localStorage.getItem('agrogestao_usuario')
+
+        const expiraEm =
+            Number(localStorage.getItem('agrogestao_token_expira_em'))
+
+        if (!token || !usuarioSalvo) {
+            return null
+        }
+
+        if (expiraEm && Date.now() >= expiraEm) {
+            limparSessao()
+            return null
+        }
+
+        const usuario =
+            JSON.parse(usuarioSalvo)
+
+        if (!usuario?.empresaId) {
+            limparSessao()
+            return null
+        }
+
+        return {
+            token,
+            tipoToken,
+            usuario,
+        }
+    } catch {
+        limparSessao()
+        return null
+    }
+}
 
 function completarComZero(numero) {
     return String(numero).padStart(2, '0')
@@ -98,41 +143,6 @@ function AppMobile() {
 
     const empresaId =
         sessao?.usuario?.empresaId
-
-    const carregarResumo = useCallback(async () => {
-        if (!sessao || !empresaId) {
-            return
-        }
-
-        try {
-            const resposta = await fetch(
-                `${API_URL}/empresas/${empresaId}/dashboard/resumo`,
-                {
-                    headers: {
-                        Authorization:
-                            `${sessao.tipoToken} ${sessao.token}`,
-                    },
-                },
-            )
-
-            if (
-                resposta.status === 401 ||
-                resposta.status === 403
-            ) {
-                limparSessao()
-                navigate('/login', { replace: true })
-                return
-            }
-
-            if (!resposta.ok) {
-                return
-            }
-
-            setResumo(await resposta.json())
-        } catch {
-            // mantém o resumo atual se a atualização falhar
-        }
-    }, [empresaId, navigate, sessao])
 
     useEffect(() => {
         if (!sessao || !empresaId) {
@@ -336,8 +346,6 @@ function AppMobile() {
             setValor('')
             setObservacao('')
             setMensagem('Lancamento salvo no dashboard.')
-
-            await carregarResumo()
         } catch (erroDaRequisicao) {
             setErro(
                 erroDaRequisicao instanceof Error
@@ -356,16 +364,7 @@ function AppMobile() {
     return (
         <div className="app-mobile">
             <header className="app-mobile-topo">
-                <button
-                    aria-label="Voltar"
-                    className="app-mobile-voltar"
-                    onClick={() => navigate('/dashboard')}
-                    type="button"
-                >
-                    <IconeSetaEsquerda />
-                </button>
-
-                <div className="app-mobile-titulo">
+                <div>
                     <span>AgroGestao</span>
                     <strong>
                         {sessao.usuario.nomeEmpresa}
@@ -373,7 +372,6 @@ function AppMobile() {
                 </div>
 
                 <button
-                    className="app-mobile-site"
                     onClick={() => navigate('/dashboard')}
                     type="button"
                 >
@@ -382,42 +380,21 @@ function AppMobile() {
             </header>
 
             <main className="app-mobile-conteudo">
-                <section
-                    aria-busy={carregando}
-                    className="app-mobile-resumo"
-                >
+                <section className="app-mobile-resumo">
                     <p>Hoje na propriedade</p>
 
                     <div>
                         <strong>
                             Entrou
                             <span>
-                                {carregando ? (
-                                    <Esqueleto
-                                        altura="18px"
-                                        largura="90px"
-                                    />
-                                ) : (
-                                    formatarDinheiro(
-                                        resumo?.totalEntrou,
-                                    )
-                                )}
+                                {formatarDinheiro(resumo?.totalEntrou)}
                             </span>
                         </strong>
 
-                        <strong className="app-mobile-resumo-saida">
+                        <strong>
                             Saiu
                             <span>
-                                {carregando ? (
-                                    <Esqueleto
-                                        altura="18px"
-                                        largura="90px"
-                                    />
-                                ) : (
-                                    formatarDinheiro(
-                                        resumo?.totalSaiu,
-                                    )
-                                )}
+                                {formatarDinheiro(resumo?.totalSaiu)}
                             </span>
                         </strong>
                     </div>

@@ -5,14 +5,80 @@ import {
 import {
     useNavigate,
 } from 'react-router'
-import { limparSessao, obterSessao } from '../servicos/sessao.js'
-import {
-    IconeFolha,
-    IconeRelogio,
-    IconeSetaDireita,
-    IconeTransferir,
-} from '../componentes/Icones.jsx'
 import './EscolhaModulo.css'
+
+function limparSessao() {
+    localStorage.removeItem(
+        'agrogestao_token',
+    )
+
+    localStorage.removeItem(
+        'agrogestao_tipo_token',
+    )
+
+    localStorage.removeItem(
+        'agrogestao_usuario',
+    )
+
+    localStorage.removeItem(
+        'agrogestao_token_expira_em',
+    )
+}
+
+function obterSessao() {
+    try {
+        const token =
+            localStorage.getItem(
+                'agrogestao_token',
+            )
+
+        const tipoToken =
+            localStorage.getItem(
+                'agrogestao_tipo_token',
+            ) ?? 'Bearer'
+
+        const usuarioSalvo =
+            localStorage.getItem(
+                'agrogestao_usuario',
+            )
+
+        const expiraEm =
+            Number(
+                localStorage.getItem(
+                    'agrogestao_token_expira_em',
+                ),
+            )
+
+        if (!token || !usuarioSalvo) {
+            return null
+        }
+
+        if (
+            expiraEm
+            && Date.now() >= expiraEm
+        ) {
+            limparSessao()
+            return null
+        }
+
+        const usuario =
+            JSON.parse(usuarioSalvo)
+
+        if (!usuario?.empresaId) {
+            limparSessao()
+            return null
+        }
+
+        return {
+            token,
+            tipoToken,
+            usuario,
+        }
+    } catch {
+        limparSessao()
+        return null
+    }
+}
 
 function EscolhaModulo() {
     const navigate = useNavigate()
@@ -40,6 +106,12 @@ function EscolhaModulo() {
     function abrirContasFinanceiras() {
         navigate(
             '/dashboard/contas',
+        )
+    }
+
+    function abrirFornecedores() {
+        navigate(
+            '/dashboard/fornecedores',
         )
     }
 
@@ -73,7 +145,7 @@ function EscolhaModulo() {
                 <header className="escolha-modulo-cabecalho">
                     <div className="escolha-modulo-marca">
                         <span aria-hidden="true">
-                            <IconeFolha />
+                            ♧
                         </span>
 
                         <div>
@@ -157,7 +229,7 @@ function EscolhaModulo() {
                             type="button"
                         >
                             <span className="escolha-modulo-icone">
-                                <IconeTransferir />
+                                ↕
                             </span>
 
                             <div className="escolha-modulo-card-texto">
@@ -199,7 +271,7 @@ function EscolhaModulo() {
                             <strong className="escolha-modulo-acao">
                                 Abrir controle interno
                                 <span aria-hidden="true">
-                                    <IconeSetaDireita />
+                                    →
                                 </span>
                             </strong>
                         </button>
@@ -212,7 +284,7 @@ function EscolhaModulo() {
                             type="button"
                         >
                             <span className="escolha-modulo-icone">
-                                <IconeRelogio />
+                                ◷
                             </span>
 
                             <div className="escolha-modulo-card-texto">
@@ -255,7 +327,54 @@ function EscolhaModulo() {
                             <strong className="escolha-modulo-acao">
                                 Abrir contas
                                 <span aria-hidden="true">
-                                    <IconeSetaDireita />
+                                    →
+                                </span>
+                            </strong>
+                        </button>
+
+                        <button
+                            className="escolha-modulo-card escolha-modulo-fornecedores"
+                            onClick={abrirFornecedores}
+                            type="button"
+                        >
+                            <span className="escolha-modulo-icone">
+                                F
+                            </span>
+
+                            <div className="escolha-modulo-card-texto">
+                                <small>
+                                    Compras e fornecedores
+                                </small>
+
+                                <h2>
+                                    Controle de fornecedores
+                                </h2>
+
+                                <p>
+                                    Cadastre onde comprou,
+                                    acompanhe valores e veja
+                                    quem registrou cada compra.
+                                </p>
+
+                                <ul>
+                                    <li>
+                                        Nome do fornecedor obrigatorio
+                                    </li>
+
+                                    <li>
+                                        Compras ligadas as despesas
+                                    </li>
+
+                                    <li>
+                                        Lixeira com restauracao
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <strong className="escolha-modulo-acao">
+                                Abrir fornecedores
+                                <span aria-hidden="true">
+                                    -&gt;
                                 </span>
                             </strong>
                         </button>

@@ -4,15 +4,6 @@ import {
 } from 'react'
 import { Link, useNavigate } from 'react-router'
 import { API_LOGIN_URL } from '../config.js'
-import { salvarSessao } from '../servicos/sessao.js'
-import {
-    IconeFolha,
-    IconeOlho,
-    IconeOlhoFechado,
-    IconeSetaDireita,
-    IconeSetaEsquerda,
-} from '../componentes/Icones.jsx'
-import SpinnerBotao from '../componentes/SpinnerBotao.jsx'
 import './Autenticacao.css'
 
 function Login() {
@@ -72,12 +63,29 @@ function Login() {
                 )
             }
 
-            salvarSessao({
-                token: dados.token,
-                tipoToken: dados.tipo,
-                usuario: dados.usuario,
-                expiraEmSegundos: dados.expiraEmSegundos,
-            })
+            const expiraEm =
+                Date.now() +
+                Number(dados.expiraEmSegundos ?? 3600) * 1000
+
+            localStorage.setItem(
+                'agrogestao_token',
+                dados.token,
+            )
+
+            localStorage.setItem(
+                'agrogestao_tipo_token',
+                dados.tipo ?? 'Bearer',
+            )
+
+            localStorage.setItem(
+                'agrogestao_usuario',
+                JSON.stringify(dados.usuario),
+            )
+
+            localStorage.setItem(
+                'agrogestao_token_expira_em',
+                String(expiraEm),
+            )
 
             if (lembrarAcesso) {
                 localStorage.setItem(
@@ -117,7 +125,7 @@ function Login() {
                     to="/"
                 >
                     <span className="autenticacao-marca-icone">
-                        <IconeFolha />
+                        ♧
                     </span>
 
                     <span>AgroGestão</span>
@@ -164,7 +172,7 @@ function Login() {
 
                     {mensagem && (
                         <div
-                            className="autenticacao-alerta"
+                            className="autenticacao-sucesso"
                             role="alert"
                         >
                             {mensagem}
@@ -236,11 +244,7 @@ function Login() {
                                     }
                                     type="button"
                                 >
-                                    {mostrarSenha ? (
-                                        <IconeOlhoFechado />
-                                    ) : (
-                                        <IconeOlho />
-                                    )}
+                                    {mostrarSenha ? '●' : '○'}
                                 </button>
                             </div>
                         </div>
@@ -265,11 +269,7 @@ function Login() {
                             disabled={carregando}
                             type="submit"
                         >
-                            {carregando ? (
-                                <SpinnerBotao />
-                            ) : (
-                                <IconeSetaDireita />
-                            )}
+                            <span>→</span>
 
                             {carregando
                                 ? 'Entrando...'
@@ -292,8 +292,7 @@ function Login() {
 
                     <p className="autenticacao-alternativa">
                         <Link to="/">
-                            <IconeSetaEsquerda /> Voltar para a página
-                            inicial
+                            ← Voltar para a página inicial
                         </Link>
                     </p>
                 </div>

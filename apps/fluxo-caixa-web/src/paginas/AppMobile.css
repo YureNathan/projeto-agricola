@@ -10,9 +10,9 @@
     z-index: 10;
     display: flex;
     align-items: center;
-    gap: 10px;
-    padding: 10px 14px;
-    padding-top: max(10px, env(safe-area-inset-top));
+    justify-content: space-between;
+    gap: 12px;
+    padding: 14px;
     border-bottom: 1px solid var(--border);
     background:
             color-mix(
@@ -22,35 +22,9 @@
             );
 }
 
-.app-mobile-voltar {
-    display: grid;
-    width: 42px;
-    height: 42px;
-    flex-shrink: 0;
-    padding: 0;
-    place-items: center;
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    background: var(--card);
-    color: var(--foreground);
-    font: inherit;
-    font-size: 1.15rem;
-    line-height: 1;
-    cursor: pointer;
-    transition:
-            background var(--motion-fast) var(--ease-standard),
-            transform var(--motion-fast) var(--ease-standard);
-}
-
-.app-mobile-voltar:active {
-    background: var(--secondary);
-    transform: scale(0.94);
-}
-
-.app-mobile-titulo {
+.app-mobile-topo div {
     display: grid;
     min-width: 0;
-    flex: 1;
     gap: 2px;
 }
 
@@ -67,24 +41,16 @@
     white-space: nowrap;
 }
 
-.app-mobile-site {
+.app-mobile-topo button {
     min-height: 42px;
     padding: 0 13px;
-    flex-shrink: 0;
     border: 1px solid var(--border);
     border-radius: var(--radius);
     background: var(--card);
     color: var(--foreground);
     font: inherit;
     font-size: 0.78rem;
-    font-weight: 800;
-    white-space: nowrap;
-    cursor: pointer;
-    transition: background var(--motion-fast) var(--ease-standard);
-}
-
-.app-mobile-site:active {
-    background: var(--secondary);
+    font-weight: 850;
 }
 
 .app-mobile-conteudo {
@@ -133,19 +99,6 @@
 .app-mobile-resumo span {
     color: var(--foreground);
     font-size: 1.05rem;
-}
-
-.app-mobile-resumo .app-mobile-resumo-saida {
-    background: color-mix(
-            in oklch,
-            var(--destructive) 12%,
-            var(--card)
-    );
-    color: var(--destructive);
-}
-
-.app-mobile-resumo .app-mobile-resumo-saida span {
-    color: var(--destructive);
 }
 
 .app-mobile-formulario {
@@ -206,7 +159,7 @@
     gap: 8px;
     color: var(--foreground);
     font-size: 0.9rem;
-    font-weight: 800;
+    font-weight: 850;
 }
 
 .app-mobile-campo input,
@@ -226,7 +179,7 @@
     padding: 12px;
     border-radius: var(--radius);
     font-size: 0.86rem;
-    font-weight: 700;
+    font-weight: 750;
     line-height: 1.45;
 }
 
