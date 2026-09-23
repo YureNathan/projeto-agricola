@@ -22,3 +22,7 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Videos institucionais (brutos)
+videos-output/
+videos-final/
