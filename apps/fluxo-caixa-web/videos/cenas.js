@@ -103,6 +103,101 @@ const cenas = [
             await pausa(page, 2600)
         },
     },
+    {
+        nome: 'categorias-16x9',
+        viewport: PAISAGEM,
+        autenticado: true,
+        async executar(page) {
+            await page.goto('/dashboard/categorias', {
+                waitUntil: 'networkidle',
+            })
+            await pausa(page, 4200)
+
+            await page.evaluate(() =>
+                window.scrollTo({
+                    top: document.body.scrollHeight,
+                    behavior: 'smooth',
+                }),
+            )
+            await pausa(page, 2400)
+        },
+    },
+    {
+        nome: 'contas-16x9',
+        viewport: PAISAGEM,
+        autenticado: true,
+        async executar(page) {
+            await page.goto('/dashboard/contas', {
+                waitUntil: 'networkidle',
+            })
+            await pausa(page, 4500)
+
+            await page.evaluate(() =>
+                window.scrollTo({
+                    top: document.body.scrollHeight,
+                    behavior: 'smooth',
+                }),
+            )
+            await pausa(page, 2600)
+        },
+    },
+    {
+        nome: 'fornecedores-16x9',
+        viewport: PAISAGEM,
+        autenticado: true,
+        async executar(page) {
+            await page.goto('/dashboard/fornecedores', {
+                waitUntil: 'networkidle',
+            })
+            await pausa(page, 4500)
+
+            await page.evaluate(() =>
+                window.scrollTo({
+                    top: document.body.scrollHeight,
+                    behavior: 'smooth',
+                }),
+            )
+            await pausa(page, 2400)
+        },
+    },
+    {
+        nome: 'nova-movimentacao-16x9',
+        viewport: PAISAGEM,
+        autenticado: true,
+        async executar(page) {
+            await page.goto('/dashboard/movimentacoes/nova', {
+                waitUntil: 'networkidle',
+            })
+            await pausa(page, 4200)
+
+            await page.evaluate(() =>
+                window.scrollTo({
+                    top: document.body.scrollHeight,
+                    behavior: 'smooth',
+                }),
+            )
+            await pausa(page, 2400)
+        },
+    },
+    {
+        nome: 'perfil-16x9',
+        viewport: PAISAGEM,
+        autenticado: true,
+        async executar(page) {
+            await page.goto('/dashboard/perfil', {
+                waitUntil: 'networkidle',
+            })
+            await pausa(page, 4200)
+
+            await page.evaluate(() =>
+                window.scrollTo({
+                    top: document.body.scrollHeight,
+                    behavior: 'smooth',
+                }),
+            )
+            await pausa(page, 2400)
+        },
+    },
 ]
 
 export default cenas

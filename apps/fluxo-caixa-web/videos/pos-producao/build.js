@@ -41,6 +41,26 @@ const LEGENDAS = {
         [4.5, 9, 'Veja o que entrou e o que saiu'],
         [9, 14, 'Lance receitas e despesas em segundos'],
     ],
+    'categorias-16x9': [
+        [0.4, 4, 'Categorias de receita e despesa'],
+        [4, 7, 'Crie, edite e ative as suas categorias'],
+    ],
+    'contas-16x9': [
+        [0.4, 4, 'Contas a pagar e a receber'],
+        [4, 7, 'Previsão futura e lembretes de vencimento'],
+    ],
+    'fornecedores-16x9': [
+        [0.4, 4, 'Controle de fornecedores'],
+        [4, 7, 'Cadastre e acompanhe seus fornecedores'],
+    ],
+    'nova-movimentacao-16x9': [
+        [0.4, 4, 'Cadastre uma receita ou despesa'],
+        [4, 7, 'Valor, categoria e data em poucos campos'],
+    ],
+    'perfil-16x9': [
+        [0.4, 4, 'Meus dados da propriedade'],
+        [4, 7, 'Atualize o cadastro e as atividades'],
+    ],
 }
 
 function ff(args) {
