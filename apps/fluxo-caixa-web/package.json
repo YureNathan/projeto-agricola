@@ -9,6 +9,7 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "videos": "node videos/gravar.js",
+    "videos:seed": "node videos/seed.js",
     "videos:build": "bash videos/pos-producao/build.sh"
   },
   "dependencies": {
