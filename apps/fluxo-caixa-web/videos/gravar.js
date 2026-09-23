@@ -2,14 +2,14 @@ import path from 'path'
 import fs from 'fs'
 import { fileURLToPath } from 'url'
 import { chromium } from 'playwright'
+import { CONFIG } from './config.js'
 import { cursorInit } from './helpers/cursor.js'
+import { injetarSessao } from './helpers/sessao.js'
 import cenas from './cenas.js'
 
 const diretorio = path.dirname(fileURLToPath(import.meta.url))
 
-const baseURL =
-    process.env.VIDEO_BASE_URL ||
-    'https://projeto-agricola-eta.vercel.app'
+const baseURL = CONFIG.baseURL
 
 const raizSaida = path.join(diretorio, '..', 'videos-output')
 
@@ -32,6 +32,10 @@ async function gravar(cena) {
             size: cena.viewport,
         },
     })
+
+    if (cena.autenticado) {
+        await injetarSessao(contexto)
+    }
 
     await contexto.addInitScript(cursorInit)
 
