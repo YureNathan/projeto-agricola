@@ -22,3 +22,11 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Videos institucionais (brutos)
+videos-output/
+videos-final/
+videos/pos-producao/cards/
+videos/pos-producao/musica/*.mp3
+videos/pos-producao/musica/*.m4a
+videos/pos-producao/musica/*.wav
